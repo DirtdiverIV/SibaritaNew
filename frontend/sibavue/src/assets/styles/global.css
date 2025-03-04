@@ -1,0 +1,176 @@
+/* src/assets/styles/global.css */
+
+/* Importar Montserrat de Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+/* Estilos de reset y base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: #f8f9fa;
+  color: #212529;
+  line-height: 1.6;
+}
+
+/* Tema principal - Negro con toques dorados */
+:root {
+  --primary-color: #212529;    /* Negro principal */
+  --secondary-color: #d4af37;  /* Dorado */
+  --accent-color: #8a6d3b;     /* Dorado oscuro */
+  --text-light: #f8f9fa;       /* Texto claro */
+  --text-dark: #212529;        /* Texto oscuro */
+  --background-light: #f8f9fa; /* Fondo claro */
+  --background-dark: #343a40;  /* Fondo oscuro */
+  --success-color: #28a745;    /* Verde para éxito */
+  --danger-color: #dc3545;     /* Rojo para errores */
+  --warning-color: #ffc107;    /* Amarillo para advertencias */
+  --info-color: #17a2b8;       /* Azul para información */
+}
+
+/* Estilos de botones */
+button {
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  border: none;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  padding: 8px 16px;
+}
+
+button.primary {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+}
+
+button.secondary {
+  background-color: var(--secondary-color);
+  color: var(--text-dark);
+}
+
+button.primary:hover {
+  background-color: #000;
+}
+
+button.secondary:hover {
+  background-color: #c19b00;
+}
+
+/* Estilos de formularios */
+input, select, textarea {
+  font-family: 'Montserrat', sans-serif;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  width: 100%;
+  transition: border-color 0.3s;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+/* Estilos de encabezados */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.75rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+h4 {
+  font-size: 1.25rem;
+}
+
+/* Estilos para TV (pantalla completa) */
+.tv-screen {
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--background-dark);
+  color: var(--text-light);
+  display: flex;
+  flex-direction: column;
+}
+
+.tv-header {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  padding: 15px;
+  text-align: center;
+  border-bottom: 2px solid var(--secondary-color);
+}
+
+.tv-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* Clases utilitarias */
+.text-center {
+  text-align: center;
+}
+
+.mb-1 {
+  margin-bottom: 0.5rem;
+}
+
+.mb-2 {
+  margin-bottom: 1rem;
+}
+
+.mb-3 {
+  margin-bottom: 1.5rem;
+}
+
+.mt-1 {
+  margin-top: 0.5rem;
+}
+
+.mt-2 {
+  margin-top: 1rem;
+}
+
+.mt-3 {
+  margin-top: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.75rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  h3 {
+    font-size: 1.25rem;
+  }
+}
