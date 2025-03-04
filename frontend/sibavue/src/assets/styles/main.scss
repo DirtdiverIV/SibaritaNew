@@ -1,0 +1,313 @@
+// Importar primero las variables personalizadas
+@import 'variables';
+
+// Estilos globales personalizados
+
+// Patrón de fondo
+body {
+  background-color: $background;
+  background-image: 
+    linear-gradient(30deg, $primary-dark 12%, transparent 12.5%, transparent 87%, $primary-dark 87.5%, $primary-dark),
+    linear-gradient(150deg, $primary-dark 12%, transparent 12.5%, transparent 87%, $primary-dark 87.5%, $primary-dark),
+    linear-gradient(30deg, $primary-dark 12%, transparent 12.5%, transparent 87%, $primary-dark 87.5%, $primary-dark),
+    linear-gradient(150deg, $primary-dark 12%, transparent 12.5%, transparent 87%, $primary-dark 87.5%, $primary-dark),
+    linear-gradient(60deg, rgba($gold-dark, 0.1) 25%, transparent 25.5%, transparent 75%, rgba($gold-dark, 0.1) 75%, rgba($gold-dark, 0.1)),
+    linear-gradient(60deg, rgba($gold-dark, 0.1) 25%, transparent 25.5%, transparent 75%, rgba($gold-dark, 0.1) 75%, rgba($gold-dark, 0.1));
+  background-size: 40px 70px;
+  background-position: 0 0, 0 0, 20px 35px, 20px 35px, 0 0, 20px 35px;
+  min-height: 100vh;
+}
+
+// Estilo para cards con efecto de gradiente dorado
+.card {
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, $gold-dark, $gold, $gold-light, $gold, $gold-dark);
+    z-index: 1;
+  }
+  
+  .card-header {
+    background-color: rgba($primary-dark, 0.5);
+    border-bottom: 1px solid rgba($gold-dark, 0.3);
+    
+    .card-header-title {
+      color: $gold;
+    }
+  }
+  
+  .card-content {
+    background-color: $card-background-color;
+  }
+  
+  .card-footer {
+    background-color: rgba($primary-dark, 0.7);
+    border-top: 1px solid rgba($gold-dark, 0.2);
+  }
+}
+
+// Botones con efecto dorado al pasar el ratón
+.button {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  
+  &:hover {
+    background-color: $primary;
+    box-shadow: 0 0 8px rgba($gold, 0.5);
+    
+    &::after {
+      opacity: 1;
+    }
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, $gold, transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  &.is-primary {
+    background-color: $gold-dark;
+    color: $text;
+    
+    &:hover {
+      background-color: $gold;
+    }
+  }
+  
+  &.is-danger {
+    &::after {
+      background: linear-gradient(90deg, transparent, #f14668, transparent);
+    }
+  }
+}
+
+// Inputs con estilo personalizado
+.input, .textarea, .select select {
+  border: 1px solid rgba($gold-dark, 0.3);
+  
+  &:focus {
+    border-color: $gold;
+    box-shadow: 0 0 0 0.125em rgba($gold, 0.25);
+  }
+}
+
+// Tablas con estilo
+.table {
+  background-color: rgba($primary, 0.7);
+  
+  th {
+    border-bottom: 2px solid rgba($gold-dark, 0.5);
+  }
+  
+  td {
+    border: 1px solid rgba($primary-light, 0.5);
+  }
+  
+  tr:hover {
+    background-color: rgba($primary-light, 0.7);
+  }
+}
+
+// Contenedores principales
+.main-container {
+  padding: 1.5rem;
+}
+
+// Títulos con efecto de gradiente
+.title {
+  color: $text;
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, $gold, transparent);
+  }
+  
+  &.has-text-gold {
+    color: $gold;
+  }
+}
+
+// Componentes específicos de TV
+.tv-screen {
+  background-color: rgba($background, 0.95);
+  height: 100vh;
+  overflow: hidden;
+  
+  .tv-header {
+    background: linear-gradient(to right, $primary-dark, $primary, $primary-dark);
+    border-bottom: 3px solid $gold;
+    padding: 1rem;
+    
+    h1 {
+      color: $gold;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-align: center;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+  }
+  
+  .tv-content {
+    padding: 1.5rem;
+    overflow-y: auto;
+    height: calc(100vh - 80px);
+  }
+}
+
+// Efecto de tarjeta para elementos del menú
+.menu-item {
+  background-color: rgba($primary, 0.7);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba($gold-dark, 0.2);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border-color: rgba($gold, 0.4);
+  }
+  
+  .item-name {
+    color: $gold;
+    font-weight: 600;
+    font-size: 1.2rem;
+  }
+  
+  .item-price {
+    color: $text-light;
+    font-style: italic;
+  }
+  
+  .item-description {
+    margin-top: 0.5rem;
+    color: $text-light;
+  }
+}
+
+// Ajustes para móviles
+@media (max-width: 768px) {
+  .columns {
+    margin: 0;
+  }
+  
+  .column {
+    padding: 0.5rem;
+  }
+  
+  .card {
+    margin-bottom: 1rem;
+  }
+}
+
+// Navbar admin
+.admin-navbar {
+  background-color: $navbar-background-color;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  
+  .navbar-brand {
+    .navbar-item {
+      color: $gold;
+      font-weight: 700;
+      font-size: 1.2rem;
+      
+      &:hover {
+        background-color: transparent;
+      }
+    }
+  }
+  
+  .navbar-burger {
+    color: $gold;
+  }
+  
+  .navbar-menu {
+    .navbar-item {
+      &.is-active {
+        background-color: rgba($gold-dark, 0.2);
+        color: $gold;
+      }
+      
+      &:hover {
+        background-color: rgba($primary-light, 0.5);
+      }
+    }
+  }
+}
+
+// Login form
+.login-container {
+  max-width: 400px;
+  margin: 2rem auto;
+  background-color: rgba($primary, 0.8);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+  
+  .login-header {
+    background: linear-gradient(to right, $primary-dark, $primary, $primary-dark);
+    padding: 1.5rem;
+    text-align: center;
+    border-bottom: 2px solid $gold;
+    
+    h1 {
+      color: $gold;
+      margin-bottom: 0.5rem;
+    }
+    
+    h2 {
+      color: $text-light;
+      font-weight: 400;
+    }
+  }
+  
+  .login-body {
+    padding: 1.5rem;
+  }
+}
+
+// Animaciones
+@keyframes shimmer {
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 100% 0;
+  }
+}
+
+.has-shimmer {
+  background: linear-gradient(90deg, 
+    rgba($gold-dark, 0.1) 0%, 
+    rgba($gold, 0.3) 50%, 
+    rgba($gold-dark, 0.1) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}

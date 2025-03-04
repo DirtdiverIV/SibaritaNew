@@ -1,51 +1,72 @@
-// src/components/admin/Auth/LoginForm.vue
 <template>
-  <div class="login-page">
-    <div class="login-container">
-      <div class="login-header">
-        <h1>Sibarita Restaurant</h1>
-        <h2>Acceso Administración</h2>
-      </div>
-      
-      <form @submit.prevent="loginUser" class="login-form">
-        <div class="form-group">
-          <label for="email">Email:</label>
-          <input 
-            v-model="email" 
-            type="email" 
-            id="email" 
-            placeholder="Introduce tu email" 
-            required 
-          />
+  <section class="section">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-one-third-desktop is-half-tablet">
+          <div class="login-container">
+            <div class="login-header">
+              <h1 class="title is-4">Sibarita Restaurant</h1>
+              <h2 class="subtitle is-6">Acceso Administración</h2>
+            </div>
+            
+            <div class="login-body">
+              <form @submit.prevent="loginUser">
+                <div class="field">
+                  <label class="label">Email</label>
+                  <div class="control has-icons-left">
+                    <input 
+                      v-model="email" 
+                      class="input" 
+                      type="email" 
+                      placeholder="Tu email"
+                      required
+                    >
+                    <span class="icon is-small is-left">
+                      <i class="fas fa-envelope"></i>
+                    </span>
+                  </div>
+                </div>
+                
+                <div class="field">
+                  <label class="label">Contraseña</label>
+                  <div class="control has-icons-left">
+                    <input 
+                      v-model="password" 
+                      class="input" 
+                      type="password" 
+                      placeholder="Tu contraseña"
+                      required
+                    >
+                    <span class="icon is-small is-left">
+                      <i class="fas fa-lock"></i>
+                    </span>
+                  </div>
+                </div>
+                
+                <div v-if="error" class="notification is-danger is-light">
+                  <p>{{ error }}</p>
+                </div>
+                
+                <div class="field mt-5">
+                  <div class="control">
+                    <button type="submit" class="button is-primary is-fullwidth">
+                      Iniciar Sesión
+                    </button>
+                  </div>
+                </div>
+              </form>
+              
+              <div class="has-text-centered mt-4">
+                <button @click="goToHome" class="button is-text">
+                  Volver al Inicio
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-        
-        <div class="form-group">
-          <label for="password">Contraseña:</label>
-          <input 
-            v-model="password" 
-            type="password" 
-            id="password" 
-            placeholder="Introduce tu contraseña" 
-            required 
-          />
-        </div>
-        
-        <button type="submit" class="login-button">
-          Iniciar Sesión
-        </button>
-        
-        <div v-if="error" class="error-message">
-          {{ error }}
-        </div>
-      </form>
-      
-      <div class="login-footer">
-        <button @click="goToHome" class="back-button">
-          Volver al Inicio
-        </button>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -90,119 +111,30 @@ export default {
 </script>
 
 <style scoped>
-.login-page {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f8f9fa;
-  font-family: 'Montserrat', sans-serif;
-}
-
-.login-container {
-  width: 400px;
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-.login-header {
-  background-color: #343a40;
-  color: white;
-  padding: 30px;
-  text-align: center;
-}
-
 .login-header h1 {
-  margin: 0 0 10px;
-  font-size: 1.8rem;
+  margin-bottom: 0.5rem !important;
 }
 
 .login-header h2 {
-  margin: 0;
-  font-size: 1.2rem;
-  font-weight: normal;
+  opacity: 0.8;
 }
 
-.login-form {
-  padding: 30px;
+.login-body {
+  padding: 1.5rem;
 }
 
-.form-group {
-  margin-bottom: 20px;
+.notification {
+  padding: 0.75rem;
+  font-size: 0.9rem;
 }
 
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-  color: #495057;
-  font-weight: 500;
+.button.is-text {
+  text-decoration: none;
+  color: #d4af37;
 }
 
-.form-group input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ced4da;
-  border-radius: 5px;
-  font-size: 1rem;
-  transition: border-color 0.3s;
-}
-
-.form-group input:focus {
-  border-color: #007bff;
-  outline: none;
-}
-
-.login-button {
-  width: 100%;
-  padding: 12px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.login-button:hover {
-  background-color: #0056b3;
-}
-
-.error-message {
-  margin-top: 15px;
-  padding: 10px;
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
-  border-radius: 5px;
-}
-
-.login-footer {
-  padding: 20px;
-  text-align: center;
-  border-top: 1px solid #e9ecef;
-}
-
-.back-button {
-  padding: 8px 15px;
-  background-color: #6c757d;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.back-button:hover {
-  background-color: #5a6268;
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-  .login-container {
-    width: 95%;
-  }
+.button.is-text:hover {
+  color: #f8e8a7;
+  background-color: transparent;
 }
 </style>

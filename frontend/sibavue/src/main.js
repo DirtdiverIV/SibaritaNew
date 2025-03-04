@@ -3,8 +3,11 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router/index.js'
 
-// Importar estilos globales
-import './assets/styles/global.css'
+// Importar Bulma CSS directamente
+import 'bulma/css/bulma.css'
+
+// Importar estilos personalizados
+import './assets/styles/main.scss'
 
 createApp(App)
   .use(router)

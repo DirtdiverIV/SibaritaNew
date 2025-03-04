@@ -1,0 +1,60 @@
+// Variables personalizadas para Sibarita Restaurant
+
+// Colores corporativos
+$primary: #1e1e1e; // Gris muy oscuro
+$primary-light: #2c2c2c;
+$primary-dark: #121212;
+
+$gold: #d4af37; // Dorado
+$gold-light: #f8e8a7;
+$gold-dark: #b08b29;
+
+$background: #242424;
+$background-light: #333333;
+
+// Sobrescribir variables de Bulma después de importar Bulma
+$scheme-main: $background;
+$scheme-main-bis: $background-light;
+$scheme-main-ter: $primary-light;
+
+$text: #f8f8f8;
+$text-light: #e0e0e0;
+$text-strong: $gold-light;
+
+$link: $gold;
+$link-hover: $gold-light;
+
+$border: $primary-light;
+$shadow: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.3), 0 0px 0 1px rgba(0, 0, 0, 0.02);
+
+// Componentes específicos
+$card-background-color: rgba($primary, 0.8);
+$card-shadow: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.4), 0 0 0 1px rgba($gold-dark, 0.1);
+
+$input-background-color: $primary-light;
+$input-border-color: $primary;
+$input-color: $text;
+$input-shadow: none;
+
+$button-background-color: $primary-dark;
+$button-color: $gold;
+$button-border-color: $gold-dark;
+$button-hover-color: $text;
+$button-hover-border-color: $gold;
+
+$navbar-background-color: rgba($primary-dark, 0.95);
+$navbar-item-color: $text-light;
+$navbar-item-hover-color: $gold;
+$navbar-item-hover-background-color: rgba($primary, 0.3);
+
+$menu-item-active-background-color: $gold-dark;
+$menu-item-active-color: $text;
+
+$table-background-color: $primary;
+$table-color: $text;
+$table-head-cell-color: $gold;
+$table-row-hover-background-color: $primary-light;
+
+// Tipografía
+$family-sans-serif: 'Montserrat', sans-serif;
+$family-secondary: 'Georgia', serif;
