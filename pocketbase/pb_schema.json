@@ -1,0 +1,377 @@
+[
+    {
+      "id": "users12345",
+      "created": "2025-01-01 00:00:00.000Z",
+      "updated": "2025-01-01 00:00:00.000Z",
+      "name": "users",
+      "type": "auth",
+      "system": false,
+      "schema": [
+        {
+          "name": "email",
+          "type": "email",
+          "required": true,
+          "unique": true,
+          "options": {
+            "exceptDomains": null,
+            "onlyDomains": null
+          }
+        },
+        {
+          "name": "password",
+          "type": "password",
+          "required": true,
+          "unique": false,
+          "options": {
+            "min": 8
+          }
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        }
+     
+      ],
+      "indexes": [],
+      "listRule": null,
+      "viewRule": null,
+      "createRule": null,
+      "updateRule": null,
+      "deleteRule": null,
+      "options": {
+        "allowEmailAuth": true,
+        "allowUsernameAuth": false,
+        "requireEmail": true,
+        "exceptEmailDomains": [],
+        "onlyEmailDomains": [],
+        "minPasswordLength": 8
+      }
+    },
+    {
+      "id": "config12345",
+      "created": "2025-01-01 00:00:00.000Z",
+      "updated": "2025-01-01 00:00:00.000Z",
+      "name": "config",
+      "type": "base",
+      "system": false,
+      "schema": [
+        {
+          "name": "rotacion_escena_segundos",
+          "type": "number",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null
+          }
+        }
+      ],
+      "indexes": [],
+      "listRule": null,
+      "viewRule": null,
+      "createRule": null,
+      "updateRule": null,
+      "deleteRule": null,
+      "options": {}
+    },
+    {
+      "id": "tvassignxxx",
+      "created": "2025-01-01 00:00:00.000Z",
+      "updated": "2025-01-01 00:00:00.000Z",
+      "name": "tv_assignments",
+      "type": "base",
+      "system": false,
+      "schema": [
+        {
+          "name": "tv_id",
+          "type": "text",
+          "required": true,
+          "unique": true,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "name": "assigned_views",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "options": {
+            "collectionId": "viewsxxxxx",
+            "cascadeDelete": false,
+            "minSelect": null,
+            "maxSelect": 10,
+            "displayFields": []
+          }
+        }
+      ],
+      "indexes": [],
+      "listRule": null,
+      "viewRule": null,
+      "createRule": null,
+      "updateRule": null,
+      "deleteRule": null,
+      "options": {}
+    },
+    {
+      "id": "viewsxxxxx",
+      "created": "2025-01-01 00:00:00.000Z",
+      "updated": "2025-01-01 00:00:00.000Z",
+      "name": "views",
+      "type": "base",
+      "system": false,
+      "schema": [
+        {
+          "name": "view_name",
+          "type": "text",
+          "required": true,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        }
+      ],
+      "indexes": [],
+      "listRule": null,
+      "viewRule": null,
+      "createRule": null,
+      "updateRule": null,
+      "deleteRule": null,
+      "options": {}
+    },
+    {
+      "id": "platosxxxxx",
+      "created": "2025-01-01 00:00:00.000Z",
+      "updated": "2025-01-01 00:00:00.000Z",
+      "name": "platos",
+      "type": "base",
+      "system": false,
+      "schema": [
+        {
+          "name": "nombre",
+          "type": "text",
+          "required": true,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "name": "precio",
+          "type": "number",
+          "required": true,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null
+          }
+        },
+        {
+          "name": "precio_medio",
+          "type": "number",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null
+          }
+        },
+        {
+          "name": "categoria",
+          "type": "text",
+          "required": true,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "name": "imagen",
+          "type": "file",
+          "required": false,
+          "unique": false,
+          "options": {
+            "maxSelect": 1,
+            "maxSize": 5242880,
+            "mimeTypes": [],
+            "thumbs": []
+          }
+        },
+        {
+          "name": "descripcion",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        }
+      ],
+      "indexes": [],
+      "listRule": null,
+      "viewRule": null,
+      "createRule": null,
+      "updateRule": null,
+      "deleteRule": null,
+      "options": {}
+    },
+    {
+      "id": "menudiaxxx",
+      "created": "2025-01-01 00:00:00.000Z",
+      "updated": "2025-01-01 00:00:00.000Z",
+      "name": "menu_dia",
+      "type": "base",
+      "system": false,
+      "schema": [
+        {
+          "name": "nombre",
+          "type": "text",
+          "required": true,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "name": "precio",
+          "type": "number",
+          "required": true,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null
+          }
+        },
+        {
+          "name": "primeros",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "options": {
+            "collectionId": "platosxxxxx",
+            "cascadeDelete": false,
+            "minSelect": null,
+            "maxSelect": 10,
+            "displayFields": []
+          }
+        },
+        {
+          "name": "segundos",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "options": {
+            "collectionId": "platosxxxxx",
+            "cascadeDelete": false,
+            "minSelect": null,
+            "maxSelect": 10,
+            "displayFields": []
+          }
+        },
+        {
+          "name": "postres",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "options": {
+            "collectionId": "platosxxxxx",
+            "cascadeDelete": false,
+            "minSelect": null,
+            "maxSelect": 10,
+            "displayFields": []
+          }
+        }
+      ],
+      "indexes": [],
+      "listRule": null,
+      "viewRule": null,
+      "createRule": null,
+      "updateRule": null,
+      "deleteRule": null,
+      "options": {}
+    },
+    {
+      "id": "eventosxxxx",
+      "created": "2025-01-01 00:00:00.000Z",
+      "updated": "2025-01-01 00:00:00.000Z",
+      "name": "eventos",
+      "type": "base",
+      "system": false,
+      "schema": [
+        {
+          "name": "titulo",
+          "type": "text",
+          "required": true,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "name": "descripcion",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "min": null,
+            "max": null,
+            "pattern": ""
+          }
+        },
+        {
+          "name": "imagen",
+          "type": "file",
+          "required": false,
+          "unique": false,
+          "options": {
+            "maxSelect": 1,
+            "maxSize": 5242880,
+            "mimeTypes": [],
+            "thumbs": []
+          }
+        },
+        {
+          "name": "menus_de_evento",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "options": {
+            "collectionId": "menudiaxxx",
+            "cascadeDelete": false,
+            "minSelect": null,
+            "maxSelect": 10,
+            "displayFields": []
+          }
+        }
+      ],
+      "indexes": [],
+      "listRule": null,
+      "viewRule": null,
+      "createRule": null,
+      "updateRule": null,
+      "deleteRule": null,
+      "options": {}
+    }
+  ]
+  

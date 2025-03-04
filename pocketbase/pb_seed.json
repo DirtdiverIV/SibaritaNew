@@ -1,0 +1,153 @@
+{
+    "config": [
+      {
+        "id": "configA1",
+        "rotacion_escena_segundos": 300,
+        "created": "2025-01-02 12:00:00.000Z",
+        "updated": "2025-01-02 12:00:00.000Z"
+      }
+    ],
+    "views": [
+      {
+        "id": "view001",
+        "view_name": "vista_del_dia",
+        "created": "2025-01-02 12:00:00.000Z",
+        "updated": "2025-01-02 12:00:00.000Z"
+      },
+      {
+        "id": "view002",
+        "view_name": "menu_dia",
+        "created": "2025-01-02 12:00:00.000Z",
+        "updated": "2025-01-02 12:00:00.000Z"
+      },
+      {
+        "id": "view003",
+        "view_name": "eventos",
+        "created": "2025-01-02 12:00:00.000Z",
+        "updated": "2025-01-02 12:00:00.000Z"
+      },
+      {
+        "id": "view004",
+        "view_name": "carta",
+        "created": "2025-01-02 12:00:00.000Z",
+        "updated": "2025-01-02 12:00:00.000Z"
+      },
+      {
+        "id": "view005",
+        "view_name": "sugerencias_chef",
+        "created": "2025-01-02 12:00:00.000Z",
+        "updated": "2025-01-02 12:00:00.000Z"
+      }
+    ],
+    "tv_assignments": [
+      {
+        "id": "tv1assign",
+        "tv_id": "tv1",
+        "assigned_views": ["view001"],
+        "created": "2025-01-02 12:00:00.000Z",
+        "updated": "2025-01-02 12:00:00.000Z"
+      },
+      {
+        "id": "tv2assign",
+        "tv_id": "tv2",
+        "assigned_views": ["view002", "view003"],
+        "created": "2025-01-02 12:00:00.000Z",
+        "updated": "2025-01-02 12:00:00.000Z"
+      },
+      {
+        "id": "tv3assign",
+        "tv_id": "tv3",
+        "assigned_views": ["view004"],
+        "created": "2025-01-02 12:00:00.000Z",
+        "updated": "2025-01-02 12:00:00.000Z"
+      },
+      {
+        "id": "tv4assign",
+        "tv_id": "tv4",
+        "assigned_views": ["view005"],
+        "created": "2025-01-02 12:00:00.000Z",
+        "updated": "2025-01-02 12:00:00.000Z"
+      }
+    ],
+    "platos": [
+      {
+        "id": "p1",
+        "nombre": "Jamón Ibérico",
+        "precio": 18.5,
+        "precio_medio": 10,
+        "categoria": "raciones",
+        "imagen": null,
+        "descripcion": "Ración de jamón de bellota",
+        "created": "2025-01-02 12:00:00.000Z",
+        "updated": "2025-01-02 12:00:00.000Z"
+      },
+      {
+        "id": "p2",
+        "nombre": "Croquetas Caseras",
+        "precio": 8,
+        "precio_medio": 5,
+        "categoria": "raciones",
+        "imagen": null,
+        "descripcion": "Croquetas de jamón y pollo",
+        "created": "2025-01-02 12:00:00.000Z",
+        "updated": "2025-01-02 12:00:00.000Z"
+      },
+      {
+        "id": "p3",
+        "nombre": "Tortilla de Patatas",
+        "precio": 6.5,
+        "precio_medio": null,
+        "categoria": "tapas",
+        "imagen": null,
+        "descripcion": "Tortilla española",
+        "created": "2025-01-02 12:00:00.000Z",
+        "updated": "2025-01-02 12:00:00.000Z"
+      },
+      {
+        "id": "p4",
+        "nombre": "Paella de Marisco",
+        "precio": 14,
+        "precio_medio": null,
+        "categoria": "carta",
+        "imagen": null,
+        "descripcion": "Tradicional paella con mariscos frescos",
+        "created": "2025-01-02 12:00:00.000Z",
+        "updated": "2025-01-02 12:00:00.000Z"
+      },
+      {
+        "id": "p5",
+        "nombre": "Bacalao a la Vizcaína",
+        "precio": 16,
+        "precio_medio": null,
+        "categoria": "carta",
+        "imagen": null,
+        "descripcion": "Bacalao con salsa tradicional",
+        "created": "2025-01-02 12:00:00.000Z",
+        "updated": "2025-01-02 12:00:00.000Z"
+      }
+    ],
+    "menu_dia": [
+      {
+        "id": "menuD1",
+        "nombre": "Menú del Día Lunes",
+        "precio": 12.5,
+        "primeros": ["p3"], 
+        "segundos": ["p4"],
+        "postres": [],
+        "created": "2025-01-02 12:00:00.000Z",
+        "updated": "2025-01-02 12:00:00.000Z"
+      }
+    ],
+    "eventos": [
+      {
+        "id": "eventA",
+        "titulo": "Celebra tus eventos aquí",
+        "descripcion": "Menús especiales desde 20€",
+        "imagen": null,
+        "menus_de_evento": ["menuD1"],
+        "created": "2025-01-02 12:00:00.000Z",
+        "updated": "2025-01-02 12:00:00.000Z"
+      }
+    ]
+  }
+  
