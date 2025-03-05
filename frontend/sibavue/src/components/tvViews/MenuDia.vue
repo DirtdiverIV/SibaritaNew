@@ -3,7 +3,11 @@
     <div class="background-pattern"></div>
     <div class="tv-content">
       <div class="view-header">
-        <h1 class="view-title">Menú del Día</h1>
+        <div class="restaurant-name">O SIBARITA</div>
+        <div class="title-price-container">
+          <h1 class="view-title">MENÚ DEL DÍA</h1>
+          <div v-if="menuDia" class="menu-price">{{ menuDia.precio }}€</div>
+        </div>
       </div>
       
       <div v-if="!menuDia" class="empty-state">
@@ -14,16 +18,11 @@
       
       <div v-else class="view-body">
         <div class="menu-container">
-          <div class="menu-header-info">
-            <h2 class="menu-name">{{ menuDia.nombre }}</h2>
-            <div class="menu-price">{{ menuDia.precio }}€</div>
-          </div>
-          
-          <div class="menu-sections">
+          <div class="menu-columns">
             <!-- Primeros platos -->
             <div class="menu-section">
               <div class="section-header">
-                <h3 class="section-title">Primeros Platos</h3>
+                <h3 class="section-title">Primeros</h3>
                 <div class="section-divider"></div>
               </div>
               
@@ -41,7 +40,7 @@
             <!-- Segundos platos -->
             <div class="menu-section">
               <div class="section-header">
-                <h3 class="section-title">Segundos Platos</h3>
+                <h3 class="section-title">Segundos</h3>
                 <div class="section-divider"></div>
               </div>
               
@@ -149,116 +148,6 @@ export default {
 
 <style scoped>
 /* Estilos específicos del componente MenuDia */
-.menu-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background-color: rgba(30, 30, 30, 0.7);
-  border-radius: 10px;
-  border: 1px solid rgba(212, 175, 55, 0.3);
-  overflow: hidden;
-  max-width: 1000px;
-  margin: 0 auto;
-  width: 90%;
-}
-
-.menu-header-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem;
-  background: linear-gradient(to right, rgba(18, 18, 18, 0.9), rgba(30, 30, 30, 0.7), rgba(18, 18, 18, 0.9));
-  border-bottom: 2px solid rgba(212, 175, 55, 0.4);
-}
-
-.menu-name {
-  color: #d4af37;
-  font-size: 2.5vh;
-  font-weight: 600;
-  margin: 0;
-}
-
-.menu-price {
-  background-color: #d4af37;
-  color: #121212;
-  padding: 0.5vh 2vw;
-  border-radius: 30px;
-  font-weight: 700;
-  font-size: 2vh;
-}
-
-.menu-sections {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  padding: 1.5rem;
-  overflow-y: auto;
-  flex: 1;
-}
-
-.menu-section {
-  background-color: rgba(18, 18, 18, 0.5);
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid rgba(212, 175, 55, 0.2);
-}
-
-.section-divider {
-  height: 2px;
-  width: 80px;
-  margin: 0.5rem auto;
-  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.7), transparent);
-}
-
-.platos-lista {
-  padding: 1rem;
-}
-
-.plato-item {
-  padding: 0.8rem;
-  border-bottom: 1px dashed rgba(212, 175, 55, 0.2);
-  transition: all 0.3s ease;
-}
-
-.plato-item:last-child {
-  border-bottom: none;
-}
-
-.plato-item:hover {
-  background-color: rgba(18, 18, 18, 0.7);
-  transform: translateX(5px);
-}
-
-.plato-nombre {
-  font-weight: 600;
-  color: #f8f8f8;
-  margin-bottom: 0.3rem;
-  font-size: 1.1rem;
-}
-
-.plato-descripcion {
-  font-style: italic;
-  color: #b0b0b0;
-  font-size: 0.9rem;
-}
-
-.empty-section {
-  text-align: center;
-  padding: 1.5rem;
-  color: #a0a0a0;
-  font-style: italic;
-}
-
-.menu-footer {
-  text-align: center;
-  padding: 1rem;
-  background-color: rgba(18, 18, 18, 0.8);
-  border-top: 1px solid rgba(212, 175, 55, 0.3);
-  color: #d4af37;
-  font-style: italic;
-}
-
-/* Estilos comunes para todas las vistas TV - importados de global.css */
 .tv-view {
   position: absolute;
   top: 0;
@@ -282,6 +171,7 @@ export default {
   width: 100%;
   height: 100%;
   z-index: -1;
+  opacity: 0.15;
   
   /* Fondo base con gradiente */
   background: linear-gradient(135deg, 
@@ -305,22 +195,46 @@ export default {
   flex-direction: column;
 }
 
+/* Nuevo header con título a la derecha y nombre del restaurante a la izquierda */
 .view-header {
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 2vh;
   padding-bottom: 1vh;
   border-bottom: 2px solid #d4af37;
 }
 
+.restaurant-name {
+  color: #ffffff;
+  font-size: 2.8vh;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.title-price-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
 .view-title {
   color: #d4af37;
-  font-size: 3.5vh;
+  font-size: 3vh;
   font-weight: 700;
   text-transform: uppercase;
   margin: 0;
-  display: inline-block;
   letter-spacing: 3px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.menu-price {
+  background-color: #d4af37;
+  color: #121212;
+  padding: 0.5vh 1.5vw;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 2.2vh;
 }
 
 .view-body {
@@ -328,6 +242,40 @@ export default {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.menu-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: rgba(30, 30, 30, 0.6);
+  border-radius: 10px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  overflow: hidden;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 90%;
+  backdrop-filter: blur(3px);
+}
+
+/* Convertimos las secciones en columnas */
+.menu-columns {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.menu-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(18, 18, 18, 0.5);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 .section-header {
@@ -342,6 +290,62 @@ export default {
   text-align: center;
   font-weight: 600;
   margin: 0;
+}
+
+.section-divider {
+  height: 2px;
+  width: 80px;
+  margin: 0.5rem auto;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.7), transparent);
+}
+
+.platos-lista {
+  padding: 1rem;
+}
+
+.plato-item {
+  padding: 1rem;
+  border-bottom: 1px dashed rgba(212, 175, 55, 0.2);
+  transition: all 0.3s ease;
+}
+
+.plato-item:last-child {
+  border-bottom: none;
+}
+
+.plato-item:hover {
+  background-color: rgba(18, 18, 18, 0.7);
+  transform: translateX(5px);
+}
+
+/* Nombres de platos más grandes y destacados */
+.plato-nombre {
+  font-weight: 700;
+  color: #f8f8f8;
+  margin-bottom: 0.5rem;
+  font-size: 1.3rem;
+}
+
+.plato-descripcion {
+  font-style: italic;
+  color: #b0b0b0;
+  font-size: 0.9rem;
+}
+
+.empty-section {
+  text-align: center;
+  padding: 1.5rem;
+  color: #a0a0a0;
+  font-style: italic;
+}
+
+.menu-footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: rgba(18, 18, 18, 0.8);
+  border-top: 1px solid rgba(212, 175, 55, 0.3);
+  color: #d4af37;
+  font-style: italic;
 }
 
 .empty-state {
@@ -375,14 +379,14 @@ export default {
     width: 95%;
   }
   
-  .menu-header-info {
+  .menu-columns {
     flex-direction: column;
     gap: 1rem;
-    text-align: center;
   }
   
-  .menu-sections {
-    padding: 1rem;
+  .title-price-container {
+    flex-direction: column;
+    gap: 0.5rem;
   }
   
   .plato-item {

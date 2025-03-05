@@ -1,13 +1,5 @@
 <template>
   <div class="tv-fullscreen">
-    <!-- Cabecera minimalista -->
-    <div class="tv-header">
-      <div class="logo-container">
-        <div class="restaurant-logo">S</div>
-      </div>
-      <h1 class="restaurant-name">Sibarita Restaurant</h1>
-    </div>
-    
     <!-- Contenido principal: ocupa todo el espacio disponible -->
     <div class="tv-content">
       <transition name="fade" mode="out-in">
@@ -40,7 +32,6 @@
           :style="{ width: progressBarWidth + '%' }"
         ></div>
       </div>
-      <div class="view-name">{{ formatViewName(currentViewName) }}</div>
     </div>
   </div>
 </template>
@@ -300,25 +291,6 @@ export default {
     })
 
     onMounted(async () => {
-      // Comentado el código de pantalla completa ya que causa errores
-      // y solo debe activarse por interacción del usuario
-      /*
-      try {
-        const elem = document.documentElement
-        if (elem.requestFullscreen) {
-          elem.requestFullscreen()
-        } else if (elem.mozRequestFullScreen) { // Firefox
-          elem.mozRequestFullScreen()
-        } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, Opera
-          elem.webkitRequestFullscreen()
-        } else if (elem.msRequestFullscreen) { // IE/Edge
-          elem.msRequestFullscreen()
-        }
-      } catch (e) {
-        console.log('No se pudo activar pantalla completa:', e)
-      }
-      */
-
       // 1) Leer param :tvId de la ruta actual
       const tvId = route.params.tvId
       
@@ -388,60 +360,6 @@ export default {
   position: relative;
 }
 
-.tv-header {
-  background: linear-gradient(to right, #121212, #1e1e1e, #121212);
-  padding: 0.8rem 1.5rem;
-  text-align: center;
-  border-bottom: 3px solid #d4af37;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 70px;
-  z-index: 10;
-}
-
-.logo-container {
-  position: absolute;
-  left: 30px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.restaurant-logo {
-  width: 50px;
-  height: 50px;
-  background: linear-gradient(135deg, #d4af37, #b08b29);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2rem;
-  font-weight: 700;
-  color: #121212;
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-.restaurant-name {
-  color: #d4af37;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  font-size: 1.8rem;
-  margin: 0;
-}
-
-.header-decoration {
-  position: absolute;
-  bottom: -3px;
-  left: 50%;
-  width: 100px;
-  height: 3px;
-  background-color: #f8e8a7;
-  transform: translateX(-50%);
-}
-
 .tv-content {
   flex: 1;
   overflow: hidden;
@@ -454,8 +372,6 @@ export default {
   width: 100%;
   display: flex;
   flex-direction: column;
-  /* Bordes temporales para depuración */
-  border: 2px dashed rgba(255, 0, 0, 0.3);
 }
 
 .tv-loading {
@@ -509,61 +425,27 @@ export default {
   max-width: 80%;
 }
 
-.debug-info {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  background-color: rgba(0, 0, 0, 0.8);
-  border: 1px solid #555;
-  text-align: left;
-  border-radius: 6px;
-  font-family: monospace;
-  font-size: 0.9rem;
-  max-width: 80%;
-}
-
-.debug-info h3 {
-  color: #d4af37;
-  margin-bottom: 1rem;
-}
-
-.debug-info p {
-  margin: 0.5rem 0;
-  color: #e0e0e0;
-}
-
-/* View Indicator */
+/* View Indicator simplificado */
 .view-indicator {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(18, 18, 18, 0.9);
-  padding: 0.6rem 1rem;
-  border-top: 1px solid rgba(212, 175, 55, 0.5);
-  display: flex;
-  flex-direction: column;
+  background: transparent;
+  padding: 0;
   z-index: 10;
 }
 
 .progress-wrapper {
   height: 4px;
-  background-color: rgba(212, 175, 55, 0.2);
-  border-radius: 2px;
+  background-color: rgba(212, 175, 55, 0.1);
   overflow: hidden;
-  margin-bottom: 0.5rem;
 }
 
 .progress-bar {
   height: 100%;
   background: linear-gradient(to right, #b08b29, #d4af37);
   transition: width 0.1s linear;
-}
-
-.view-name {
-  font-size: 0.9rem;
-  color: #d4af37;
-  text-align: center;
-  font-weight: 500;
 }
 
 /* Transition effects */
@@ -579,11 +461,6 @@ export default {
 
 /* Responsive adjustments */
 @media screen and (max-width: 768px) {
-  .tv-header {
-    padding: 0.5rem;
-    height: 60px;
-  }
-  
   .restaurant-logo {
     width: 40px;
     height: 40px;

@@ -3,7 +3,8 @@
     <div class="background-pattern"></div>
     <div class="tv-content">
       <div class="view-header">
-        <h1 class="view-title">Nuestra Carta</h1>
+        <div class="restaurant-name">O SIBARITA</div>
+        <h1 class="view-title">NUESTRA CARTA</h1>
       </div>
       
       <div v-if="!carta.length" class="empty-state">
@@ -42,10 +43,7 @@
                     {{ plato.descripcion }}
                   </p>
                   <div class="plato-precio">
-                    <span class="price-tag">{{ plato.precio }}€</span>
-                    <span v-if="plato.precio_medio" class="precio-medio">
-                      Media: {{ plato.precio_medio }}€
-                    </span>
+                    <span class="price-tag">{{ plato.precio }}€<span v-if="plato.precio_medio"> (Media: {{ plato.precio_medio }}€)</span></span>
                   </div>
                 </div>
               </div>
@@ -117,6 +115,80 @@ export default {
 
 <style scoped>
 /* Estilos específicos del componente Carta */
+.tv-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(
+    ellipse at center, 
+    rgba(30, 30, 30, 0.7) 0%, 
+    rgba(20, 20, 20, 0.8) 70%, 
+    rgba(10, 10, 10, 0.85) 100%
+  );
+  font-family: 'Montserrat', sans-serif;
+}
+
+.background-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: 0.15;
+  
+  /* Fondo base con gradiente */
+  background: linear-gradient(135deg, 
+    rgba(25, 25, 25, 0.95) 0%, 
+    rgba(35, 35, 35, 0.97) 50%, 
+    rgba(25, 25, 25, 0.95) 100%);
+  
+  /* Patrón de azulejos Alhambra */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><defs><linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23d4af37" stop-opacity="0.07"/><stop offset="100%" stop-color="%23b08b29" stop-opacity="0.05"/></linearGradient></defs><rect width="40" height="40" fill="%23222" fill-opacity="0.7"/><path d="M0,20 L20,0 L40,20 L20,40 Z" fill="%23282828" fill-opacity="0.4"/><path d="M20,0 L40,20 L20,40 L0,20 Z" fill="%23333" fill-opacity="0.3"/><path d="M10,10 L20,20 L10,30 L0,20 Z" fill="url(%23goldGrad)"/><path d="M30,10 L40,20 L30,30 L20,20 Z" fill="url(%23goldGrad)"/></svg>');
+}
+
+.tv-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 1.5vh 1.5vw;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Nuevo header con título a la derecha y nombre del restaurante a la izquierda */
+.view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2vh;
+  padding-bottom: 1vh;
+  border-bottom: 2px solid #d4af37;
+}
+
+.restaurant-name {
+  color: #ffffff;
+  font-size: 2.8vh;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.view-title {
+  color: #d4af37;
+  font-size: 3vh;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 0;
+  letter-spacing: 3px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
 .categoria-sections {
   display: flex;
   flex-direction: column;
@@ -127,11 +199,26 @@ export default {
 }
 
 .categoria-section {
-  background-color: rgba(30, 30, 30, 0.7);
+  background-color: rgba(30, 30, 30, 0.6);
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid rgba(212, 175, 55, 0.2);
   padding-bottom: 1rem;
+  backdrop-filter: blur(3px);
+}
+
+.section-header {
+  padding: 1vh;
+  background-color: rgba(18, 18, 18, 0.6);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+.section-title {
+  color: #d4af37;
+  font-size: 2.5vh;
+  text-align: center;
+  font-weight: 600;
+  margin: 0;
 }
 
 .section-divider {
@@ -221,15 +308,22 @@ export default {
   padding-top: 0.8rem;
   border-top: 1px solid rgba(212, 175, 55, 0.2);
   font-weight: 600;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
-.precio-medio {
+/* Ajuste precio de la media para que aparezca junto al precio principal */
+.price-tag {
+  background-color: #d4af37;
+  color: #121212;
+  padding: 0.4vh 0.8vw;
+  border-radius: 0.6vh;
+  font-weight: 700;
+  display: inline-block;
+  font-size: 1.1rem;
+}
+
+.price-tag span {
   font-size: 0.9rem;
-  color: #a0a0a0;
-  font-style: italic;
+  font-weight: normal;
 }
 
 .empty-state {
@@ -247,6 +341,24 @@ export default {
   opacity: 0.6;
 }
 
+.empty-title {
+  color: #d4af37;
+  font-size: 3vh;
+  margin-bottom: 2vh;
+}
+
+.empty-subtitle {
+  font-size: 2vh;
+  color: #e0e0e0;
+}
+
+.view-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 @media (max-width: 768px) {
   .platos-grid {
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -259,112 +371,11 @@ export default {
   .plato-nombre {
     font-size: 1.1rem;
   }
-}
-
-/* Estilos comunes para todas las vistas TV - importados de global.css */
-.tv-view {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: radial-gradient(
-    ellipse at center, 
-    rgba(30, 30, 30, 0.7) 0%, 
-    rgba(20, 20, 20, 0.8) 70%, 
-    rgba(10, 10, 10, 0.85) 100%
-  );
-  font-family: 'Montserrat', sans-serif;
-}
-
-.background-pattern {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
   
-  /* Fondo base con gradiente */
-  background: linear-gradient(135deg, 
-    rgba(25, 25, 25, 0.95) 0%, 
-    rgba(35, 35, 35, 0.97) 50%, 
-    rgba(25, 25, 25, 0.95) 100%);
-  
-  /* Patrón de azulejos Alhambra */
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><defs><linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23d4af37" stop-opacity="0.07"/><stop offset="100%" stop-color="%23b08b29" stop-opacity="0.05"/></linearGradient></defs><rect width="40" height="40" fill="%23222" fill-opacity="0.7"/><path d="M0,20 L20,0 L40,20 L20,40 Z" fill="%23282828" fill-opacity="0.4"/><path d="M20,0 L40,20 L20,40 L0,20 Z" fill="%23333" fill-opacity="0.3"/><path d="M10,10 L20,20 L10,30 L0,20 Z" fill="url(%23goldGrad)"/><path d="M30,10 L40,20 L30,30 L20,20 Z" fill="url(%23goldGrad)"/></svg>');
-}
-
-.tv-content {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  padding: 1.5vh 1.5vw;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-}
-
-.view-header {
-  text-align: center;
-  margin-bottom: 2vh;
-  padding-bottom: 1vh;
-  border-bottom: 2px solid #d4af37;
-}
-
-.view-title {
-  color: #d4af37;
-  font-size: 3.5vh;
-  font-weight: 700;
-  text-transform: uppercase;
-  margin: 0;
-  display: inline-block;
-  letter-spacing: 3px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.view-body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.section-header {
-  padding: 1vh;
-  background-color: rgba(18, 18, 18, 0.6);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
-}
-
-.section-title {
-  color: #d4af37;
-  font-size: 2.5vh;
-  text-align: center;
-  font-weight: 600;
-  margin: 0;
-}
-
-.empty-title {
-  color: #d4af37;
-  font-size: 3vh;
-  margin-bottom: 2vh;
-}
-
-.empty-subtitle {
-  font-size: 2vh;
-  color: #e0e0e0;
-}
-
-.price-tag {
-  background-color: #d4af37;
-  color: #121212;
-  padding: 0.4vh 0.8vw;
-  border-radius: 0.6vh;
-  font-weight: 700;
-  display: inline-block;
-  font-size: 1.1rem;
+  .view-header {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
 }
 </style>
