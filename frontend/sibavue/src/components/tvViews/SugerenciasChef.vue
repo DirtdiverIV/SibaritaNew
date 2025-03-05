@@ -46,7 +46,7 @@
               
               <div class="sugerencia-footer">
                 <div class="sugerencia-precio">
-                  <span class="price-tag">{{ plato.precio || '0' }}€<span v-if="plato.precio_medio"> (Media: {{ plato.precio_medio }}€)</span></span>
+                  <span class="price-tag">{{ plato.precio || '0' }}€{{ plato.precio_medio ? ' / ' + plato.precio_medio + '€' : '' }}</span>
                 </div>
                 
                 <div v-if="index === 0" class="chef-recomendacion">
@@ -102,12 +102,8 @@ export default {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: radial-gradient(
-    ellipse at center, 
-    rgba(30, 30, 30, 0.7) 0%, 
-    rgba(20, 20, 20, 0.8) 70%, 
-    rgba(10, 10, 10, 0.85) 100%
-  );
+  /* Fondo base eliminado para evitar que tape el patrón */
+  background: none;
   font-family: 'Montserrat', sans-serif;
 }
 
@@ -118,7 +114,8 @@ export default {
   width: 100%;
   height: 100%;
   z-index: -1;
-  opacity: 0.15;
+  /* Aumentar la opacidad para que sea visible */
+  opacity: 0.3;
   
   /* Fondo base con gradiente */
   background: linear-gradient(135deg, 
@@ -126,8 +123,8 @@ export default {
     rgba(35, 35, 35, 0.97) 50%, 
     rgba(25, 25, 25, 0.95) 100%);
   
-  /* Patrón de azulejos Alhambra */
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><defs><linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23d4af37" stop-opacity="0.07"/><stop offset="100%" stop-color="%23b08b29" stop-opacity="0.05"/></linearGradient></defs><rect width="40" height="40" fill="%23222" fill-opacity="0.7"/><path d="M0,20 L20,0 L40,20 L20,40 Z" fill="%23282828" fill-opacity="0.4"/><path d="M20,0 L40,20 L20,40 L0,20 Z" fill="%23333" fill-opacity="0.3"/><path d="M10,10 L20,20 L10,30 L0,20 Z" fill="url(%23goldGrad)"/><path d="M30,10 L40,20 L30,30 L20,20 Z" fill="url(%23goldGrad)"/></svg>');
+  /* Patrón de azulejos con colores más visibles */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><defs><linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23d4af37" stop-opacity="0.2"/><stop offset="100%" stop-color="%23b08b29" stop-opacity="0.15"/></linearGradient></defs><rect width="40" height="40" fill="%23222" fill-opacity="0.7"/><path d="M0,20 L20,0 L40,20 L20,40 Z" fill="%23282828" fill-opacity="0.4"/><path d="M20,0 L40,20 L20,40 L0,20 Z" fill="%23333" fill-opacity="0.3"/><path d="M10,10 L20,20 L10,30 L0,20 Z" fill="url(%23goldGrad)"/><path d="M30,10 L40,20 L30,30 L20,20 Z" fill="url(%23goldGrad)"/></svg>');
 }
 
 .tv-content {
@@ -234,7 +231,8 @@ export default {
 }
 
 .sugerencia-item {
-  background: rgba(30, 30, 30, 0.6);
+  background-color: rgba(30, 30, 30, 0.5) !important; /* Más transparencia */
+  backdrop-filter: blur(2px); /* Efecto blur para mejorar legibilidad */
   border-radius: 10px;
   overflow: hidden;
   display: flex;

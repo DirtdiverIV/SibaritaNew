@@ -20,10 +20,6 @@
                :key="categoria" 
                class="categoria-section">
             
-            <div class="section-header">
-              <h2 class="section-title">{{ formatCategoria(categoria) }}</h2>
-              <div class="section-divider"></div>
-            </div>
             
             <div class="platos-grid">
               <div v-for="plato in platosPorCategoria" 
@@ -43,7 +39,7 @@
                     {{ plato.descripcion }}
                   </p>
                   <div class="plato-precio">
-                    <span class="price-tag">{{ plato.precio }}€<span v-if="plato.precio_medio"> (Media: {{ plato.precio_medio }}€)</span></span>
+                    <span class="price-tag">{{ plato.precio }}€{{ plato.precio_medio ? ' / ' + plato.precio_medio + '€' : '' }}</span>
                   </div>
                 </div>
               </div>
@@ -122,12 +118,8 @@ export default {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: radial-gradient(
-    ellipse at center, 
-    rgba(30, 30, 30, 0.7) 0%, 
-    rgba(20, 20, 20, 0.8) 70%, 
-    rgba(10, 10, 10, 0.85) 100%
-  );
+  /* Fondo base eliminado para evitar que tape el patrón */
+  background: none;
   font-family: 'Montserrat', sans-serif;
 }
 
@@ -138,7 +130,8 @@ export default {
   width: 100%;
   height: 100%;
   z-index: -1;
-  opacity: 0.15;
+  /* Aumentar la opacidad para que sea visible */
+  opacity: 0.3;
   
   /* Fondo base con gradiente */
   background: linear-gradient(135deg, 
@@ -146,8 +139,8 @@ export default {
     rgba(35, 35, 35, 0.97) 50%, 
     rgba(25, 25, 25, 0.95) 100%);
   
-  /* Patrón de azulejos Alhambra */
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><defs><linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23d4af37" stop-opacity="0.07"/><stop offset="100%" stop-color="%23b08b29" stop-opacity="0.05"/></linearGradient></defs><rect width="40" height="40" fill="%23222" fill-opacity="0.7"/><path d="M0,20 L20,0 L40,20 L20,40 Z" fill="%23282828" fill-opacity="0.4"/><path d="M20,0 L40,20 L20,40 L0,20 Z" fill="%23333" fill-opacity="0.3"/><path d="M10,10 L20,20 L10,30 L0,20 Z" fill="url(%23goldGrad)"/><path d="M30,10 L40,20 L30,30 L20,20 Z" fill="url(%23goldGrad)"/></svg>');
+  /* Patrón de azulejos con colores más visibles */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><defs><linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23d4af37" stop-opacity="0.2"/><stop offset="100%" stop-color="%23b08b29" stop-opacity="0.15"/></linearGradient></defs><rect width="40" height="40" fill="%23222" fill-opacity="0.7"/><path d="M0,20 L20,0 L40,20 L20,40 Z" fill="%23282828" fill-opacity="0.4"/><path d="M20,0 L40,20 L20,40 L0,20 Z" fill="%23333" fill-opacity="0.3"/><path d="M10,10 L20,20 L10,30 L0,20 Z" fill="url(%23goldGrad)"/><path d="M30,10 L40,20 L30,30 L20,20 Z" fill="url(%23goldGrad)"/></svg>');
 }
 
 .tv-content {
@@ -199,33 +192,14 @@ export default {
 }
 
 .categoria-section {
-  background-color: rgba(30, 30, 30, 0.6);
+  background-color: rgba(30, 30, 30, 0.5) !important; /* Más transparencia */
+  backdrop-filter: blur(2px); /* Efecto blur para mejorar legibilidad */
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid rgba(212, 175, 55, 0.2);
   padding-bottom: 1rem;
+  padding-top: 1rem;
   backdrop-filter: blur(3px);
-}
-
-.section-header {
-  padding: 1vh;
-  background-color: rgba(18, 18, 18, 0.6);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
-}
-
-.section-title {
-  color: #d4af37;
-  font-size: 2.5vh;
-  text-align: center;
-  font-weight: 600;
-  margin: 0;
-}
-
-.section-divider {
-  height: 2px;
-  width: 80px;
-  margin: 0.5rem auto;
-  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.7), transparent);
 }
 
 .platos-grid {
@@ -236,7 +210,8 @@ export default {
 }
 
 .plato-card {
-  background-color: rgba(18, 18, 18, 0.7);
+  background-color: rgba(30, 30, 30, 0.5) !important; /* Más transparencia */
+  backdrop-filter: blur(2px); /* Efecto blur para mejorar legibilidad */
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid rgba(212, 175, 55, 0.2);
@@ -319,11 +294,6 @@ export default {
   font-weight: 700;
   display: inline-block;
   font-size: 1.1rem;
-}
-
-.price-tag span {
-  font-size: 0.9rem;
-  font-weight: normal;
 }
 
 .empty-state {
