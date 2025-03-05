@@ -1,127 +1,130 @@
 <template>
-  <div class="vista-del-dia">
-    <div class="vista-header">
-      <h1 class="vista-title">Especialidades del Día</h1>
-    </div>
-    
-    <div class="vista-content">
-      <div class="vista-grid">
-        <!-- Sección Raciones -->
-        <div class="section-container">
-          <div class="section-header">
-            <h2 class="section-title">Raciones</h2>
-            <div class="section-divider"></div>
-          </div>
-          
-          <div class="section-content">
-            <div v-if="!raciones.length" class="empty-section">
-              <p>No hay raciones disponibles hoy</p>
-            </div>
-            <div v-else class="platos-list">
-              <div v-for="item in raciones" :key="item.id" class="plato-item">
-                <div class="plato-content">
-                  <div class="plato-name">{{ item.nombre }}</div>
-                  <div v-if="item.descripcion" class="plato-desc">{{ item.descripcion }}</div>
-                </div>
-                <div class="plato-price">
-                  <span class="price-tag">{{ item.precio }}€</span>
-                  <span v-if="item.precio_medio" class="price-media">Media: {{ item.precio_medio }}€</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Sección Tapas -->
-        <div class="section-container">
-          <div class="section-header">
-            <h2 class="section-title">Tapas</h2>
-            <div class="section-divider"></div>
-          </div>
-          
-          <div class="section-content">
-            <div v-if="!tapas.length" class="empty-section">
-              <p>No hay tapas disponibles hoy</p>
-            </div>
-            <div v-else class="platos-list">
-              <div v-for="item in tapas" :key="item.id" class="plato-item">
-                <div class="plato-content">
-                  <div class="plato-name">{{ item.nombre }}</div>
-                  <div v-if="item.descripcion" class="plato-desc">{{ item.descripcion }}</div>
-                </div>
-                <div class="plato-price">
-                  <span class="price-tag">{{ item.precio }}€</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Sección Menú del Día Completo - MODIFICADA -->
-        <div class="section-container menu-dia-container">
-          <div class="section-header">
-            <h2 class="section-title">Menú del Día</h2>
-            <div class="section-divider"></div>
-          </div>
-          
-          <div class="section-content">
-            <div v-if="!menuDia" class="empty-section">
-              <p>No hay menú del día disponible</p>
-            </div>
-            <div v-else class="menu-completo">
-              <div class="menu-header-info">
-                <h3 class="menu-name">{{ menuDia.nombre }}</h3>
-                <div class="menu-price">{{ menuDia.precio }}€</div>
-              </div>
-              
-              <!-- Primeros platos -->
-              <div class="menu-seccion">
-                <h4 class="menu-seccion-title">Primeros</h4>
-                <ul class="menu-platos-list">
-                  <li v-for="plato in primeros" :key="plato.id" class="menu-plato-item">
-                    {{ plato.nombre }}
-                    <span v-if="plato.descripcion" class="plato-desc-inline">({{ plato.descripcion }})</span>
-                  </li>
-                  <li v-if="primeros.length === 0" class="menu-empty-item">No hay primeros disponibles</li>
-                </ul>
-              </div>
-              
-              <!-- Segundos platos -->
-              <div class="menu-seccion">
-                <h4 class="menu-seccion-title">Segundos</h4>
-                <ul class="menu-platos-list">
-                  <li v-for="plato in segundos" :key="plato.id" class="menu-plato-item">
-                    {{ plato.nombre }}
-                    <span v-if="plato.descripcion" class="plato-desc-inline">({{ plato.descripcion }})</span>
-                  </li>
-                  <li v-if="segundos.length === 0" class="menu-empty-item">No hay segundos disponibles</li>
-                </ul>
-              </div>
-              
-              <!-- Postres -->
-              <div class="menu-seccion">
-                <h4 class="menu-seccion-title">Postres</h4>
-                <ul class="menu-platos-list">
-                  <li v-for="plato in postres" :key="plato.id" class="menu-plato-item">
-                    {{ plato.nombre }}
-                    <span v-if="plato.descripcion" class="plato-desc-inline">({{ plato.descripcion }})</span>
-                  </li>
-                  <li v-if="postres.length === 0" class="menu-empty-item">No hay postres disponibles</li>
-                </ul>
-              </div>
-              
-              <div class="menu-footer-info">
-                <p>Incluye pan, bebida y café</p>
-              </div>
-            </div>
-          </div>
-        </div>
+  <div class="tv-view">
+    <div class="background-pattern"></div>
+    <div class="tv-content">
+      <div class="view-header">
+        <h1 class="view-title">Especialidades del Día</h1>
       </div>
       
-      <div class="vista-footer">
-        <div class="horario-box">
-          <h3 class="horario-title">Horario</h3>
-          <p>Lunes a domingo: 12:00 - 16:00 | 20:00 - 23:30</p>
+      <div class="view-body">
+        <div class="vista-grid">
+          <!-- Sección Raciones -->
+          <div class="section-container">
+            <div class="section-header">
+              <h2 class="section-title">Raciones</h2>
+              <div class="section-divider"></div>
+            </div>
+            
+            <div class="section-content">
+              <div v-if="!raciones.length" class="empty-section">
+                <p>No hay raciones disponibles hoy</p>
+              </div>
+              <div v-else class="platos-list">
+                <div v-for="item in raciones" :key="item.id" class="plato-item">
+                  <div class="plato-content">
+                    <div class="plato-name">{{ item.nombre }}</div>
+                    <div v-if="item.descripcion" class="plato-desc">{{ item.descripcion }}</div>
+                  </div>
+                  <div class="plato-price">
+                    <span class="price-tag">{{ item.precio }}€</span>
+                    <span v-if="item.precio_medio" class="price-media">Media: {{ item.precio_medio }}€</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Sección Tapas -->
+          <div class="section-container">
+            <div class="section-header">
+              <h2 class="section-title">Tapas</h2>
+              <div class="section-divider"></div>
+            </div>
+            
+            <div class="section-content">
+              <div v-if="!tapas.length" class="empty-section">
+                <p>No hay tapas disponibles hoy</p>
+              </div>
+              <div v-else class="platos-list">
+                <div v-for="item in tapas" :key="item.id" class="plato-item">
+                  <div class="plato-content">
+                    <div class="plato-name">{{ item.nombre }}</div>
+                    <div v-if="item.descripcion" class="plato-desc">{{ item.descripcion }}</div>
+                  </div>
+                  <div class="plato-price">
+                    <span class="price-tag">{{ item.precio }}€</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Sección Menú del Día Completo -->
+          <div class="section-container menu-dia-container">
+            <div class="section-header">
+              <h2 class="section-title">Menú del Día</h2>
+              <div class="section-divider"></div>
+            </div>
+            
+            <div class="section-content">
+              <div v-if="!menuDia" class="empty-section">
+                <p>No hay menú del día disponible</p>
+              </div>
+              <div v-else class="menu-completo">
+                <div class="menu-header-info">
+                  <h3 class="menu-name">{{ menuDia.nombre }}</h3>
+                  <div class="menu-price">{{ menuDia.precio }}€</div>
+                </div>
+                
+                <!-- Primeros platos -->
+                <div class="menu-seccion">
+                  <h4 class="menu-seccion-title">Primeros</h4>
+                  <ul class="menu-platos-list">
+                    <li v-for="plato in primeros" :key="plato.id" class="menu-plato-item">
+                      {{ plato.nombre }}
+                      <span v-if="plato.descripcion" class="plato-desc-inline">({{ plato.descripcion }})</span>
+                    </li>
+                    <li v-if="primeros.length === 0" class="menu-empty-item">No hay primeros disponibles</li>
+                  </ul>
+                </div>
+                
+                <!-- Segundos platos -->
+                <div class="menu-seccion">
+                  <h4 class="menu-seccion-title">Segundos</h4>
+                  <ul class="menu-platos-list">
+                    <li v-for="plato in segundos" :key="plato.id" class="menu-plato-item">
+                      {{ plato.nombre }}
+                      <span v-if="plato.descripcion" class="plato-desc-inline">({{ plato.descripcion }})</span>
+                    </li>
+                    <li v-if="segundos.length === 0" class="menu-empty-item">No hay segundos disponibles</li>
+                  </ul>
+                </div>
+                
+                <!-- Postres -->
+                <div class="menu-seccion">
+                  <h4 class="menu-seccion-title">Postres</h4>
+                  <ul class="menu-platos-list">
+                    <li v-for="plato in postres" :key="plato.id" class="menu-plato-item">
+                      {{ plato.nombre }}
+                      <span v-if="plato.descripcion" class="plato-desc-inline">({{ plato.descripcion }})</span>
+                    </li>
+                    <li v-if="postres.length === 0" class="menu-empty-item">No hay postres disponibles</li>
+                  </ul>
+                </div>
+                
+                <div class="menu-footer-info">
+                  <p>Incluye pan, bebida y café</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="vista-footer">
+          <div class="horario-box">
+            <h3 class="horario-title">Horario</h3>
+            <p>Lunes a domingo: 12:00 - 16:00 | 20:00 - 23:30</p>
+          </div>
         </div>
       </div>
     </div>
@@ -208,56 +211,15 @@ export default {
 </script>
 
 <style scoped>
-.vista-del-dia {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  background-color: #242424;
-  font-family: 'Montserrat', sans-serif;
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23242424"/><path d="M0 0 L50 50 L0 100 Z" fill="%23282828" fill-opacity="0.2"/><path d="M100 0 L50 50 L100 100 Z" fill="%23282828" fill-opacity="0.2"/></svg>') repeat;
-}
-
-.vista-header {
-  text-align: center;
-  padding: 1.5rem 1rem;
-  background: linear-gradient(to bottom, rgba(18, 18, 18, 0.9), rgba(18, 18, 18, 0.6), transparent);
-}
-
-.vista-title {
-  color: #d4af37;
-  font-size: 2.5rem;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  font-weight: 700;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  position: relative;
-  display: inline-block;
-}
-
-.vista-title::after {
-  content: "";
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #d4af37, transparent);
-}
-
-.vista-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  overflow-y: auto;
-}
-
+/* Estilos específicos del componente VistaDelDia */
 .vista-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
   flex: 1;
+  overflow-y: auto;
+  padding: 0 1rem;
+  height: calc(100% - 60px);
 }
 
 .section-container {
@@ -267,26 +229,13 @@ export default {
   border-radius: 10px;
   border: 1px solid rgba(212, 175, 55, 0.2);
   overflow: hidden;
-}
-
-.section-header {
-  padding: 1rem;
-  background-color: rgba(18, 18, 18, 0.6);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
-}
-
-.section-title {
-  color: #d4af37;
-  font-size: 1.6rem;
-  text-align: center;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+  height: 100%;
 }
 
 .section-divider {
   height: 2px;
   width: 60px;
-  margin: 0 auto;
+  margin: 0.5rem auto;
   background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.7), transparent);
 }
 
@@ -294,7 +243,6 @@ export default {
   flex: 1;
   padding: 1rem;
   overflow-y: auto;
-  max-height: 400px;
 }
 
 .empty-section {
@@ -355,15 +303,6 @@ export default {
   min-width: 70px;
 }
 
-.price-tag {
-  background-color: #d4af37;
-  color: #121212;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  font-weight: 700;
-  display: inline-block;
-}
-
 .price-media {
   display: block;
   font-size: 0.8rem;
@@ -371,7 +310,7 @@ export default {
   margin-top: 0.3rem;
 }
 
-/* Nuevos estilos para la sección de menú del día */
+/* Estilos para el Menú del Día */
 .menu-dia-container {
   background: linear-gradient(135deg, rgba(30, 30, 30, 0.9), rgba(18, 18, 18, 0.95));
   border: 1px solid rgba(212, 175, 55, 0.4);
@@ -382,6 +321,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  height: 100%;
 }
 
 .menu-header-info {
@@ -459,11 +399,11 @@ export default {
   border-radius: 6px;
   color: #d4af37;
   font-style: italic;
-  margin-top: 0.5rem;
+  margin-top: auto;
 }
 
 .vista-footer {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   text-align: center;
 }
 
@@ -489,5 +429,101 @@ export default {
   .section-content {
     max-height: none;
   }
+}
+
+/* Estilos comunes para todas las vistas TV - importados de global.css */
+.tv-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(
+    ellipse at center, 
+    rgba(30, 30, 30, 0.7) 0%, 
+    rgba(20, 20, 20, 0.8) 70%, 
+    rgba(10, 10, 10, 0.85) 100%
+  );
+  font-family: 'Montserrat', sans-serif;
+}
+
+.background-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  
+  /* Fondo base con gradiente */
+  background: linear-gradient(135deg, 
+    rgba(25, 25, 25, 0.95) 0%, 
+    rgba(35, 35, 35, 0.97) 50%, 
+    rgba(25, 25, 25, 0.95) 100%);
+  
+  /* Patrón de azulejos Alhambra */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><defs><linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23d4af37" stop-opacity="0.07"/><stop offset="100%" stop-color="%23b08b29" stop-opacity="0.05"/></linearGradient></defs><rect width="40" height="40" fill="%23222" fill-opacity="0.7"/><path d="M0,20 L20,0 L40,20 L20,40 Z" fill="%23282828" fill-opacity="0.4"/><path d="M20,0 L40,20 L20,40 L0,20 Z" fill="%23333" fill-opacity="0.3"/><path d="M10,10 L20,20 L10,30 L0,20 Z" fill="url(%23goldGrad)"/><path d="M30,10 L40,20 L30,30 L20,20 Z" fill="url(%23goldGrad)"/></svg>');
+}
+
+.tv-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 1.5vh 1.5vw;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.view-header {
+  text-align: center;
+  margin-bottom: 2vh;
+  padding-bottom: 1vh;
+  border-bottom: 2px solid #d4af37;
+}
+
+.view-title {
+  color: #d4af37;
+  font-size: 3.5vh;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 0;
+  display: inline-block;
+  letter-spacing: 3px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.view-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.section-header {
+  padding: 1vh;
+  background-color: rgba(18, 18, 18, 0.6);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+.section-title {
+  color: #d4af37;
+  font-size: 2.5vh;
+  text-align: center;
+  font-weight: 600;
+  margin: 0;
+}
+
+.price-tag {
+  background-color: #d4af37;
+  color: #121212;
+  padding: 0.4vh 0.8vw;
+  border-radius: 0.6vh;
+  font-weight: 700;
+  display: inline-block;
+  font-size: 1.1rem;
 }
 </style>

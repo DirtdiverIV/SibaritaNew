@@ -1,50 +1,53 @@
 <template>
-  <div class="carta-view">
-    <div class="carta-header">
-      <h1 class="carta-title">Nuestra Carta</h1>
-    </div>
-    
-    <div v-if="!carta.length" class="carta-empty">
-      <div class="empty-container">
-        <div class="empty-icon">🍽️</div>
-        <h2>No hay platos en la carta</h2>
-        <p>Consulte nuestro menú del día o pregunte a nuestro personal</p>
+  <div class="tv-view">
+    <div class="background-pattern"></div>
+    <div class="tv-content">
+      <div class="view-header">
+        <h1 class="view-title">Nuestra Carta</h1>
       </div>
-    </div>
-    
-    <div v-else class="carta-content">
-      <!-- Agrupamos platos por categoría -->
-      <div v-for="(platosPorCategoria, categoria) in platosPorCategoriaMapped" 
-           :key="categoria" 
-           class="categoria-section">
-        
-        <div class="categoria-header">
-          <h2 class="categoria-title">{{ formatCategoria(categoria) }}</h2>
-          <div class="categoria-divider"></div>
-        </div>
-        
-        <div class="platos-grid">
-          <div v-for="plato in platosPorCategoria" 
-               :key="plato.id"
-               class="plato-card">
+      
+      <div v-if="!carta.length" class="empty-state">
+        <div class="empty-icon">🍽️</div>
+        <h2 class="empty-title">No hay platos en la carta</h2>
+        <p class="empty-subtitle">Consulte nuestro menú del día o pregunte a nuestro personal</p>
+      </div>
+      
+      <div v-else class="view-body">
+        <!-- Agrupamos platos por categoría -->
+        <div class="categoria-sections">
+          <div v-for="(platosPorCategoria, categoria) in platosPorCategoriaMapped" 
+               :key="categoria" 
+               class="categoria-section">
             
-            <div v-if="plato.imagen" class="plato-imagen">
-              <img :src="pb.files.getUrl(plato, 'imagen')" alt="plato" />
-            </div>
-            <div v-else class="plato-imagen plato-imagen-placeholder">
-              <span class="placeholder-icon">🍽️</span>
+            <div class="section-header">
+              <h2 class="section-title">{{ formatCategoria(categoria) }}</h2>
+              <div class="section-divider"></div>
             </div>
             
-            <div class="plato-content">
-              <h3 class="plato-nombre">{{ plato.nombre }}</h3>
-              <p v-if="plato.descripcion" class="plato-descripcion">
-                {{ plato.descripcion }}
-              </p>
-              <div class="plato-precio">
-                <span class="precio-principal">{{ plato.precio }}€</span>
-                <span v-if="plato.precio_medio" class="precio-medio">
-                  Media: {{ plato.precio_medio }}€
-                </span>
+            <div class="platos-grid">
+              <div v-for="plato in platosPorCategoria" 
+                   :key="plato.id"
+                   class="plato-card">
+                
+                <div v-if="plato.imagen" class="plato-imagen">
+                  <img :src="pb.files.getUrl(plato, 'imagen')" alt="plato" />
+                </div>
+                <div v-else class="plato-imagen plato-imagen-placeholder">
+                  <span class="placeholder-icon">🍽️</span>
+                </div>
+                
+                <div class="plato-content">
+                  <h3 class="plato-nombre">{{ plato.nombre }}</h3>
+                  <p v-if="plato.descripcion" class="plato-descripcion">
+                    {{ plato.descripcion }}
+                  </p>
+                  <div class="plato-precio">
+                    <span class="price-tag">{{ plato.precio }}€</span>
+                    <span v-if="plato.precio_medio" class="precio-medio">
+                      Media: {{ plato.precio_medio }}€
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -113,69 +116,28 @@ export default {
 </script>
 
 <style scoped>
-.carta-view {
-  height: 100%;
+/* Estilos específicos del componente Carta */
+.categoria-sections {
   display: flex;
   flex-direction: column;
-  background-color: #242424;
-  font-family: 'Montserrat', sans-serif;
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><rect width="20" height="20" fill="%23242424"/><circle cx="10" cy="10" r="1" fill="%23333333"/></svg>') repeat;
-}
-
-.carta-header {
-  text-align: center;
-  padding: 1.5rem 1rem;
-  background: linear-gradient(to bottom, rgba(18, 18, 18, 0.9), rgba(18, 18, 18, 0.6), transparent);
-}
-
-.carta-title {
-  color: #d4af37;
-  font-size: 2.5rem;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  font-weight: 700;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  position: relative;
-  display: inline-block;
-}
-
-.carta-title::after {
-  content: "";
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #d4af37, transparent);
-}
-
-.carta-content {
-  flex: 1;
+  gap: 2rem;
+  padding: 0 1rem;
   overflow-y: auto;
-  padding: 1rem;
+  height: 100%;
 }
 
 .categoria-section {
-  margin-bottom: 3rem;
+  background-color: rgba(30, 30, 30, 0.7);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  padding-bottom: 1rem;
 }
 
-.categoria-header {
-  margin-bottom: 1.5rem;
-}
-
-.categoria-title {
-  color: #d4af37;
-  font-size: 1.8rem;
-  font-weight: 600;
-  text-align: center;
-  margin-bottom: 0.5rem;
-}
-
-.categoria-divider {
+.section-divider {
   height: 2px;
-  width: 120px;
-  margin: 0 auto;
+  width: 80px;
+  margin: 0.5rem auto;
   background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.7), transparent);
 }
 
@@ -183,10 +145,11 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.5rem;
+  padding: 0 1rem;
 }
 
 .plato-card {
-  background-color: rgba(30, 30, 30, 0.7);
+  background-color: rgba(18, 18, 18, 0.7);
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid rgba(212, 175, 55, 0.2);
@@ -263,46 +226,25 @@ export default {
   align-items: center;
 }
 
-.precio-principal {
-  color: #ffffff;
-  font-size: 1.2rem;
-}
-
 .precio-medio {
   font-size: 0.9rem;
   color: #a0a0a0;
   font-style: italic;
 }
 
-.carta-empty {
+.empty-state {
   flex: 1;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.empty-container {
   text-align: center;
-  padding: 3rem;
-  background-color: rgba(30, 30, 30, 0.8);
-  border-radius: 10px;
-  border: 1px solid rgba(212, 175, 55, 0.3);
 }
 
 .empty-icon {
   font-size: 4rem;
   margin-bottom: 1.5rem;
   opacity: 0.6;
-}
-
-.empty-container h2 {
-  color: #d4af37;
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
-}
-
-.empty-container p {
-  color: #b0b0b0;
 }
 
 @media (max-width: 768px) {
@@ -317,5 +259,112 @@ export default {
   .plato-nombre {
     font-size: 1.1rem;
   }
+}
+
+/* Estilos comunes para todas las vistas TV - importados de global.css */
+.tv-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(
+    ellipse at center, 
+    rgba(30, 30, 30, 0.7) 0%, 
+    rgba(20, 20, 20, 0.8) 70%, 
+    rgba(10, 10, 10, 0.85) 100%
+  );
+  font-family: 'Montserrat', sans-serif;
+}
+
+.background-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  
+  /* Fondo base con gradiente */
+  background: linear-gradient(135deg, 
+    rgba(25, 25, 25, 0.95) 0%, 
+    rgba(35, 35, 35, 0.97) 50%, 
+    rgba(25, 25, 25, 0.95) 100%);
+  
+  /* Patrón de azulejos Alhambra */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><defs><linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23d4af37" stop-opacity="0.07"/><stop offset="100%" stop-color="%23b08b29" stop-opacity="0.05"/></linearGradient></defs><rect width="40" height="40" fill="%23222" fill-opacity="0.7"/><path d="M0,20 L20,0 L40,20 L20,40 Z" fill="%23282828" fill-opacity="0.4"/><path d="M20,0 L40,20 L20,40 L0,20 Z" fill="%23333" fill-opacity="0.3"/><path d="M10,10 L20,20 L10,30 L0,20 Z" fill="url(%23goldGrad)"/><path d="M30,10 L40,20 L30,30 L20,20 Z" fill="url(%23goldGrad)"/></svg>');
+}
+
+.tv-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 1.5vh 1.5vw;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.view-header {
+  text-align: center;
+  margin-bottom: 2vh;
+  padding-bottom: 1vh;
+  border-bottom: 2px solid #d4af37;
+}
+
+.view-title {
+  color: #d4af37;
+  font-size: 3.5vh;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 0;
+  display: inline-block;
+  letter-spacing: 3px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.view-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.section-header {
+  padding: 1vh;
+  background-color: rgba(18, 18, 18, 0.6);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+.section-title {
+  color: #d4af37;
+  font-size: 2.5vh;
+  text-align: center;
+  font-weight: 600;
+  margin: 0;
+}
+
+.empty-title {
+  color: #d4af37;
+  font-size: 3vh;
+  margin-bottom: 2vh;
+}
+
+.empty-subtitle {
+  font-size: 2vh;
+  color: #e0e0e0;
+}
+
+.price-tag {
+  background-color: #d4af37;
+  color: #121212;
+  padding: 0.4vh 0.8vw;
+  border-radius: 0.6vh;
+  font-weight: 700;
+  display: inline-block;
+  font-size: 1.1rem;
 }
 </style>

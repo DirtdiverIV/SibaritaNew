@@ -1,86 +1,84 @@
 <template>
-  <div class="menu-dia-view">
-    <div class="menu-header">
-      <h1 class="menu-title">Menú del Día</h1>
-      <div v-if="menuDia" class="menu-info">
-        <h2 class="menu-name">{{ menuDia.nombre }}</h2>
-        <div class="menu-price">{{ menuDia.precio }}€</div>
-      </div>
-    </div>
-    
-    <div v-if="menuDia" class="menu-content">
-      <div class="menu-sections">
-        <!-- Primeros -->
-        <div class="menu-section">
-          <div class="section-header">
-            <h3 class="section-title">Primeros</h3>
-            <div class="section-divider"></div>
-          </div>
-          
-          <div class="section-content">
-            <div v-if="primeros.length === 0" class="empty-message">
-              No hay primeros platos
-            </div>
-            <ul v-else class="platos-list">
-              <li v-for="plato in primeros" :key="plato.id" class="plato-item">
-                <div class="plato-name">{{ plato.nombre }}</div>
-                <div v-if="plato.descripcion" class="plato-desc">{{ plato.descripcion }}</div>
-              </li>
-            </ul>
-          </div>
-        </div>
-        
-        <!-- Segundos -->
-        <div class="menu-section">
-          <div class="section-header">
-            <h3 class="section-title">Segundos</h3>
-            <div class="section-divider"></div>
-          </div>
-          
-          <div class="section-content">
-            <div v-if="segundos.length === 0" class="empty-message">
-              No hay segundos platos
-            </div>
-            <ul v-else class="platos-list">
-              <li v-for="plato in segundos" :key="plato.id" class="plato-item">
-                <div class="plato-name">{{ plato.nombre }}</div>
-                <div v-if="plato.descripcion" class="plato-desc">{{ plato.descripcion }}</div>
-              </li>
-            </ul>
-          </div>
-        </div>
-        
-        <!-- Postres -->
-        <div class="menu-section">
-          <div class="section-header">
-            <h3 class="section-title">Postres</h3>
-            <div class="section-divider"></div>
-          </div>
-          
-          <div class="section-content">
-            <div v-if="postres.length === 0" class="empty-message">
-              No hay postres
-            </div>
-            <ul v-else class="platos-list">
-              <li v-for="plato in postres" :key="plato.id" class="plato-item">
-                <div class="plato-name">{{ plato.nombre }}</div>
-                <div v-if="plato.descripcion" class="plato-desc">{{ plato.descripcion }}</div>
-              </li>
-            </ul>
-          </div>
-        </div>
+  <div class="tv-view">
+    <div class="background-pattern"></div>
+    <div class="tv-content">
+      <div class="view-header">
+        <h1 class="view-title">Menú del Día</h1>
       </div>
       
-      <div class="menu-footer">
-        <div class="includes-text">El menú incluye pan, bebida y café</div>
-      </div>
-    </div>
-    
-    <div v-else class="menu-empty">
-      <div class="empty-container">
+      <div v-if="!menuDia" class="empty-state">
         <div class="empty-icon">🍽️</div>
-        <h2>No hay Menú del Día disponible</h2>
-        <p>Consulte nuestra carta o pregunte a nuestro personal</p>
+        <h2 class="empty-title">No hay menú del día disponible</h2>
+        <p class="empty-subtitle">Consulte nuestras sugerencias o la carta</p>
+      </div>
+      
+      <div v-else class="view-body">
+        <div class="menu-container">
+          <div class="menu-header-info">
+            <h2 class="menu-name">{{ menuDia.nombre }}</h2>
+            <div class="menu-price">{{ menuDia.precio }}€</div>
+          </div>
+          
+          <div class="menu-sections">
+            <!-- Primeros platos -->
+            <div class="menu-section">
+              <div class="section-header">
+                <h3 class="section-title">Primeros Platos</h3>
+                <div class="section-divider"></div>
+              </div>
+              
+              <div class="platos-lista">
+                <div v-if="primeros.length === 0" class="empty-section">
+                  <p>No hay primeros disponibles</p>
+                </div>
+                <div v-else v-for="plato in primeros" :key="plato.id" class="plato-item">
+                  <div class="plato-nombre">{{ plato.nombre }}</div>
+                  <div v-if="plato.descripcion" class="plato-descripcion">{{ plato.descripcion }}</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Segundos platos -->
+            <div class="menu-section">
+              <div class="section-header">
+                <h3 class="section-title">Segundos Platos</h3>
+                <div class="section-divider"></div>
+              </div>
+              
+              <div class="platos-lista">
+                <div v-if="segundos.length === 0" class="empty-section">
+                  <p>No hay segundos disponibles</p>
+                </div>
+                <div v-else v-for="plato in segundos" :key="plato.id" class="plato-item">
+                  <div class="plato-nombre">{{ plato.nombre }}</div>
+                  <div v-if="plato.descripcion" class="plato-descripcion">{{ plato.descripcion }}</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Postres -->
+            <div class="menu-section">
+              <div class="section-header">
+                <h3 class="section-title">Postres</h3>
+                <div class="section-divider"></div>
+              </div>
+              
+              <div class="platos-lista">
+                <div v-if="postres.length === 0" class="empty-section">
+                  <p>No hay postres disponibles</p>
+                </div>
+                <div v-else v-for="plato in postres" :key="plato.id" class="plato-item">
+                  <div class="plato-nombre">{{ plato.nombre }}</div>
+                  <div v-if="plato.descripcion" class="plato-descripcion">{{ plato.descripcion }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="menu-footer">
+            <p>Incluye pan, bebida y café</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -98,31 +96,45 @@ export default {
     const segundos = ref([])
     const postres = ref([])
 
-    const loadMenuDia = async () => {
+    const loadData = async () => {
       try {
-        // 1) Obtener el menu_dia principal
-        const lista = await pb.collection('menu_dia').getFullList({ sort: '-created', limit: 1 })
-        if (!lista.length) return
-        menuDia.value = lista[0]
-
-        // 2) Cargar subcolecciones
-        const id = menuDia.value.id
-        primeros.value = await pb.collection('menu_dia_primeros').getFullList({
-          filter: `field = "${id}"`
+        // Obtener menú del día
+        const lista = await pb.collection('menu_dia').getFullList({
+          sort: '-created',
+          limit: 1
         })
-        segundos.value = await pb.collection('menu_dia_segundos').getFullList({
-          filter: `field = "${id}"`
-        })
-        postres.value = await pb.collection('menu_dia_postres').getFullList({
-          filter: `field = "${id}"`
-        })
+        
+        if (lista.length) {
+          menuDia.value = lista[0]
+          
+          // Cargar los platos del menú del día
+          const menuId = menuDia.value.id
+          
+          // Cargar primeros
+          primeros.value = await pb.collection('menu_dia_primeros').getFullList({
+            filter: `field = "${menuId}"`,
+            sort: 'created'
+          })
+          
+          // Cargar segundos
+          segundos.value = await pb.collection('menu_dia_segundos').getFullList({
+            filter: `field = "${menuId}"`,
+            sort: 'created'
+          })
+          
+          // Cargar postres
+          postres.value = await pb.collection('menu_dia_postres').getFullList({
+            filter: `field = "${menuId}"`,
+            sort: 'created'
+          })
+        }
       } catch (err) {
         console.error('Error MenuDia:', err)
       }
     }
 
     onMounted(() => {
-      loadMenuDia()
+      loadData()
     })
 
     return {
@@ -136,179 +148,209 @@ export default {
 </script>
 
 <style scoped>
-.menu-dia-view {
-  height: 100%;
+/* Estilos específicos del componente MenuDia */
+.menu-container {
   display: flex;
   flex-direction: column;
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23242424"/><path d="M0 50 L50 0 L100 50 L50 100 Z" fill="%23282828"/></svg>') repeat;
-  font-family: 'Montserrat', sans-serif;
-}
-
-.menu-header {
-  text-align: center;
-  padding: 2rem 1rem 1.5rem;
-  background: linear-gradient(to bottom, rgba(18, 18, 18, 0.9), rgba(18, 18, 18, 0.6), transparent);
-}
-
-.menu-title {
-  color: #d4af37;
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  font-weight: 700;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.menu-info {
-  display: inline-block;
-  border: 2px solid rgba(212, 175, 55, 0.4);
-  border-radius: 8px;
-  padding: 0.8rem 3rem;
+  height: 100%;
   background-color: rgba(30, 30, 30, 0.7);
+  border-radius: 10px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  overflow: hidden;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 90%;
+}
+
+.menu-header-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background: linear-gradient(to right, rgba(18, 18, 18, 0.9), rgba(30, 30, 30, 0.7), rgba(18, 18, 18, 0.9));
+  border-bottom: 2px solid rgba(212, 175, 55, 0.4);
 }
 
 .menu-name {
-  color: #f8f9fa;
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
+  color: #d4af37;
+  font-size: 2.5vh;
   font-weight: 600;
+  margin: 0;
 }
 
 .menu-price {
-  display: inline-block;
   background-color: #d4af37;
   color: #121212;
-  padding: 0.3rem 1.5rem;
-  border-radius: 20px;
+  padding: 0.5vh 2vw;
+  border-radius: 30px;
   font-weight: 700;
-  font-size: 1.2rem;
-}
-
-.menu-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 1.5rem;
-  overflow-y: auto;
+  font-size: 2vh;
 }
 
 .menu-sections {
   display: flex;
-  justify-content: space-around;
-  gap: 2rem;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  overflow-y: auto;
   flex: 1;
-}
-
-@media (max-width: 768px) {
-  .menu-sections {
-    flex-direction: column;
-  }
 }
 
 .menu-section {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.section-header {
-  margin-bottom: 1.5rem;
-  position: relative;
-}
-
-.section-title {
-  color: #d4af37;
-  font-size: 1.8rem;
-  font-weight: 600;
-  margin-bottom: 0.8rem;
-  text-align: center;
+  background-color: rgba(18, 18, 18, 0.5);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 .section-divider {
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.6), transparent);
-  margin: 0 auto;
-  width: 70%;
+  width: 80px;
+  margin: 0.5rem auto;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.7), transparent);
 }
 
-.section-content {
-  flex: 1;
-  padding: 0 0.5rem;
-}
-
-.platos-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.platos-lista {
+  padding: 1rem;
 }
 
 .plato-item {
-  background-color: rgba(30, 30, 30, 0.7);
-  border-radius: 6px;
-  padding: 1rem;
-  margin-bottom: 0.8rem;
-  border-left: 3px solid #d4af37;
-  transition: transform 0.3s ease;
+  padding: 0.8rem;
+  border-bottom: 1px dashed rgba(212, 175, 55, 0.2);
+  transition: all 0.3s ease;
+}
+
+.plato-item:last-child {
+  border-bottom: none;
 }
 
 .plato-item:hover {
+  background-color: rgba(18, 18, 18, 0.7);
   transform: translateX(5px);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
 }
 
-.plato-name {
-  color: #f8f9fa;
+.plato-nombre {
   font-weight: 600;
+  color: #f8f8f8;
+  margin-bottom: 0.3rem;
   font-size: 1.1rem;
-  margin-bottom: 0.4rem;
 }
 
-.plato-desc {
+.plato-descripcion {
+  font-style: italic;
   color: #b0b0b0;
   font-size: 0.9rem;
-  font-style: italic;
 }
 
-.empty-message {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 120px;
-  background-color: rgba(30, 30, 30, 0.4);
-  border-radius: 6px;
+.empty-section {
+  text-align: center;
+  padding: 1.5rem;
   color: #a0a0a0;
   font-style: italic;
-  border: 1px dashed rgba(160, 160, 160, 0.3);
 }
 
 .menu-footer {
   text-align: center;
-  margin-top: 2rem;
-  background-color: rgba(18, 18, 18, 0.6);
   padding: 1rem;
-  border-radius: 8px;
-}
-
-.includes-text {
+  background-color: rgba(18, 18, 18, 0.8);
+  border-top: 1px solid rgba(212, 175, 55, 0.3);
   color: #d4af37;
   font-style: italic;
-  font-size: 1.1rem;
 }
 
-.menu-empty {
+/* Estilos comunes para todas las vistas TV - importados de global.css */
+.tv-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(
+    ellipse at center, 
+    rgba(30, 30, 30, 0.7) 0%, 
+    rgba(20, 20, 20, 0.8) 70%, 
+    rgba(10, 10, 10, 0.85) 100%
+  );
+  font-family: 'Montserrat', sans-serif;
+}
+
+.background-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  
+  /* Fondo base con gradiente */
+  background: linear-gradient(135deg, 
+    rgba(25, 25, 25, 0.95) 0%, 
+    rgba(35, 35, 35, 0.97) 50%, 
+    rgba(25, 25, 25, 0.95) 100%);
+  
+  /* Patrón de azulejos Alhambra */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><defs><linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23d4af37" stop-opacity="0.07"/><stop offset="100%" stop-color="%23b08b29" stop-opacity="0.05"/></linearGradient></defs><rect width="40" height="40" fill="%23222" fill-opacity="0.7"/><path d="M0,20 L20,0 L40,20 L20,40 Z" fill="%23282828" fill-opacity="0.4"/><path d="M20,0 L40,20 L20,40 L0,20 Z" fill="%23333" fill-opacity="0.3"/><path d="M10,10 L20,20 L10,30 L0,20 Z" fill="url(%23goldGrad)"/><path d="M30,10 L40,20 L30,30 L20,20 Z" fill="url(%23goldGrad)"/></svg>');
+}
+
+.tv-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 1.5vh 1.5vw;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.view-header {
+  text-align: center;
+  margin-bottom: 2vh;
+  padding-bottom: 1vh;
+  border-bottom: 2px solid #d4af37;
+}
+
+.view-title {
+  color: #d4af37;
+  font-size: 3.5vh;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 0;
+  display: inline-block;
+  letter-spacing: 3px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.view-body {
   flex: 1;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-.empty-container {
+.section-header {
+  padding: 1vh;
+  background-color: rgba(18, 18, 18, 0.6);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+.section-title {
+  color: #d4af37;
+  font-size: 2.5vh;
   text-align: center;
-  padding: 3rem;
-  background-color: rgba(30, 30, 30, 0.8);
-  border-radius: 10px;
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  font-weight: 600;
+  margin: 0;
+}
+
+.empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .empty-icon {
@@ -317,13 +359,38 @@ export default {
   opacity: 0.6;
 }
 
-.empty-container h2 {
+.empty-title {
   color: #d4af37;
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
+  font-size: 3vh;
+  margin-bottom: 2vh;
 }
 
-.empty-container p {
-  color: #b0b0b0;
+.empty-subtitle {
+  font-size: 2vh;
+  color: #e0e0e0;
+}
+
+@media (max-width: 768px) {
+  .menu-container {
+    width: 95%;
+  }
+  
+  .menu-header-info {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .menu-sections {
+    padding: 1rem;
+  }
+  
+  .plato-item {
+    padding: 0.6rem;
+  }
+  
+  .plato-nombre {
+    font-size: 1rem;
+  }
 }
 </style>

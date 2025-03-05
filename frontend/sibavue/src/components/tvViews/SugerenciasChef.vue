@@ -1,58 +1,57 @@
 <template>
-  <div class="sugerencias-view">
-    <div class="sugerencias-header">
-      <h1 class="sugerencias-title">Sugerencias del Chef</h1>
-    </div>
-    
-    <div v-if="!sugerencias.length" class="sugerencias-empty">
-      <div class="empty-container">
-        <div class="empty-icon">👨‍🍳</div>
-        <h2>No hay sugerencias disponibles</h2>
-        <p>Consulte nuestra carta o pregunte a nuestro personal</p>
-      </div>
-    </div>
-    
-    <div v-else class="sugerencias-content">
-      <!-- Mensaje del chef -->
-      <div class="chef-message">
-        <div class="chef-avatar">
-          <div class="chef-icon">👨‍🍳</div>
-        </div>
-        <div class="message-content">
-          <p class="quote">"Estas son mis recomendaciones especiales para hoy. He seleccionado ingredientes frescos de temporada para crear platos únicos que espero disfruten."</p>
-          <p class="chef-name">— Javier Romero, Chef Ejecutivo</p>
-        </div>
+  <div class="tv-view">
+    <div class="background-pattern"></div>
+    <div class="tv-content">
+      <div class="view-header">
+        <h1 class="view-title">Sugerencias del Chef</h1>
       </div>
       
-      <!-- Sugerencias principales -->
-      <div class="sugerencias-showcase">
-        <div 
-          v-for="(plato, index) in sugerencias" 
-          :key="plato.id"
-          class="sugerencia-item"
-          :class="{'sugerencia-principal': index === 0}"
-        >
-          <div class="sugerencia-imagen-container">
-            <div v-if="plato.imagen" class="sugerencia-imagen">
-              <img :src="pb.files.getUrl(plato, 'imagen')" alt="Sugerencia" />
-            </div>
-            <div v-else class="sugerencia-imagen sugerencia-imagen-placeholder">
-              <span class="placeholder-icon">🍽️</span>
-            </div>
+      <div v-if="!sugerencias.length" class="empty-state">
+        <div class="empty-icon">👨‍🍳</div>
+        <h2 class="empty-title">No hay sugerencias disponibles</h2>
+        <p class="empty-subtitle">Consulte nuestra carta o pregunte a nuestro personal</p>
+      </div>
+      
+      <div v-else class="view-body">
+        <div class="chef-message">
+          <div class="chef-avatar">
+            <div class="chef-icon">👨‍🍳</div>
           </div>
-          
-          <div class="sugerencia-detalles">
-            <h2 class="sugerencia-nombre">{{ plato.nombre }}</h2>
-            <p class="sugerencia-descripcion">{{ plato.descripcion || 'Una exquisita creación de nuestro chef con ingredientes seleccionados.' }}</p>
-            
-            <div class="sugerencia-footer">
-              <div class="sugerencia-precio">
-                <span class="precio-valor">{{ plato.precio || '0' }}€</span>
-                <span v-if="plato.precio_medio" class="precio-medio">(Media: {{ plato.precio_medio }}€)</span>
+          <div class="message-content">
+            <p class="quote">"Estas son mis recomendaciones especiales para hoy. He seleccionado ingredientes frescos de temporada para crear platos únicos que espero disfruten."</p>
+            <p class="chef-name">— Javier Romero, Chef Ejecutivo</p>
+          </div>
+        </div>
+        
+        <div class="sugerencias-showcase">
+          <div 
+            v-for="(plato, index) in sugerencias" 
+            :key="plato.id"
+            class="sugerencia-item"
+            :class="{'sugerencia-principal': index === 0}"
+          >
+            <div class="sugerencia-imagen-container">
+              <div v-if="plato.imagen" class="sugerencia-imagen">
+                <img :src="pb.files.getUrl(plato, 'imagen')" alt="Sugerencia" />
               </div>
+              <div v-else class="sugerencia-imagen sugerencia-imagen-placeholder">
+                <span class="placeholder-icon">🍽️</span>
+              </div>
+            </div>
+            
+            <div class="sugerencia-detalles">
+              <h2 class="sugerencia-nombre">{{ plato.nombre }}</h2>
+              <p class="sugerencia-descripcion">{{ plato.descripcion || 'Una exquisita creación de nuestro chef con ingredientes seleccionados.' }}</p>
               
-              <div v-if="index === 0" class="chef-recomendacion">
-                <span>Recomendación del chef</span>
+              <div class="sugerencia-footer">
+                <div class="sugerencia-precio">
+                  <span class="price-tag">{{ plato.precio || '0' }}€</span>
+                  <span v-if="plato.precio_medio" class="precio-medio">(Media: {{ plato.precio_medio }}€)</span>
+                </div>
+                
+                <div v-if="index === 0" class="chef-recomendacion">
+                  <span>Recomendación del chef</span>
+                </div>
               </div>
             </div>
           </div>
@@ -95,51 +94,7 @@ export default {
 </script>
 
 <style scoped>
-.sugerencias-view {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  background-color: #242424;
-  font-family: 'Montserrat', sans-serif;
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" fill="%23242424"/><path d="M0 20 L20 0 L40 20 L20 40 Z" fill="%23282828" fill-opacity="0.2"/></svg>') repeat;
-}
-
-.sugerencias-header {
-  text-align: center;
-  padding: 1.5rem 1rem;
-  background: linear-gradient(to bottom, rgba(18, 18, 18, 0.9), rgba(18, 18, 18, 0.6), transparent);
-}
-
-.sugerencias-title {
-  color: #d4af37;
-  font-size: 2.5rem;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  font-weight: 700;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  position: relative;
-  display: inline-block;
-}
-
-.sugerencias-title::after {
-  content: "";
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #d4af37, transparent);
-}
-
-.sugerencias-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  overflow-y: auto;
-}
-
+/* Estilos específicos del componente SugerenciasChef */
 .chef-message {
   background: rgba(18, 18, 18, 0.7);
   border-radius: 10px;
@@ -148,6 +103,9 @@ export default {
   display: flex;
   align-items: center;
   border-left: 4px solid #d4af37;
+  max-width: 90%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .chef-avatar {
@@ -189,6 +147,8 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  overflow-y: auto;
+  padding: 0 1rem 1rem;
   flex: 1;
 }
 
@@ -285,15 +245,6 @@ export default {
   flex-direction: column;
 }
 
-.precio-valor {
-  background: #d4af37;
-  color: #121212;
-  font-weight: 600;
-  padding: 0.3rem 0.8rem;
-  border-radius: 4px;
-  font-size: 1.2rem;
-}
-
 .precio-medio {
   margin-top: 0.3rem;
   color: #a0a0a0;
@@ -308,37 +259,6 @@ export default {
   border-radius: 4px;
   font-weight: 500;
   font-style: italic;
-}
-
-.sugerencias-empty {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.empty-container {
-  text-align: center;
-  padding: 3rem;
-  background-color: rgba(30, 30, 30, 0.8);
-  border-radius: 10px;
-  border: 1px solid rgba(212, 175, 55, 0.3);
-}
-
-.empty-icon {
-  font-size: 4rem;
-  margin-bottom: 1.5rem;
-  opacity: 0.6;
-}
-
-.empty-container h2 {
-  color: #d4af37;
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
-}
-
-.empty-container p {
-  color: #b0b0b0;
 }
 
 @media (max-width: 768px) {
@@ -378,5 +298,113 @@ export default {
   .chef-recomendacion {
     align-self: flex-end;
   }
+}
+
+/* Estilos comunes para todas las vistas TV - importados de global.css */
+.tv-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(
+    ellipse at center, 
+    rgba(30, 30, 30, 0.7) 0%, 
+    rgba(20, 20, 20, 0.8) 70%, 
+    rgba(10, 10, 10, 0.85) 100%
+  );
+  font-family: 'Montserrat', sans-serif;
+}
+
+.background-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  
+  /* Fondo base con gradiente */
+  background: linear-gradient(135deg, 
+    rgba(25, 25, 25, 0.95) 0%, 
+    rgba(35, 35, 35, 0.97) 50%, 
+    rgba(25, 25, 25, 0.95) 100%);
+  
+  /* Patrón de azulejos Alhambra */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><defs><linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23d4af37" stop-opacity="0.07"/><stop offset="100%" stop-color="%23b08b29" stop-opacity="0.05"/></linearGradient></defs><rect width="40" height="40" fill="%23222" fill-opacity="0.7"/><path d="M0,20 L20,0 L40,20 L20,40 Z" fill="%23282828" fill-opacity="0.4"/><path d="M20,0 L40,20 L20,40 L0,20 Z" fill="%23333" fill-opacity="0.3"/><path d="M10,10 L20,20 L10,30 L0,20 Z" fill="url(%23goldGrad)"/><path d="M30,10 L40,20 L30,30 L20,20 Z" fill="url(%23goldGrad)"/></svg>');
+}
+
+.tv-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 1.5vh 1.5vw;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.view-header {
+  text-align: center;
+  margin-bottom: 2vh;
+  padding-bottom: 1vh;
+  border-bottom: 2px solid #d4af37;
+}
+
+.view-title {
+  color: #d4af37;
+  font-size: 3.5vh;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 0;
+  display: inline-block;
+  letter-spacing: 3px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.view-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.6;
+}
+
+.empty-title {
+  color: #d4af37;
+  font-size: 3vh;
+  margin-bottom: 2vh;
+}
+
+.empty-subtitle {
+  font-size: 2vh;
+  color: #e0e0e0;
+}
+
+.price-tag {
+  background-color: #d4af37;
+  color: #121212;
+  padding: 0.4vh 0.8vw;
+  border-radius: 0.6vh;
+  font-weight: 700;
+  display: inline-block;
+  font-size: 1.1rem;
 }
 </style>

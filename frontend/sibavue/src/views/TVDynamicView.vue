@@ -23,6 +23,9 @@
               <div class="spinner-inner"></div>
             </div>
             <h2>Cargando contenido...</h2>
+            <p>Vista actual: {{ currentViewName || 'ninguna' }}</p>
+            <p>Componente: {{ currentViewComponent ? (currentViewComponent.name || 'Sin nombre') : 'No disponible' }}</p>
+            <p>Total de vistas: {{ assignedViews.length }}</p>
             <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
           </div>
         </div>
@@ -43,7 +46,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import pb from '@/services/pocketbase.js'
 
@@ -73,6 +76,10 @@ export default {
       sugerencias_chef: SugerenciasChef,
       menu_dia: MenuDia
     }
+    
+    // Añadir console.log para verificar los componentes
+    console.log('Componentes disponibles:', Object.keys(viewMap));
+    console.log('MenuDia component:', MenuDia);
 
     // Format view name for display
     const formatViewName = (viewName) => {
@@ -94,8 +101,16 @@ export default {
 
     // Componente actual a mostrar
     const currentViewComponent = computed(() => {
-      if (!currentViewName.value) return null
-      return viewMap[currentViewName.value] || null
+      console.log('Calculando componente para:', currentViewName.value);
+      if (!currentViewName.value) return null;
+      
+      // Añade este console.log para depurar
+      console.log('¿Existe el componente?', viewMap[currentViewName.value] ? 'Sí' : 'No');
+      
+      return viewMap[currentViewName.value] || null;
+      
+      // Descomentar para forzar MenuDia durante depuración
+      // return MenuDia;
     })
 
     // Ancho de la barra de progreso
@@ -235,6 +250,18 @@ export default {
       }
     }
 
+    // Función para forzar vista inicial
+    const forceInitialView = () => {
+      if (assignedViews.value.length > 0) {
+        console.log('Forzando vista inicial:', assignedViews.value[0]);
+        currentIndex.value = 0;
+        // Forzar actualización del componente
+        nextTick(() => {
+          console.log('Componente actual después de forzar:', currentViewComponent.value);
+        });
+      }
+    }
+
     // Iniciar rotación
     const startRotation = () => {
       // Limpiar intervalo existente si hay
@@ -273,7 +300,9 @@ export default {
     })
 
     onMounted(async () => {
-      // Entrar en modo pantalla completa si es posible
+      // Comentado el código de pantalla completa ya que causa errores
+      // y solo debe activarse por interacción del usuario
+      /*
       try {
         const elem = document.documentElement
         if (elem.requestFullscreen) {
@@ -288,6 +317,7 @@ export default {
       } catch (e) {
         console.log('No se pudo activar pantalla completa:', e)
       }
+      */
 
       // 1) Leer param :tvId de la ruta actual
       const tvId = route.params.tvId
@@ -297,6 +327,9 @@ export default {
       
       // 3) Cargar la asignación de TV
       await loadTvAssignment(tvId)
+      
+      // Forzar vista inicial para depuración
+      forceInitialView()
       
       // 4) Iniciar la rotación si hay vistas asignadas
       if (assignedViews.value.length > 0) {
@@ -346,12 +379,12 @@ export default {
 </script>
 
 <style scoped>
-.tv-screen {
+.tv-fullscreen {
+  width: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  background-color: var(--background-dark, #242424);
-  color: var(--text-light, #f8f9fa);
+  background-color: #242424;
   position: relative;
 }
 
@@ -411,8 +444,18 @@ export default {
 
 .tv-content {
   flex: 1;
-  overflow-y: auto;
+  overflow: hidden;
   position: relative;
+}
+
+/* Clase para los componentes de vista */
+.fullheight-component {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  /* Bordes temporales para depuración */
+  border: 2px dashed rgba(255, 0, 0, 0.3);
 }
 
 .tv-loading {
@@ -502,25 +545,25 @@ export default {
   z-index: 10;
 }
 
-.current-view-name {
-  font-size: 0.9rem;
-  color: #d4af37;
-  margin-bottom: 0.5rem;
-  text-align: center;
-  font-weight: 500;
-}
-
-.view-progress-bar {
+.progress-wrapper {
   height: 4px;
   background-color: rgba(212, 175, 55, 0.2);
   border-radius: 2px;
   overflow: hidden;
+  margin-bottom: 0.5rem;
 }
 
-.progress-inner {
+.progress-bar {
   height: 100%;
   background: linear-gradient(to right, #b08b29, #d4af37);
   transition: width 0.1s linear;
+}
+
+.view-name {
+  font-size: 0.9rem;
+  color: #d4af37;
+  text-align: center;
+  font-weight: 500;
 }
 
 /* Transition effects */
