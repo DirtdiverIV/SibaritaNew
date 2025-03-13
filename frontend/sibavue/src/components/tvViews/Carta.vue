@@ -14,33 +14,74 @@
       </div>
       
       <div v-else class="view-body">
-        <!-- Agrupamos platos por categoría -->
-        <div class="categoria-sections">
-          <div v-for="(platosPorCategoria, categoria) in platosPorCategoriaMapped" 
-               :key="categoria" 
-               class="categoria-section">
-            
-            
-            <div class="platos-grid">
-              <div v-for="plato in platosPorCategoria" 
-                   :key="plato.id"
-                   class="plato-card">
-                
-                <div v-if="plato.imagen" class="plato-imagen">
-                  <img :src="pb.files.getUrl(plato, plato.imagen)" alt="plato" />
+        <!-- Plato destacado -->
+        <div v-if="platoDestacado" class="plato-destacado" :class="{ 'fade-in': mostrarDestacado }">
+          <div class="destacado-imagen">
+            <img v-if="platoDestacado.imagen" :src="pb.files.getUrl(platoDestacado, platoDestacado.imagen)" alt="plato destacado" />
+            <div v-else class="destacado-imagen-placeholder">
+              <span class="placeholder-icon">🍽️</span>
+            </div>
+          </div>
+          <div class="destacado-content">
+            <div class="destacado-header">
+              <span class="destacado-tag">Hoy recomendamos</span>
+            </div>
+            <div class="destacado-info">
+              <div class="destacado-texto">
+                <h2 class="destacado-nombre">{{ platoDestacado.nombre }}</h2>
+                <p v-if="platoDestacado.descripcion" class="destacado-descripcion">
+                  {{ platoDestacado.descripcion }}
+                </p>
+              </div>
+              <div class="destacado-precio">
+                <span class="price-tag">{{ platoDestacado.precio }}€{{ platoDestacado.precio_medio ? ' / ' + platoDestacado.precio_medio + '€' : '' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección de platos -->
+        <div class="platos-container">
+          <div class="platos-scroll">
+            <!-- Primera copia de los platos -->
+            <div v-for="plato in carta" 
+                 :key="'first-' + plato.id"
+                 class="plato-card">
+              <div v-if="plato.imagen" class="plato-imagen">
+                <img :src="pb.files.getUrl(plato, plato.imagen)" alt="plato" />
+              </div>
+              <div v-else class="plato-imagen plato-imagen-placeholder">
+                <span class="placeholder-icon">🍽️</span>
+              </div>
+              
+              <div class="plato-content">
+                <h3 class="plato-nombre">{{ plato.nombre }}</h3>
+                <p v-if="plato.descripcion" class="plato-descripcion">
+                  {{ plato.descripcion }}
+                </p>
+                <div class="plato-precio">
+                  <span class="price-tag">{{ plato.precio }}€{{ plato.precio_medio ? ' / ' + plato.precio_medio + '€' : '' }}</span>
                 </div>
-                <div v-else class="plato-imagen plato-imagen-placeholder">
-                  <span class="placeholder-icon">🍽️</span>
-                </div>
-                
-                <div class="plato-content">
-                  <h3 class="plato-nombre">{{ plato.nombre }}</h3>
-                  <p v-if="plato.descripcion" class="plato-descripcion">
-                    {{ plato.descripcion }}
-                  </p>
-                  <div class="plato-precio">
-                    <span class="price-tag">{{ plato.precio }}€{{ plato.precio_medio ? ' / ' + plato.precio_medio + '€' : '' }}</span>
-                  </div>
+              </div>
+            </div>
+            <!-- Segunda copia de los platos -->
+            <div v-for="plato in carta" 
+                 :key="'second-' + plato.id"
+                 class="plato-card">
+              <div v-if="plato.imagen" class="plato-imagen">
+                <img :src="pb.files.getUrl(plato, plato.imagen)" alt="plato" />
+              </div>
+              <div v-else class="plato-imagen plato-imagen-placeholder">
+                <span class="placeholder-icon">🍽️</span>
+              </div>
+              
+              <div class="plato-content">
+                <h3 class="plato-nombre">{{ plato.nombre }}</h3>
+                <p v-if="plato.descripcion" class="plato-descripcion">
+                  {{ plato.descripcion }}
+                </p>
+                <div class="plato-precio">
+                  <span class="price-tag">{{ plato.precio }}€{{ plato.precio_medio ? ' / ' + plato.precio_medio + '€' : '' }}</span>
                 </div>
               </div>
             </div>
@@ -52,31 +93,46 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import pb from '@/services/pocketbase.js'
 
 export default {
   name: 'Carta',
   setup() {
     const carta = ref([])
+    const platoDestacado = ref(null)
+    const mostrarDestacado = ref(true)
+    const currentIndex = ref(0)
     
-    // Agrupar platos por categoría
-    const platosPorCategoriaMapped = computed(() => {
-      const categoriasMap = {};
-      
-      carta.value.forEach(plato => {
-        // Extraer subcategoría si existe (formato: categoria:subcategoria)
-        const categoriaBase = plato.categoria.split(':')[0].trim();
+    // Función para seleccionar un plato aleatorio
+    const seleccionarPlatoDestacado = () => {
+      if (carta.value.length === 0) return
+      const platoAleatorio = carta.value[Math.floor(Math.random() * carta.value.length)]
+      platoDestacado.value = platoAleatorio
+    }
+
+    // Función para manejar el scroll horizontal
+    const scrollPlatos = () => {
+      const container = document.querySelector('.platos-scroll')
+      if (container) {
+        const cardWidth = container.clientWidth / 6
+        currentIndex.value++
         
-        if (!categoriasMap[categoriaBase]) {
-          categoriasMap[categoriaBase] = [];
+        // Si llegamos al final de la primera copia, volvemos al inicio sin animación
+        if (currentIndex.value >= carta.value.length) {
+          currentIndex.value = 0
+          container.scrollLeft = 0
         }
         
-        categoriasMap[categoriaBase].push(plato);
-      });
-      
-      return categoriasMap;
-    });
+        container.scrollTo({
+          left: currentIndex.value * cardWidth,
+          behavior: 'smooth'
+        })
+      }
+    }
+
+    let scrollInterval = null
+    let destacadoInterval = null
 
     const loadCarta = async () => {
       try {
@@ -84,26 +140,38 @@ export default {
           filter: 'categoria = "carta" || categoria ~ "carta:"',
           sort: 'categoria,nombre'
         })
+        seleccionarPlatoDestacado()
       } catch (err) {
         console.error('Error Carta:', err)
       }
     }
     
-    // Formatea el nombre de la categoría para visualización
-    const formatCategoria = (categoria) => {
-      // Convertir primera letra a mayúscula y el resto en minúsculas
-      return categoria.charAt(0).toUpperCase() + categoria.slice(1).toLowerCase();
-    }
-
     onMounted(() => {
       loadCarta()
+      scrollInterval = setInterval(scrollPlatos, 3000) // Cambia cada 3 segundos
+      destacadoInterval = setInterval(() => {
+        mostrarDestacado.value = false
+        setTimeout(() => {
+          seleccionarPlatoDestacado()
+          mostrarDestacado.value = true
+        }, 500)
+      }, 8000)
+    })
+
+    onUnmounted(() => {
+      if (scrollInterval) {
+        clearInterval(scrollInterval)
+      }
+      if (destacadoInterval) {
+        clearInterval(destacadoInterval)
+      }
     })
 
     return {
       carta,
-      platosPorCategoriaMapped,
-      formatCategoria,
-      pb
+      pb,
+      platoDestacado,
+      mostrarDestacado
     }
   }
 }
@@ -181,41 +249,48 @@ export default {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.categoria-sections {
+.view-body {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  padding: 0 1rem;
-  overflow-y: auto;
-  height: 100%;
-}
-
-.categoria-section {
-  background-color: rgba(30, 30, 30, 0.5) !important; /* Más transparencia */
-  backdrop-filter: blur(2px); /* Efecto blur para mejorar legibilidad */
-  border-radius: 8px;
   overflow: hidden;
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  padding-bottom: 1rem;
-  padding-top: 1rem;
-  backdrop-filter: blur(3px);
+  height: calc(100vh - 15vh);
 }
 
-.platos-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
+.platos-container {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  margin-top: 1rem;
+  height: 35vh; /* Altura fija para las cards */
+}
+
+.platos-scroll {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
   padding: 0 1rem;
+  height: 100%;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.platos-scroll::-webkit-scrollbar {
+  display: none;
 }
 
 .plato-card {
-  background-color: rgba(30, 30, 30, 0.5) !important; /* Más transparencia */
-  backdrop-filter: blur(2px); /* Efecto blur para mejorar legibilidad */
+  width: calc((100vw - 12rem) / 6); /* Ancho fijo para que quepan 6 cards */
+  height: 100%;
+  background-color: rgba(30, 30, 30, 0.5);
+  backdrop-filter: blur(2px);
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid rgba(212, 175, 55, 0.2);
   transition: all 0.3s ease;
-  height: 100%;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
 }
@@ -227,7 +302,7 @@ export default {
 }
 
 .plato-imagen {
-  height: 180px;
+  height: 60%; /* Altura fija para la imagen */
   overflow: hidden;
   position: relative;
 }
@@ -257,9 +332,10 @@ export default {
 
 .plato-content {
   flex: 1;
-  padding: 1.2rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
 }
 
 .plato-nombre {
@@ -321,33 +397,6 @@ export default {
   color: #e0e0e0;
 }
 
-.view-body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-@media (max-width: 768px) {
-  .platos-grid {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  }
-  
-  .plato-imagen {
-    height: 150px;
-  }
-  
-  .plato-nombre {
-    font-size: 1.1rem;
-  }
-  
-  .view-header {
-    flex-direction: column;
-    gap: 0.5rem;
-    text-align: center;
-  }
-}
-
 .carta-container {
   font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
@@ -358,5 +407,170 @@ export default {
 
 .plato-item {
   font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+/* Estilos para el plato destacado */
+.plato-destacado {
+  position: relative;
+  width: 100%;
+  height: 45vh;
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: rgba(30, 30, 30, 0.7);
+  backdrop-filter: blur(4px);
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  display: flex;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s ease;
+}
+
+.plato-destacado.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.destacado-imagen {
+  flex: 1.2;
+  height: 100%;
+  overflow: hidden;
+}
+
+.destacado-imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.destacado-imagen-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1e1e1e, #2c2c2c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.destacado-content {
+  flex: 1;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to right, rgba(30, 30, 30, 0.95), rgba(30, 30, 30, 0.85));
+  width: 100%;
+}
+
+.destacado-header {
+  margin-bottom: 2rem;
+}
+
+.destacado-tag {
+  background-color: #d4af37;
+  color: #121212;
+  padding: 0.8rem 2rem;
+  border-radius: 8px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.destacado-info {
+  display: flex;
+  flex-direction: row;
+  gap: 3rem;
+  height: 100%;
+}
+
+.destacado-texto {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.destacado-nombre {
+  color: #d4af37;
+  font-size: 3.5rem;
+  margin: 0;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  line-height: 1.1;
+  letter-spacing: 1px;
+}
+
+.destacado-descripcion {
+  color: #e0e0e0;
+  font-size: 2rem;
+  line-height: 1.6;
+  margin: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.destacado-precio {
+  display: flex;
+  align-items: center;
+  padding-left: 2rem;
+  border-left: 2px solid rgba(212, 175, 55, 0.3);
+}
+
+.destacado-precio .price-tag {
+  font-size: 3rem;
+  padding: 1rem 2rem;
+  background-color: #d4af37;
+  color: #121212;
+  border-radius: 12px;
+  font-weight: 700;
+  display: inline-block;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  letter-spacing: 1px;
+}
+
+@media (max-width: 768px) {
+  .plato-destacado {
+    height: 50vh;
+    flex-direction: column;
+  }
+
+  .destacado-content {
+    padding: 2rem;
+  }
+
+  .destacado-info {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .destacado-nombre {
+    font-size: 2.5rem;
+  }
+
+  .destacado-descripcion {
+    font-size: 1.4rem;
+  }
+
+  .destacado-precio {
+    padding-left: 0;
+    border-left: none;
+    border-top: 2px solid rgba(212, 175, 55, 0.3);
+    padding-top: 1.5rem;
+    justify-content: center;
+  }
+
+  .destacado-precio .price-tag {
+    font-size: 2.2rem;
+    padding: 0.8rem 1.5rem;
+  }
+
+  .destacado-tag {
+    font-size: 1.4rem;
+    padding: 0.6rem 1.5rem;
+  }
 }
 </style>

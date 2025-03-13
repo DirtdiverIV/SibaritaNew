@@ -14,21 +14,74 @@
       </div>
       
       <div v-else class="view-body">
-        <div class="eventos-grid">
-          <div 
-            v-for="(ev, index) in eventos" 
-            :key="ev.id"
-            class="evento-card" 
-            :class="{ 'special': index === 0 }"
-          >
-            <div class="evento-image" v-if="ev.imagen">
-              <img :src="pb.files.getUrl(ev, ev.imagen)" alt="Evento" />
+        <div class="eventos-container">
+          <div class="eventos-scroll">
+            <!-- Primera copia de los eventos -->
+            <div v-for="evento in eventos" 
+                 :key="'first-' + evento.id"
+                 class="evento-card">
+              <div v-if="evento.imagen" class="evento-imagen">
+                <img :src="pb.files.getUrl(evento, evento.imagen)" alt="evento" />
+              </div>
+              <div v-else class="evento-imagen evento-imagen-placeholder">
+                <span class="placeholder-icon">🎉</span>
+              </div>
+              
+              <div class="evento-content">
+                <h3 class="evento-nombre">{{ evento.titulo }}</h3>
+                <p v-if="evento.descripcion" class="evento-descripcion">
+                  {{ evento.descripcion }}
+                </p>
+                <div class="evento-precio">
+                  <span class="price-tag">Desde {{ evento.precio_desde }}€</span>
+                </div>
+              </div>
             </div>
-            <div class="evento-content">
-              <h3 class="evento-title">{{ ev.titulo }}</h3>
-              <p class="evento-description">{{ ev.descripcion }}</p>
-              <div class="evento-price">
-                <span class="price-tag">Desde {{ ev.precio_desde }}€</span>
+            <!-- Segunda copia de los eventos -->
+            <div v-for="evento in eventos" 
+                 :key="'second-' + evento.id"
+                 class="evento-card">
+              <div v-if="evento.imagen" class="evento-imagen">
+                <img :src="pb.files.getUrl(evento, evento.imagen)" alt="evento" />
+              </div>
+              <div v-else class="evento-imagen evento-imagen-placeholder">
+                <span class="placeholder-icon">🎉</span>
+              </div>
+              
+              <div class="evento-content">
+                <h3 class="evento-nombre">{{ evento.titulo }}</h3>
+                <p v-if="evento.descripcion" class="evento-descripcion">
+                  {{ evento.descripcion }}
+                </p>
+                <div class="evento-precio">
+                  <span class="price-tag">Desde {{ evento.precio_desde }}€</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Evento destacado -->
+        <div v-if="eventoDestacado" class="evento-destacado" :class="{ 'fade-in': mostrarDestacado }">
+          <div class="destacado-imagen">
+            <img v-if="eventoDestacado.imagen" :src="pb.files.getUrl(eventoDestacado, eventoDestacado.imagen)" alt="evento destacado" />
+            <div v-else class="destacado-imagen-placeholder">
+              <span class="placeholder-icon">🎉</span>
+            </div>
+          </div>
+          <div class="destacado-content">
+            <div class="destacado-header">
+              <span class="destacado-tag">Realiza tus eventos con nosotros</span>
+            </div>
+            <div class="destacado-info">
+              <div class="destacado-texto">
+                <h2 class="destacado-nombre">{{ eventoDestacado.titulo }}</h2>
+                <p v-if="eventoDestacado.descripcion" class="destacado-descripcion">
+                  {{ eventoDestacado.descripcion }}
+                </p>
+              </div>
+              <div class="destacado-precio">
+                <span class="price-tag">Desde {{ eventoDestacado.precio_desde }}€</span>
               </div>
             </div>
           </div>
@@ -46,32 +99,84 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import pb from '@/services/pocketbase.js'
 
 export default {
   name: 'Eventos',
   setup() {
     const eventos = ref([])
+    const eventoDestacado = ref(null)
+    const mostrarDestacado = ref(true)
+    const currentIndex = ref(0)
+    
+    // Función para seleccionar un evento aleatorio
+    const seleccionarEventoDestacado = () => {
+      if (eventos.value.length === 0) return
+      const eventoAleatorio = eventos.value[Math.floor(Math.random() * eventos.value.length)]
+      eventoDestacado.value = eventoAleatorio
+    }
+
+    // Función para manejar el scroll horizontal
+    const scrollEventos = () => {
+      const container = document.querySelector('.eventos-scroll')
+      if (container) {
+        const cardWidth = container.clientWidth / 6
+        currentIndex.value++
+        
+        // Si llegamos al final de la primera copia, volvemos al inicio sin animación
+        if (currentIndex.value >= eventos.value.length) {
+          currentIndex.value = 0
+          container.scrollLeft = 0
+        }
+        
+        container.scrollTo({
+          left: currentIndex.value * cardWidth,
+          behavior: 'smooth'
+        })
+      }
+    }
+
+    let scrollInterval = null
+    let destacadoInterval = null
 
     const loadEventos = async () => {
       try {
-        // Cargar todos los eventos
         eventos.value = await pb.collection('eventos').getFullList({
           sort: '-created'
         })
+        seleccionarEventoDestacado()
       } catch (err) {
         console.error('Error Eventos:', err)
       }
     }
-
+    
     onMounted(() => {
       loadEventos()
+      scrollInterval = setInterval(scrollEventos, 3000) // Cambia cada 3 segundos
+      destacadoInterval = setInterval(() => {
+        mostrarDestacado.value = false
+        setTimeout(() => {
+          seleccionarEventoDestacado()
+          mostrarDestacado.value = true
+        }, 500)
+      }, 8000)
+    })
+
+    onUnmounted(() => {
+      if (scrollInterval) {
+        clearInterval(scrollInterval)
+      }
+      if (destacadoInterval) {
+        clearInterval(destacadoInterval)
+      }
     })
 
     return {
       eventos,
-      pb // para usar pb.files.getUrl en el template
+      pb,
+      eventoDestacado,
+      mostrarDestacado
     }
   }
 }
@@ -157,26 +262,42 @@ export default {
   overflow: hidden;
 }
 
-.eventos-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+.eventos-container {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 1rem;
+  height: 35vh;
+}
+
+.eventos-scroll {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
   padding: 0 1rem;
-  overflow-y: auto;
-  max-height: calc(100% - 40px);
+  height: 100%;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.eventos-scroll::-webkit-scrollbar {
+  display: none;
 }
 
 .evento-card {
-  background-color: rgba(30, 30, 30, 0.5) !important; /* Más transparencia */
-  backdrop-filter: blur(2px); /* Efecto blur para mejorar legibilidad */
+  width: calc((100vw - 12rem) / 6);
+  height: 100%;
+  background-color: rgba(30, 30, 30, 0.5);
+  backdrop-filter: blur(2px);
   border-radius: 8px;
   overflow: hidden;
-  height: 100%;
-  transition: all 0.3s ease;
   border: 1px solid rgba(212, 175, 55, 0.2);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  backdrop-filter: blur(3px);
 }
 
 .evento-card:hover {
@@ -185,70 +306,181 @@ export default {
   border-color: rgba(212, 175, 55, 0.5);
 }
 
-.evento-card.special {
-  background: linear-gradient(135deg, rgba(30, 30, 30, 0.8), rgba(18, 18, 18, 0.9));
-  border: 1px solid rgba(212, 175, 55, 0.5);
-  position: relative;
-}
-
-.evento-card.special::before {
-  content: 'Destacado';
-  position: absolute;
-  top: 15px;
-  right: -25px;
-  background: #d4af37;
-  color: #121212;
-  padding: 3px 25px;
-  transform: rotate(45deg);
-  font-size: 0.8rem;
-  font-weight: 600;
-  z-index: 1;
-}
-
-.evento-image {
-  position: relative;
+.evento-imagen {
+  height: 60%;
   overflow: hidden;
-  height: 200px;
+  position: relative;
 }
 
-.evento-image img {
+.evento-imagen img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
 }
 
-.evento-card:hover .evento-image img {
+.evento-card:hover .evento-imagen img {
   transform: scale(1.05);
 }
 
-.evento-content {
-  padding: 1.5rem;
-  flex-grow: 1;
+.evento-imagen-placeholder {
+  background: linear-gradient(135deg, #1e1e1e, #2c2c2c);
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.evento-title {
+.evento-content {
+  flex: 1;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.evento-nombre {
   color: #d4af37;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  margin-bottom: 0.8rem;
   font-weight: 600;
   text-transform: uppercase;
 }
 
-.evento-description {
+.evento-descripcion {
   color: #e0e0e0;
-  margin-bottom: 1.5rem;
-  line-height: 1.6;
+  margin-bottom: 1rem;
+  flex-grow: 1;
+  font-size: 0.95rem;
 }
 
-.evento-price {
+.evento-precio {
   margin-top: auto;
-  padding-top: 1rem;
+  padding-top: 0.8rem;
   border-top: 1px solid rgba(212, 175, 55, 0.2);
   font-weight: 600;
-  font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+/* Estilos para el evento destacado */
+.evento-destacado {
+  position: relative;
+  width: 100%;
+  height: 45vh;
+  margin-top: 1rem;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: rgba(30, 30, 30, 0.7);
+  backdrop-filter: blur(4px);
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  display: flex;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s ease;
+}
+
+.evento-destacado.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.destacado-imagen {
+  flex: 1.2;
+  height: 100%;
+  overflow: hidden;
+}
+
+.destacado-imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.destacado-imagen-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1e1e1e, #2c2c2c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.destacado-content {
+  flex: 1;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to right, rgba(30, 30, 30, 0.95), rgba(30, 30, 30, 0.85));
+  width: 100%;
+}
+
+.destacado-header {
+  margin-bottom: 2rem;
+}
+
+.destacado-tag {
+  background-color: #d4af37;
+  color: #121212;
+  padding: 0.8rem 2rem;
+  border-radius: 8px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.destacado-info {
+  display: flex;
+  flex-direction: row;
+  gap: 3rem;
+  height: 100%;
+}
+
+.destacado-texto {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.destacado-nombre {
+  color: #d4af37;
+  font-size: 3.5rem;
+  margin: 0;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  line-height: 1.1;
+  letter-spacing: 1px;
+}
+
+.destacado-descripcion {
+  color: #e0e0e0;
+  font-size: 2rem;
+  line-height: 1.6;
+  margin: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.destacado-precio {
+  display: flex;
+  align-items: center;
+  padding-left: 2rem;
+  border-left: 2px solid rgba(212, 175, 55, 0.3);
+}
+
+.destacado-precio .price-tag {
+  font-size: 3rem;
+  padding: 1rem 2rem;
+  background-color: #d4af37;
+  color: #121212;
+  border-radius: 12px;
+  font-weight: 700;
+  display: inline-block;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  letter-spacing: 1px;
 }
 
 .view-footer {
