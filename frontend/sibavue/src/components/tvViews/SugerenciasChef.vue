@@ -225,9 +225,10 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  overflow-y: auto;
+  overflow: hidden;
   padding: 0 1rem 1rem;
   flex: 1;
+  height: 100%;
 }
 
 .sugerencia-item {

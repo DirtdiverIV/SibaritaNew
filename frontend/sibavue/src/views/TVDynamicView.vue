@@ -308,6 +308,16 @@ export default {
       if (assignedViews.value.length > 0) {
         startRotation()
       }
+
+      // 5) Activar modo pantalla completa
+      const element = document.documentElement
+      if (element.requestFullscreen) {
+        element.requestFullscreen()
+      } else if (element.webkitRequestFullscreen) {
+        element.webkitRequestFullscreen()
+      } else if (element.msRequestFullscreen) {
+        element.msRequestFullscreen()
+      }
     })
 
     onUnmounted(() => {
@@ -321,18 +331,12 @@ export default {
       }
       
       // Salir de pantalla completa
-      try {
-        if (document.exitFullscreen) {
-          document.exitFullscreen()
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen()
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen()
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen()
-        }
-      } catch (e) {
-        console.log('No se pudo salir de pantalla completa:', e)
+      if (document.exitFullscreen) {
+        document.exitFullscreen()
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen()
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen()
       }
     })
 

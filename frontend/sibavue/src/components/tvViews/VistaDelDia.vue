@@ -288,7 +288,7 @@ export default {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
   flex: 1;
-  overflow-y: auto;
+  overflow: hidden;
   padding: 0 1rem;
   height: calc(100% - 60px);
 }
@@ -348,7 +348,7 @@ export default {
 .section-content {
   flex: 1;
   padding: 1rem;
-  overflow-y: auto;
+  overflow: hidden;
   font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
@@ -368,6 +368,8 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+  height: 100%;
+  overflow: hidden;
 }
 
 .plato-item {

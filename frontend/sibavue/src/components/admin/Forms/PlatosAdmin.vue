@@ -274,11 +274,7 @@ export default {
       'carta',
       'raciones',
       'tapas',
-      'sugerencias',
       'sugerencias_chef',
-      'entrantes',
-      'postres',
-      'bebidas'
     ]
     
     // Categorías únicas de los platos existentes

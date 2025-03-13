@@ -156,16 +156,6 @@ export default {
           mostrarDestacado.value = true
         }, 500)
       }, 8000)
-
-      // Activar modo pantalla completa
-      const element = document.documentElement
-      if (element.requestFullscreen) {
-        element.requestFullscreen()
-      } else if (element.webkitRequestFullscreen) {
-        element.webkitRequestFullscreen()
-      } else if (element.msRequestFullscreen) {
-        element.msRequestFullscreen()
-      }
     })
 
     onUnmounted(() => {
@@ -174,15 +164,6 @@ export default {
       }
       if (destacadoInterval) {
         clearInterval(destacadoInterval)
-      }
-
-      // Salir del modo pantalla completa
-      if (document.exitFullscreen) {
-        document.exitFullscreen()
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen()
-      } else if (document.msExitFullscreen) {
-        document.msExitFullscreen()
       }
     })
 

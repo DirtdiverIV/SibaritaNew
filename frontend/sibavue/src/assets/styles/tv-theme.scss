@@ -36,6 +36,7 @@ $tv-background-pattern: url('data:image/svg+xml;utf8,<svg width="80" height="88"
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 @mixin tv-header {
@@ -70,6 +71,7 @@ $tv-background-pattern: url('data:image/svg+xml;utf8,<svg width="80" height="88"
   border-radius: 8px;
   border: 1px solid $tv-border-color;
   transition: all 0.3s ease;
+  overflow: hidden;
 }
 
 @mixin tv-card-hover {
@@ -122,6 +124,15 @@ $tv-background-pattern: url('data:image/svg+xml;utf8,<svg width="80" height="88"
   @include tv-restaurant-name;
 }
 
+.view-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: calc(100vh - 15vh);
+  position: relative;
+}
+
 // Animaciones
 @keyframes shimmer {
   0% { background-position: -100% 0; }
@@ -149,4 +160,65 @@ $tv-background-pattern: url('data:image/svg+xml;utf8,<svg width="80" height="88"
   .restaurant-name {
     font-size: 2.2vh;
   }
+}
+
+// Estilos para el modo pantalla completa
+:fullscreen {
+  .tv-view {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+}
+
+:-webkit-full-screen {
+  .tv-view {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+}
+
+:-moz-full-screen {
+  .tv-view {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+}
+
+:-ms-fullscreen {
+  .tv-view {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+}
+
+// Asegurar que no haya scroll en el body y html
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+// Asegurar que no haya scroll en el contenedor principal de la app
+#app {
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
 } 

@@ -1,51 +1,33 @@
 <template>
   <div class="admin-page">
     <!-- Navbar -->
-    <nav class="navbar admin-navbar" role="navigation" aria-label="main navigation">
-      <div class="container">
-        <div class="navbar-brand">
-          <a class="navbar-item" href="/">
-            <span class="icon mr-2">
-              <i class="fas fa-utensils"></i>
-            </span>
-            Sibarita Admin
-          </a>
-          
-          <a 
-            role="button" 
-            class="navbar-burger" 
-            :class="{'is-active': isNavbarActive}" 
-            aria-label="menu" 
-            aria-expanded="false" 
-            @click="toggleNavbar"
-          >
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-          </a>
-        </div>
+    <nav class="navbar is-dark admin-navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+          <span class="icon"><i class="fas fa-utensils"></i></span>
+          <span>Sibarita Admin</span>
+        </a>
         
-        <div class="navbar-menu" :class="{'is-active': isNavbarActive}">
-          <div class="navbar-end">
-            <a 
-              v-for="(section, index) in sections" 
-              :key="index"
-              class="navbar-item" 
-              :class="{'is-active': activeSection === index}"
-              @click="activeSection = index"
-            >
-              {{ section.name }}
-            </a>
-            
-            <div class="navbar-item">
-              <button @click="logout" class="button is-small">
-                <span class="icon">
-                  <i class="fas fa-sign-out-alt"></i>
-                </span>
-                <span>Cerrar sesión</span>
-              </button>
-            </div>
-          </div>
+        <a 
+          role="button" 
+          class="navbar-burger" 
+          :class="{'is-active': isNavbarActive}"
+          @click="toggleNavbar"
+          aria-label="menu" 
+          aria-expanded="false"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+      
+      <div class="navbar-menu" :class="{'is-active': isNavbarActive}">
+        <div class="navbar-end">
+          <a class="navbar-item" @click="logout">
+            <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
+            <span>Cerrar Sesión</span>
+          </a>
         </div>
       </div>
     </nav>
@@ -56,6 +38,16 @@
         <h1 class="title is-3 has-text-centered">
           Panel de Administración
         </h1>
+        
+        <!-- Acceso rápido al menú del día -->
+        <div class="quick-access mb-5">
+          <router-link to="/admin/menu-dia" class="button is-primary is-large is-fullwidth">
+            <span class="icon is-large">
+              <i class="fas fa-clipboard-list"></i>
+            </span>
+            <span>Gestionar Menú del Día</span>
+          </router-link>
+        </div>
         
         <!-- Secciones dinámicas -->
         <div class="tabs is-centered is-boxed">
@@ -97,22 +89,18 @@ import pb from '@/services/pocketbase.js'
 import { useRouter } from 'vue-router'
 
 // Importación asíncrona de componentes para mejorar rendimiento
-const ConfigAdmin = defineAsyncComponent(() => import('@/components/admin/Forms/ConfigAdmin.vue'))
-const TvAssignmentsAdmin = defineAsyncComponent(() => import('@/components/admin/Forms/TvAssignmentsAdmin.vue'))
+const SystemAdmin = defineAsyncComponent(() => import('@/components/admin/Forms/SystemAdmin.vue'))
 const PlatosAdmin = defineAsyncComponent(() => import('@/components/admin/Forms/PlatosAdmin.vue'))
 const MenuDiaAdmin = defineAsyncComponent(() => import('@/components/admin/Forms/MenuDiaAdmin.vue'))
 const EventosAdmin = defineAsyncComponent(() => import('@/components/admin/Forms/EventosAdmin.vue'))
-const DiagnosticsAdmin = defineAsyncComponent(() => import('@/components/admin/Forms/DiagnosticsAdmin.vue'))
 
 export default {
   name: 'AdminView',
   components: {
-    ConfigAdmin,
-    TvAssignmentsAdmin,
+    SystemAdmin,
     PlatosAdmin,
     MenuDiaAdmin,
-    EventosAdmin,
-    DiagnosticsAdmin
+    EventosAdmin
   },
   setup() {
     const router = useRouter()
@@ -121,14 +109,10 @@ export default {
     
     const sections = [
       { 
-        name: 'Configuración', 
-        component: 'ConfigAdmin',
-        icon: 'fas fa-cog'
-      },
-      { 
-        name: 'Pantallas TV', 
-        component: 'TvAssignmentsAdmin',
-        icon: 'fas fa-tv'
+        name: 'Menú del Día', 
+        component: 'MenuDiaAdmin',
+        icon: 'fas fa-clipboard-list',
+        isQuickAccess: true
       },
       { 
         name: 'Platos', 
@@ -136,19 +120,14 @@ export default {
         icon: 'fas fa-utensils'
       },
       { 
-        name: 'Menú del Día', 
-        component: 'MenuDiaAdmin',
-        icon: 'fas fa-clipboard-list'
-      },
-      { 
         name: 'Eventos', 
         component: 'EventosAdmin',
         icon: 'fas fa-calendar-alt'
       },
       { 
-        name: 'Diagnóstico', 
-        component: 'DiagnosticsAdmin',
-        icon: 'fas fa-stethoscope'
+        name: 'Sistema', 
+        component: 'SystemAdmin',
+        icon: 'fas fa-cog'
       }
     ]
     
@@ -197,9 +176,26 @@ export default {
   border: 1px solid rgba(212, 175, 55, 0.2);
 }
 
-.tab-content {
-  border-radius: 0 0 6px 6px;
-  min-height: 50vh;
+.quick-access {
+  background-color: rgba(212, 175, 55, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.quick-access .button {
+  height: 4rem;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+.quick-access .button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.quick-access .icon {
+  margin-right: 0.5rem;
 }
 
 .tabs li.is-active a {
@@ -226,6 +222,11 @@ export default {
 @media screen and (max-width: 768px) {
   .main-container {
     padding: 1rem 0.5rem;
+  }
+  
+  .quick-access .button {
+    height: 3.5rem;
+    font-size: 1rem;
   }
   
   .tabs {
