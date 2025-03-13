@@ -48,7 +48,7 @@
                   <div class="plato-img-container">
                     <img 
                       v-if="plato.imagen" 
-                      :src="pb.files.getUrl(plato, 'imagen')" 
+                      :src="pb.files.getUrl(plato, plato.imagen, { 'thumb': '100x100' })" 
                       alt="Plato" 
                       class="plato-img"
                     />
@@ -229,9 +229,12 @@
               </div>
               
               <!-- Vista previa de la imagen -->
-              <div v-if="isEdit && previewImageUrl" class="image-preview mt-3">
-                <img :src="previewImageUrl" alt="Vista previa" />
-                <div class="image-caption">Imagen actual</div>
+              <div v-if="previewImageUrl" class="field">
+                <label class="label">Vista previa</label>
+                <div class="image-preview">
+                  <img :src="previewImageUrl" alt="Vista previa" />
+                  <div class="image-caption">{{ isEdit ? 'Imagen actual' : 'Nueva imagen' }}</div>
+                </div>
               </div>
             </div>
           </form>
@@ -329,15 +332,19 @@ export default {
     const handleFileChange = () => {
       if (imagen.value && imagen.value.files.length > 0) {
         fileName.value = imagen.value.files[0].name
+        // Crear URL para vista previa
+        previewImageUrl.value = URL.createObjectURL(imagen.value.files[0])
       } else {
         fileName.value = ''
+        previewImageUrl.value = ''
       }
     }
     
     // Actualizar vista previa de imagen
     const updatePreviewImage = (plato) => {
       if (plato && plato.imagen) {
-        previewImageUrl.value = pb.files.getUrl(plato, 'imagen')
+        // Usar el ID del registro y el nombre del archivo
+        previewImageUrl.value = pb.files.getUrl(plato, plato.imagen, { 'thumb': '100x100' })
       } else {
         previewImageUrl.value = ''
       }
@@ -354,6 +361,7 @@ export default {
       form.categoria = plato.categoria
       form.descripcion = plato.descripcion || ''
       
+      // Actualizar la vista previa de la imagen
       updatePreviewImage(plato)
       showForm.value = true
     }

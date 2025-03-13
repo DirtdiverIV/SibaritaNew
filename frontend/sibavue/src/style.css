@@ -1,5 +1,14 @@
+@font-face {
+    font-family: 'BelleroSeLight';
+    src: url('../public/fonts/belleroseligth.ttf') format('truetype'),
+         url('/fonts/belleroseligth.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 

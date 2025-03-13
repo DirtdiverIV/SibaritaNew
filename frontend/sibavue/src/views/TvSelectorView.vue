@@ -77,6 +77,10 @@ export default {
 </script>
 
 <style scoped>
+.tv-selector {
+  font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
 .tv-card {
   background: linear-gradient(145deg, rgba(30, 30, 30, 0.8), rgba(44, 44, 44, 0.8));
   border: 1px solid rgba(212, 175, 55, 0.3);
@@ -107,12 +111,14 @@ export default {
 .tv-name {
   font-weight: 600;
   font-size: 1.2rem;
+  font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
 .footer {
   background-color: transparent;
   color: #e0e0e0;
   padding: 3rem 1.5rem;
+  font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
 @media screen and (max-width: 768px) {

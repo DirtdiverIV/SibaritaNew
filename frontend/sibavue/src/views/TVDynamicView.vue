@@ -359,6 +359,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif !important;
 }
 
 .background-pattern {
@@ -390,6 +391,7 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: rgba(0, 0, 0, 0.3);
+  font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif !important;
 }
 
 /* Clase para los componentes de vista */
@@ -397,6 +399,7 @@ export default {
   flex: 1;
   position: relative;
   z-index: 2;
+  font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif !important;
 }
 
 .tv-loading {
@@ -414,6 +417,7 @@ export default {
   border-radius: 8px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
   border: 1px solid rgba(212, 175, 55, 0.3);
+  font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
 .loading-spinner {
@@ -496,5 +500,11 @@ export default {
   .restaurant-name {
     font-size: 1.5rem;
   }
+}
+
+.tv-name {
+  font-weight: 600;
+  font-size: 1.2rem;
+  font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 </style>

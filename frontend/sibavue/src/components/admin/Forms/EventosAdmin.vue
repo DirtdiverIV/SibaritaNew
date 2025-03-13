@@ -32,7 +32,7 @@
               <div class="columns">
                 <div class="column is-4 evento-imagen-container">
                   <div v-if="evento.imagen" class="evento-imagen">
-                    <img :src="pb.files.getUrl(evento, 'imagen')" alt="Evento" />
+                    <img :src="pb.files.getUrl(evento, evento.imagen, { 'thumb': '100x100' })" alt="Evento" />
                   </div>
                   <div v-else class="evento-imagen evento-imagen-placeholder">
                     <span class="placeholder-icon">🖼️</span>
@@ -137,11 +137,12 @@
               </div>
             </div>
             
-            <!-- Vista previa de la imagen si estamos editando -->
-            <div v-if="isEdit && previewImageUrl" class="field">
+            <!-- Vista previa de la imagen -->
+            <div v-if="previewImageUrl" class="field">
               <label class="label">Vista previa</label>
               <div class="imagen-preview">
                 <img :src="previewImageUrl" alt="Vista previa">
+                <div class="image-caption">{{ isEdit ? 'Imagen actual' : 'Nueva imagen' }}</div>
               </div>
             </div>
           </form>
@@ -192,14 +193,17 @@ export default {
     const handleFileChange = () => {
       if (imagen.value && imagen.value.files.length > 0) {
         selectedFileName.value = imagen.value.files[0].name
+        // Crear URL para vista previa
+        previewImageUrl.value = URL.createObjectURL(imagen.value.files[0])
       } else {
         selectedFileName.value = ''
+        previewImageUrl.value = ''
       }
     }
 
     const updatePreviewImage = (evento) => {
       if (evento && evento.imagen) {
-        previewImageUrl.value = pb.files.getUrl(evento, 'imagen')
+        previewImageUrl.value = pb.files.getUrl(evento, evento.imagen, { 'thumb': '100x100' })
       } else {
         previewImageUrl.value = ''
       }
@@ -405,6 +409,13 @@ export default {
 .imagen-preview img {
   width: 100%;
   display: block;
+}
+
+.image-caption {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #e0e0e0;
+  margin-top: 0.2rem;
 }
 
 .modal-card {

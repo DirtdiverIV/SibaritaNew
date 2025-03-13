@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'BelleroSeLight';
+    src: url('../public/fonts/belleroseligth.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+000-5FF; /* Latin */
+}
+
+/* Aplicar la fuente a todos los elementos excepto los iconos */
+*:not(.fas):not(.far):not(.fab):not(.fa) {
+    font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif !important;
+} 

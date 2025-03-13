@@ -21,14 +21,17 @@
                 <p>No hay raciones disponibles hoy</p>
               </div>
               <div v-else class="platos-list">
-                <div v-for="item in raciones" :key="item.id" class="plato-item">
+                <div v-for="(item, index) in raciones" 
+                     :key="item.id" 
+                     class="plato-item"
+                     :class="{ 'highlighted': highlightedIndex === index && currentSection === 'raciones' }">
                   <div class="plato-content">
                     <div class="plato-name">{{ item.nombre }}</div>
                     <div v-if="item.descripcion" class="plato-desc">{{ item.descripcion }}</div>
                   </div>
                   <div class="plato-price">
-  <span class="price-tag">{{ item.precio }}€{{ item.precio_medio ? ' / ' + item.precio_medio + '€' : '' }}</span>
-</div>
+                    <span class="price-tag">{{ item.precio }}€{{ item.precio_medio ? ' / ' + item.precio_medio + '€' : '' }}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -46,7 +49,10 @@
                 <p>No hay tapas disponibles hoy</p>
               </div>
               <div v-else class="platos-list">
-                <div v-for="item in tapas" :key="item.id" class="plato-item">
+                <div v-for="(item, index) in tapas" 
+                     :key="item.id" 
+                     class="plato-item"
+                     :class="{ 'highlighted': highlightedIndex === index && currentSection === 'tapas' }">
                   <div class="plato-content">
                     <div class="plato-name">{{ item.nombre }}</div>
                     <div v-if="item.descripcion" class="plato-desc">{{ item.descripcion }}</div>
@@ -59,7 +65,7 @@
             </div>
           </div>
           
-          <!-- Sección Menú del Día Completo -->
+          <!-- Sección Menú del Día -->
           <div class="section-container menu-dia-container">
             <div class="section-header">
               <div class="menu-header-flex">
@@ -78,11 +84,13 @@
                 <div class="menu-seccion">
                   <h4 class="menu-seccion-title">Primeros</h4>
                   <ul class="menu-platos-list">
-                    <li v-for="plato in primeros" :key="plato.id" class="menu-plato-item">
+                    <li v-for="(plato, index) in primeros" 
+                        :key="plato.id" 
+                        class="menu-plato-item"
+                        :class="{ 'highlighted': highlightedIndex === index && currentSection === 'primeros' }">
                       {{ plato.nombre }}
-                      <span v-if="plato.descripcion" class="plato-desc-inline">({{ plato.descripcion }})</span>
+                      <span v-if="plato.descripcion" class="plato-desc-inline">- {{ plato.descripcion }}</span>
                     </li>
-                    <li v-if="primeros.length === 0" class="menu-empty-item">No hay primeros disponibles</li>
                   </ul>
                 </div>
                 
@@ -90,11 +98,13 @@
                 <div class="menu-seccion">
                   <h4 class="menu-seccion-title">Segundos</h4>
                   <ul class="menu-platos-list">
-                    <li v-for="plato in segundos" :key="plato.id" class="menu-plato-item">
+                    <li v-for="(plato, index) in segundos" 
+                        :key="plato.id" 
+                        class="menu-plato-item"
+                        :class="{ 'highlighted': highlightedIndex === index && currentSection === 'segundos' }">
                       {{ plato.nombre }}
-                      <span v-if="plato.descripcion" class="plato-desc-inline">({{ plato.descripcion }})</span>
+                      <span v-if="plato.descripcion" class="plato-desc-inline">- {{ plato.descripcion }}</span>
                     </li>
-                    <li v-if="segundos.length === 0" class="menu-empty-item">No hay segundos disponibles</li>
                   </ul>
                 </div>
                 
@@ -102,11 +112,13 @@
                 <div class="menu-seccion">
                   <h4 class="menu-seccion-title">Postres</h4>
                   <ul class="menu-platos-list">
-                    <li v-for="plato in postres" :key="plato.id" class="menu-plato-item">
+                    <li v-for="(plato, index) in postres" 
+                        :key="plato.id" 
+                        class="menu-plato-item"
+                        :class="{ 'highlighted': highlightedIndex === index && currentSection === 'postres' }">
                       {{ plato.nombre }}
-                      <span v-if="plato.descripcion" class="plato-desc-inline">({{ plato.descripcion }})</span>
+                      <span v-if="plato.descripcion" class="plato-desc-inline">- {{ plato.descripcion }}</span>
                     </li>
-                    <li v-if="postres.length === 0" class="menu-empty-item">No hay postres disponibles</li>
                   </ul>
                 </div>
                 
@@ -117,15 +129,13 @@
             </div>
           </div>
         </div>
-        
-     
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import pb from '@/services/pocketbase.js'
 
 export default {
@@ -137,6 +147,40 @@ export default {
     const primeros = ref([])
     const segundos = ref([])
     const postres = ref([])
+    
+    const highlightedIndex = ref(0)
+    const currentSection = ref('raciones')
+    let highlightInterval = null
+
+    const sections = [
+      { name: 'raciones', items: raciones },
+      { name: 'tapas', items: tapas },
+      { name: 'primeros', items: primeros },
+      { name: 'segundos', items: segundos },
+      { name: 'postres', items: postres }
+    ]
+
+    const startHighlightAnimation = () => {
+      highlightInterval = setInterval(() => {
+        // Encontrar la sección actual
+        const currentSectionIndex = sections.findIndex(s => s.name === currentSection.value)
+        const currentItems = sections[currentSectionIndex].items.value
+
+        // Si hay items en la sección actual
+        if (currentItems.length > 0) {
+          // Avanzar al siguiente índice
+          highlightedIndex.value = (highlightedIndex.value + 1) % currentItems.length
+        }
+
+        // Si llegamos al final de la sección actual
+        if (highlightedIndex.value === 0) {
+          // Avanzar a la siguiente sección
+          const nextSectionIndex = (currentSectionIndex + 1) % sections.length
+          currentSection.value = sections[nextSectionIndex].name
+          highlightedIndex.value = 0
+        }
+      }, 3000) // Cambiar cada 3 segundos
+    }
 
     const loadData = async () => {
       try {
@@ -189,6 +233,13 @@ export default {
 
     onMounted(() => {
       loadData()
+      startHighlightAnimation()
+    })
+
+    onUnmounted(() => {
+      if (highlightInterval) {
+        clearInterval(highlightInterval)
+      }
     })
 
     return {
@@ -197,7 +248,9 @@ export default {
       menuDia,
       primeros,
       segundos,
-      postres
+      postres,
+      highlightedIndex,
+      currentSection
     }
   }
 }
@@ -214,7 +267,7 @@ export default {
   overflow: hidden;
   /* Fondo base eliminado para evitar que tape el patrón */
   background: none;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
 .background-pattern {
@@ -224,17 +277,17 @@ export default {
   width: 100%;
   height: 100%;
   z-index: -1;
-  /* Aumentar la opacidad para que sea visible */
-  opacity: 0.3;
+  /* Aumentar la opacidad para que sea más visible */
+  opacity: 0.5;
   
   /* Fondo base con gradiente */
-  background: linear-gradient(135deg, 
-    rgba(25, 25, 25, 0.95) 0%, 
-    rgba(35, 35, 35, 0.97) 50%, 
-    rgba(25, 25, 25, 0.95) 100%);
+  background: linear-gradient(135deg,
+     rgba(25, 25, 25, 0.95) 0%,
+     rgba(35, 35, 35, 0.97) 50%,
+     rgba(25, 25, 25, 0.95) 100%);
   
-  /* Patrón de azulejos con colores más visibles */
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><defs><linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23d4af37" stop-opacity="0.2"/><stop offset="100%" stop-color="%23b08b29" stop-opacity="0.15"/></linearGradient></defs><rect width="40" height="40" fill="%23222" fill-opacity="0.7"/><path d="M0,20 L20,0 L40,20 L20,40 Z" fill="%23282828" fill-opacity="0.4"/><path d="M20,0 L40,20 L20,40 L0,20 Z" fill="%23333" fill-opacity="0.3"/><path d="M10,10 L20,20 L10,30 L0,20 Z" fill="url(%23goldGrad)"/><path d="M30,10 L40,20 L30,30 L20,20 Z" fill="url(%23goldGrad)"/></svg>');
+  /* Patrón con la forma del segundo ejemplo pero con los colores del primero */
+  background-image: url('data:image/svg+xml;utf8,<svg width="80" height="88" viewBox="0 0 80 88" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23d4af37" stop-opacity="0.6"/><stop offset="100%" stop-color="%23b08b29" stop-opacity="0.5"/></linearGradient></defs><rect width="80" height="88" fill="%23222" fill-opacity="0.7"/><path d="M22 21.91V26h-2c-9.94 0-18 8.06-18 18 0 9.943 8.058 18 18 18h2v4.09c8.012.722 14.785 5.738 18 12.73 3.212-6.99 9.983-12.008 18-12.73V62h2c9.94 0 18-8.06 18-18 0-9.943-8.058-18-18-18h-2v-4.09c-8.012-.722-14.785-5.738-18-12.73-3.212 6.99-9.983 12.008-18 12.73zM54 58v4.696c-5.574 1.316-10.455 4.428-14 8.69-3.545-4.262-8.426-7.374-14-8.69V58h-5.993C12.27 58 6 51.734 6 44c0-7.732 6.275-14 14.007-14H26v-4.696c5.574-1.316 10.455-4.428 14-8.69 3.545 4.262 8.426 7.374 14 8.69V30h5.993C67.73 30 74 36.266 74 44c0 7.732-6.275 14-14.007 14H54zM42 88c0-9.94 8.06-18 18-18h2v-4.09c8.016-.722 14.787-5.738 18-12.73v7.434c-3.545 4.262-8.426 7.374-14 8.69V74h-5.993C52.275 74 46 80.268 46 88h-4zm-4 0c0-9.943-8.058-18-18-18h-2v-4.09c-8.012-.722-14.785-5.738-18-12.73v7.434c3.545 4.262 8.426 7.374 14 8.69V74h5.993C27.73 74 34 80.266 34 88h4zm4-88c0 9.943 8.058 18 18 18h2v4.09c8.012.722 14.785 5.738 18 12.73v-7.434c-3.545-4.262-8.426-7.374-14-8.69V14h-5.993C52.27 14 46 7.734 46 0h-4zM0 34.82c3.213-6.992 9.984-12.008 18-12.73V18h2c9.94 0 18-8.06 18-18h-4c0 7.732-6.275 14-14.007 14H14v4.696c-5.574 1.316-10.455 4.428-14 8.69v7.433z" fill="url(%23goldGrad)" fill-opacity="0.8" fill-rule="evenodd"/></svg>');
 }
 
 .tv-content {
@@ -274,6 +327,7 @@ export default {
   margin: 0;
   letter-spacing: 3px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
 .vista-grid {
@@ -298,8 +352,6 @@ export default {
   backdrop-filter: blur(3px);
 }
 
-
-
 .section-header {
   padding: 1vh;
   background-color: rgba(18, 18, 18, 0.6);
@@ -308,9 +360,10 @@ export default {
 
 .menu-header-flex {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   width: 100%;
+  position: relative;
 }
 
 .menu-price {
@@ -320,15 +373,20 @@ export default {
   border-radius: 20px;
   font-weight: 700;
   font-size: 1.1rem;
-  margin-right: 10px;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .section-title {
   color: #d4af37;
-  font-size: 2.5vh;
+  font-size: 2.8vh;
   text-align: center;
   font-weight: 600;
   margin: 0;
+  text-transform: uppercase;
+  flex: 1;
 }
 
 .section-divider {
@@ -342,6 +400,7 @@ export default {
   flex: 1;
   padding: 1rem;
   overflow-y: auto;
+  font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
 .empty-section {
@@ -365,52 +424,60 @@ export default {
 .plato-item {
   background-color: rgba(18, 18, 18, 0.5);
   border-radius: 6px;
-  padding: 1rem;
+  padding: 1.2rem;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   border-left: 3px solid #d4af37;
-  transition: all 0.3s ease;
+  transition: all 0.5s ease;
 }
 
-.plato-item:hover {
-  transform: translateX(5px);
-  background-color: rgba(18, 18, 18, 0.7);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+.plato-item.highlighted {
+  transform: translateX(10px);
+  background-color: rgba(18, 18, 18, 0.9);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  border-left: 4px solid #d4af37;
 }
 
 .plato-content {
   flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
 }
 
 .plato-name {
   font-weight: 600;
   color: #f8f8f8;
-  margin-bottom: 0.3rem;
-  font-size: 1.1rem;
+  margin-bottom: 0;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  min-width: 150px;
 }
 
 .plato-desc {
-  color: #b0b0b0;
-  font-size: 0.9rem;
-  font-style: italic;
+  color: #d4af37;
+  font-size: 1.1rem;
+  flex: 1;
+  font-weight: 500;
+  margin-left: 0.5rem;
 }
 
 .plato-price {
-  margin-left: 1rem;
+  margin-left: 1.5rem;
   text-align: right;
-  min-width: 70px;
+  min-width: 80px;
+  font-size: 1.2rem;
 }
 
-/* Ajuste precio de la media para que aparezca junto al precio principal */
 .price-tag {
   background-color: #d4af37;
   color: #121212;
-  padding: 0.4vh 0.8vw;
+  padding: 0.5vh 1vw;
   border-radius: 0.6vh;
   font-weight: 700;
   display: inline-block;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
 }
 
 /* Estilos para el Menú del Día */
@@ -437,9 +504,10 @@ export default {
 
 .menu-seccion-title {
   color: #d4af37;
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.4rem;
+  margin-bottom: 0.8rem;
   font-weight: 600;
+  text-transform: uppercase;
 }
 
 .menu-platos-list {
@@ -449,20 +517,30 @@ export default {
 }
 
 .menu-plato-item {
-  padding: 0.4rem 0;
+  padding: 0.8rem 0;
   color: #e0e0e0;
   border-bottom: 1px dashed rgba(160, 160, 160, 0.2);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.2rem;
+  transition: all 0.5s ease;
 }
 
-.menu-plato-item:last-child {
-  border-bottom: none;
+.menu-plato-item.highlighted {
+  background-color: rgba(18, 18, 18, 0.9);
+  padding-left: 1.5rem;
+  border-left: 4px solid #d4af37;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .plato-desc-inline {
-  font-size: 0.9rem;
-  color: #a0a0a0;
-  font-style: italic;
-  margin-left: 0.5rem;
+  font-size: 1.1rem;
+  color: #d4af37;
+  text-transform: none;
+  flex: 1;
+  font-weight: 500;
 }
 
 .menu-empty-item {
