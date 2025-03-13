@@ -256,78 +256,31 @@ export default {
 }
 </script>
 
-<style scoped>
-/* Estilos específicos del componente VistaDelDia */
+<style lang="scss" scoped>
+@import '@/assets/styles/tv-theme.scss';
+
 .tv-view {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  /* Fondo base eliminado para evitar que tape el patrón */
-  background: none;
-  font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  @extend .tv-view;
 }
 
 .background-pattern {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  /* Aumentar la opacidad para que sea más visible */
-  opacity: 0.5;
-  
-  /* Fondo base con gradiente */
-  background: linear-gradient(135deg,
-     rgba(25, 25, 25, 0.95) 0%,
-     rgba(35, 35, 35, 0.97) 50%,
-     rgba(25, 25, 25, 0.95) 100%);
-  
-  /* Patrón con la forma del segundo ejemplo pero con los colores del primero */
-  background-image: url('data:image/svg+xml;utf8,<svg width="80" height="88" viewBox="0 0 80 88" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23d4af37" stop-opacity="0.6"/><stop offset="100%" stop-color="%23b08b29" stop-opacity="0.5"/></linearGradient></defs><rect width="80" height="88" fill="%23222" fill-opacity="0.7"/><path d="M22 21.91V26h-2c-9.94 0-18 8.06-18 18 0 9.943 8.058 18 18 18h2v4.09c8.012.722 14.785 5.738 18 12.73 3.212-6.99 9.983-12.008 18-12.73V62h2c9.94 0 18-8.06 18-18 0-9.943-8.058-18-18-18h-2v-4.09c-8.012-.722-14.785-5.738-18-12.73-3.212 6.99-9.983 12.008-18 12.73zM54 58v4.696c-5.574 1.316-10.455 4.428-14 8.69-3.545-4.262-8.426-7.374-14-8.69V58h-5.993C12.27 58 6 51.734 6 44c0-7.732 6.275-14 14.007-14H26v-4.696c5.574-1.316 10.455-4.428 14-8.69 3.545 4.262 8.426 7.374 14 8.69V30h5.993C67.73 30 74 36.266 74 44c0 7.732-6.275 14-14.007 14H54zM42 88c0-9.94 8.06-18 18-18h2v-4.09c8.016-.722 14.787-5.738 18-12.73v7.434c-3.545 4.262-8.426 7.374-14 8.69V74h-5.993C52.275 74 46 80.268 46 88h-4zm-4 0c0-9.943-8.058-18-18-18h-2v-4.09c-8.012-.722-14.785-5.738-18-12.73v7.434c3.545 4.262 8.426 7.374 14 8.69V74h5.993C27.73 74 34 80.266 34 88h4zm4-88c0 9.943 8.058 18 18 18h2v4.09c8.012.722 14.785 5.738 18 12.73v-7.434c-3.545-4.262-8.426-7.374-14-8.69V14h-5.993C52.27 14 46 7.734 46 0h-4zM0 34.82c3.213-6.992 9.984-12.008 18-12.73V18h2c9.94 0 18-8.06 18-18h-4c0 7.732-6.275 14-14.007 14H14v4.696c-5.574 1.316-10.455 4.428-14 8.69v7.433z" fill="url(%23goldGrad)" fill-opacity="0.8" fill-rule="evenodd"/></svg>');
+  @extend .background-pattern;
 }
 
 .tv-content {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  padding: 1.5vh 1.5vw;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
+  @extend .tv-content;
 }
 
-/* Nuevo header con título a la derecha y nombre del restaurante a la izquierda */
 .view-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2vh;
-  padding-bottom: 1vh;
-  border-bottom: 2px solid #d4af37;
+  @extend .view-header;
 }
 
 .restaurant-name {
-  color: #ffffff;
-  font-size: 2.8vh;
-  font-weight: 700;
-  letter-spacing: 2px;
+  @extend .restaurant-name;
 }
 
 .view-title {
-  color: #d4af37;
-  font-size: 3vh;
-  font-weight: 700;
-  text-transform: uppercase;
-  margin: 0;
-  letter-spacing: 3px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  @extend .view-title;
 }
 
 .vista-grid {
@@ -341,21 +294,22 @@ export default {
 }
 
 .section-container {
+  @include tv-card;
   display: flex;
   flex-direction: column;
-  background-color: rgba(30, 30, 30, 0.5) !important;
-  backdrop-filter: blur(2px);
-  border-radius: 10px;
-  border: 1px solid rgba(212, 175, 55, 0.2);
   overflow: hidden;
   height: 100%;
   backdrop-filter: blur(3px);
+
+  &:hover {
+    @include tv-card-hover;
+  }
 }
 
 .section-header {
   padding: 1vh;
   background-color: rgba(18, 18, 18, 0.6);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+  border-bottom: 1px solid $tv-border-color;
 }
 
 .menu-header-flex {
@@ -367,12 +321,7 @@ export default {
 }
 
 .menu-price {
-  background-color: #d4af37;
-  color: #121212;
-  padding: 0.3vh 1vw;
-  border-radius: 20px;
-  font-weight: 700;
-  font-size: 1.1rem;
+  @include tv-price-tag;
   position: absolute;
   right: 0;
   top: 50%;
@@ -380,7 +329,7 @@ export default {
 }
 
 .section-title {
-  color: #d4af37;
+  color: $tv-primary-color;
   font-size: 2.8vh;
   text-align: center;
   font-weight: 600;
@@ -393,7 +342,7 @@ export default {
   height: 2px;
   width: 60px;
   margin: 0.5rem auto;
-  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.7), transparent);
+  background: linear-gradient(90deg, transparent, rgba($tv-primary-color, 0.7), transparent);
 }
 
 .section-content {
@@ -422,21 +371,24 @@ export default {
 }
 
 .plato-item {
-  background-color: rgba(18, 18, 18, 0.5);
-  border-radius: 6px;
+  @include tv-card;
   padding: 1.2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-left: 3px solid #d4af37;
+  border-left: 3px solid $tv-primary-color;
   transition: all 0.5s ease;
-}
 
-.plato-item.highlighted {
-  transform: translateX(10px);
-  background-color: rgba(18, 18, 18, 0.9);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-  border-left: 4px solid #d4af37;
+  &:hover {
+    @include tv-card-hover;
+  }
+
+  &.highlighted {
+    transform: translateX(10px);
+    background-color: rgba(18, 18, 18, 0.9);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    border-left: 4px solid $tv-primary-color;
+  }
 }
 
 .plato-content {
@@ -448,7 +400,7 @@ export default {
 
 .plato-name {
   font-weight: 600;
-  color: #f8f8f8;
+  color: $tv-text-light;
   margin-bottom: 0;
   font-size: 1.2rem;
   text-transform: uppercase;
@@ -456,7 +408,7 @@ export default {
 }
 
 .plato-desc {
-  color: #d4af37;
+  color: $tv-primary-color;
   font-size: 1.1rem;
   flex: 1;
   font-weight: 500;
@@ -471,19 +423,12 @@ export default {
 }
 
 .price-tag {
-  background-color: #d4af37;
-  color: #121212;
-  padding: 0.5vh 1vw;
-  border-radius: 0.6vh;
-  font-weight: 700;
-  display: inline-block;
-  font-size: 1.2rem;
+  @include tv-price-tag;
 }
 
-/* Estilos para el Menú del Día */
 .menu-dia-container {
   background: linear-gradient(135deg, rgba(30, 30, 30, 0.9), rgba(18, 18, 18, 0.95));
-  border: 1px solid rgba(212, 175, 55, 0.4);
+  border: 1px solid rgba($tv-primary-color, 0.4);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
@@ -499,11 +444,11 @@ export default {
   background-color: rgba(18, 18, 18, 0.3);
   border-radius: 6px;
   padding: 0.8rem;
-  border-left: 2px solid rgba(212, 175, 55, 0.5);
+  border-left: 2px solid rgba($tv-primary-color, 0.5);
 }
 
 .menu-seccion-title {
-  color: #d4af37;
+  color: $tv-primary-color;
   font-size: 1.4rem;
   margin-bottom: 0.8rem;
   font-weight: 600;
@@ -526,18 +471,18 @@ export default {
   gap: 1rem;
   font-size: 1.2rem;
   transition: all 0.5s ease;
-}
 
-.menu-plato-item.highlighted {
-  background-color: rgba(18, 18, 18, 0.9);
-  padding-left: 1.5rem;
-  border-left: 4px solid #d4af37;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  &:hover {
+    background-color: rgba(18, 18, 18, 0.9);
+    padding-left: 1.5rem;
+    border-left: 4px solid $tv-primary-color;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  }
 }
 
 .plato-desc-inline {
   font-size: 1.1rem;
-  color: #d4af37;
+  color: $tv-primary-color;
   text-transform: none;
   flex: 1;
   font-weight: 500;
@@ -555,7 +500,7 @@ export default {
   background-color: rgba(18, 18, 18, 0.5);
   padding: 0.7rem;
   border-radius: 6px;
-  color: #d4af37;
+  color: $tv-primary-color;
   font-style: italic;
   margin-top: auto;
 }
@@ -570,11 +515,11 @@ export default {
   background-color: rgba(18, 18, 18, 0.7);
   padding: 0.8rem 2rem;
   border-radius: 8px;
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  border: 1px solid $tv-border-color;
 }
 
 .horario-title {
-  color: #d4af37;
+  color: $tv-primary-color;
   font-size: 1.1rem;
   margin-bottom: 0.5rem;
 }

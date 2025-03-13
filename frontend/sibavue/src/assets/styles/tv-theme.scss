@@ -1,0 +1,152 @@
+// Variables de tema
+$tv-primary-color: #d4af37;
+$tv-primary-dark: #b08b29;
+$tv-background-dark: rgba(25, 25, 25, 0.95);
+$tv-background-light: rgba(35, 35, 35, 0.97);
+$tv-text-light: #ffffff;
+$tv-text-dark: #121212;
+$tv-border-color: rgba(212, 175, 55, 0.3);
+
+// Patrón de fondo común
+$tv-background-pattern: url('data:image/svg+xml;utf8,<svg width="80" height="88" viewBox="0 0 80 88" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23d4af37" stop-opacity="0.6"/><stop offset="100%" stop-color="%23b08b29" stop-opacity="0.5"/></linearGradient></defs><rect width="80" height="88" fill="%23222" fill-opacity="0.7"/><path d="M22 21.91V26h-2c-9.94 0-18 8.06-18 18 0 9.943 8.058 18 18 18h2v4.09c8.012.722 14.785 5.738 18 12.73 3.212-6.99 9.983-12.008 18-12.73V62h2c9.94 0 18-8.06 18-18 0-9.943-8.058-18-18-18h-2v-4.09c-8.012-.722-14.785-5.738-18-12.73-3.212 6.99-9.983 12.008-18 12.73zM54 58v4.696c-5.574 1.316-10.455 4.428-14 8.69-3.545-4.262-8.426-7.374-14-8.69V58h-5.993C12.27 58 6 51.734 6 44c0-7.732 6.275-14 14.007-14H26v-4.696c5.574-1.316 10.455-4.428 14-8.69 3.545 4.262 8.426 7.374 14 8.69V30h5.993C67.73 30 74 36.266 74 44c0 7.732-6.275 14-14.007 14H54zM42 88c0-9.94 8.06-18 18-18h2v-4.09c8.016-.722 14.787-5.738 18-12.73v7.434c-3.545 4.262-8.426 7.374-14 8.69V74h-5.993C52.275 74 46 80.268 46 88h-4zm-4 0c0-9.943-8.058-18-18-18h-2v-4.09c-8.012-.722-14.785-5.738-18-12.73v7.434c3.545 4.262 8.426 7.374 14 8.69V74h5.993C27.73 74 34 80.266 34 88h4zm4-88c0 9.943 8.058 18 18 18h2v4.09c8.012.722 14.785 5.738 18 12.73v-7.434c-3.545-4.262-8.426-7.374-14-8.69V14h-5.993C52.27 14 46 7.734 46 0h-4zM0 34.82c3.213-6.992 9.984-12.008 18-12.73V18h2c9.94 0 18-8.06 18-18h-4c0 7.732-6.275 14-14.007 14H14v4.696c-5.574 1.316-10.455 4.428-14 8.69v7.433z" fill="url(%23goldGrad)" fill-opacity="0.8" fill-rule="evenodd"/></svg>');
+
+// Mixins comunes
+@mixin tv-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  opacity: 0.5;
+  background: linear-gradient(135deg,
+    $tv-background-dark 0%,
+    $tv-background-light 50%,
+    $tv-background-dark 100%);
+  background-image: $tv-background-pattern;
+}
+
+@mixin tv-content {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  padding: 1.5vh 1.5vw;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin tv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2vh;
+  padding-bottom: 1vh;
+  border-bottom: 2px solid $tv-primary-color;
+}
+
+@mixin tv-title {
+  color: $tv-primary-color;
+  font-size: 3vh;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 0;
+  letter-spacing: 3px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+@mixin tv-restaurant-name {
+  color: $tv-text-light;
+  font-size: 2.8vh;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+@mixin tv-card {
+  background-color: rgba(30, 30, 30, 0.5);
+  backdrop-filter: blur(2px);
+  border-radius: 8px;
+  border: 1px solid $tv-border-color;
+  transition: all 0.3s ease;
+}
+
+@mixin tv-card-hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  border-color: rgba($tv-primary-color, 0.5);
+}
+
+@mixin tv-price-tag {
+  background-color: $tv-primary-color;
+  color: $tv-text-dark;
+  padding: 0.4vh 0.8vw;
+  border-radius: 0.6vh;
+  font-weight: 700;
+  display: inline-block;
+  font-size: 1.1rem;
+}
+
+// Clases base para componentes TV
+.tv-view {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: none;
+  font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif !important;
+}
+
+.background-pattern {
+  @include tv-background;
+}
+
+.tv-content {
+  @include tv-content;
+}
+
+.view-header {
+  @include tv-header;
+}
+
+.view-title {
+  @include tv-title;
+}
+
+.restaurant-name {
+  @include tv-restaurant-name;
+}
+
+// Animaciones
+@keyframes shimmer {
+  0% { background-position: -100% 0; }
+  100% { background-position: 100% 0; }
+}
+
+.has-shimmer {
+  display: inline-block;
+  padding: 2px 6px;
+  background: linear-gradient(90deg, 
+    rgba($tv-primary-color, 0.1) 0%, 
+    rgba($tv-primary-color, 0.3) 50%, 
+    rgba($tv-primary-color, 0.1) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+  border-radius: 4px;
+}
+
+// Responsive
+@media screen and (max-width: 768px) {
+  .view-title {
+    font-size: 2.5vh;
+  }
+
+  .restaurant-name {
+    font-size: 2.2vh;
+  }
+} 
