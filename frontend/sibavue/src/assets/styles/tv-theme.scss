@@ -104,12 +104,34 @@ $tv-background-pattern: url('data:image/svg+xml;utf8,<svg width="80" height="88"
   font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif !important;
 }
 
+// Asegurar que no haya scroll en el body y html cuando estamos en TV view
+html.tv-mode, 
+body.tv-mode {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+// Asegurar que no haya scroll en el contenedor principal de la app en TV mode
+#app.tv-mode {
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
 .background-pattern {
   @include tv-background;
 }
 
 .tv-content {
   @include tv-content;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .view-header {
@@ -131,6 +153,11 @@ $tv-background-pattern: url('data:image/svg+xml;utf8,<svg width="80" height="88"
   overflow: hidden;
   height: calc(100vh - 15vh);
   position: relative;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 // Animaciones
@@ -205,20 +232,4 @@ $tv-background-pattern: url('data:image/svg+xml;utf8,<svg width="80" height="88"
     height: 100vh;
     overflow: hidden;
   }
-}
-
-// Asegurar que no haya scroll en el body y html
-html, body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  height: 100vh;
-  width: 100vw;
-}
-
-// Asegurar que no haya scroll en el contenedor principal de la app
-#app {
-  overflow: hidden;
-  height: 100vh;
-  width: 100vw;
 } 

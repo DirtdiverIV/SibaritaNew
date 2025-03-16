@@ -51,6 +51,12 @@ import MenuDia from '@/components/tvViews/MenuDia.vue'
 
 export default {
   name: 'TVDynamicView',
+  components: {
+    VistaDelDia,
+    MenuDia,
+    Carta,
+    Eventos
+  },
   setup() {
     const route = useRoute()
     const assignedViews = ref([])
@@ -318,6 +324,11 @@ export default {
       } else if (element.msRequestFullscreen) {
         element.msRequestFullscreen()
       }
+
+      // Agregar clases para modo TV
+      document.documentElement.classList.add('tv-mode');
+      document.body.classList.add('tv-mode');
+      document.getElementById('app').classList.add('tv-mode');
     })
 
     onUnmounted(() => {
@@ -338,6 +349,11 @@ export default {
       } else if (document.msExitFullscreen) {
         document.msExitFullscreen()
       }
+
+      // Remover clases al desmontar
+      document.documentElement.classList.remove('tv-mode');
+      document.body.classList.remove('tv-mode');
+      document.getElementById('app').classList.remove('tv-mode');
     })
 
     return {
