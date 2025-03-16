@@ -71,6 +71,17 @@
                 <td class="is-narrow">
                   <div class="buttons are-small">
                     <button 
+                      v-if="plato.categoria === 'carta'"
+                      @click="toggleSugerencia(plato)"
+                      class="button is-warning is-small"
+                      :class="{'is-light': !plato.es_sugerencia}"
+                      :title="plato.es_sugerencia ? 'Quitar de sugerencias' : 'Marcar como sugerencia'"
+                    >
+                      <span class="icon is-small">
+                        <i class="fas fa-star"></i>
+                      </span>
+                    </button>
+                    <button 
                       @click="editPlato(plato)"
                       class="button is-info is-small"
                     >
@@ -203,6 +214,18 @@
               </div>
             </div>
             
+            <div v-if="form.categoria === 'carta'" class="field">
+              <div class="control">
+                <label class="checkbox">
+                  <input 
+                    type="checkbox" 
+                    v-model="form.es_sugerencia"
+                  >
+                  Marcar como sugerencia del chef
+                </label>
+              </div>
+            </div>
+            
             <div class="field">
               <label class="label">Imagen</label>
               <div class="file has-name">
@@ -310,7 +333,8 @@ export default {
       precio: 0,
       precio_medio: 0,
       categoria: '',
-      descripcion: ''
+      descripcion: '',
+      es_sugerencia: false
     })
     
     // Cargar platos
@@ -356,10 +380,24 @@ export default {
       form.precio_medio = plato.precio_medio || 0
       form.categoria = plato.categoria
       form.descripcion = plato.descripcion || ''
+      form.es_sugerencia = plato.es_sugerencia || false
       
       // Actualizar la vista previa de la imagen
       updatePreviewImage(plato)
       showForm.value = true
+    }
+    
+    // Toggle sugerencia
+    const toggleSugerencia = async (plato) => {
+      try {
+        await pb.collection('platos').update(plato.id, {
+          es_sugerencia: !plato.es_sugerencia
+        })
+        await loadPlatos()
+      } catch (error) {
+        console.error('Error al actualizar sugerencia:', error)
+        alert(`Error: ${error.message}`)
+      }
     }
     
     // Crear o actualizar plato
@@ -370,7 +408,8 @@ export default {
           precio: form.precio,
           precio_medio: form.precio_medio || null,
           categoria: form.categoria,
-          descripcion: form.descripcion || ''
+          descripcion: form.descripcion || '',
+          es_sugerencia: form.es_sugerencia
         }
         
         // Imagen
@@ -415,6 +454,7 @@ export default {
       form.precio_medio = 0
       form.categoria = ''
       form.descripcion = ''
+      form.es_sugerencia = false
       fileName.value = ''
       previewImageUrl.value = ''
       
@@ -465,7 +505,8 @@ export default {
       resetForm,
       formatCategoria,
       truncateText,
-      handleFileChange
+      handleFileChange,
+      toggleSugerencia
     }
   }
 }
