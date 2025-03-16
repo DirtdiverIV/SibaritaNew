@@ -8,9 +8,20 @@
       </div>
       
       <div class="card-content">
-        <!-- Filtros y búsqueda -->
-        <div class="field is-grouped">
-          <div class="control is-expanded">
+        <!-- Botón para añadir plato y búsqueda -->
+        <div class="columns">
+          <div class="column is-4">
+            <button 
+              @click="showForm = true; isEdit = false; resetForm()"
+              class="button is-primary is-fullwidth"
+            >
+              <span class="icon">
+                <i class="fas fa-plus"></i>
+              </span>
+              <span>Añadir nuevo plato</span>
+            </button>
+          </div>
+          <div class="column">
             <input 
               v-model="filter" 
               class="input" 
@@ -18,16 +29,20 @@
               placeholder="Buscar plato..." 
             />
           </div>
-          <div class="control">
-            <div class="select">
-              <select v-model="filterCategoria">
-                <option value="">Todas las categorías</option>
-                <option v-for="cat in categorias" :key="cat" :value="cat">
-                  {{ formatCategoria(cat) }}
-                </option>
-              </select>
-            </div>
-          </div>
+        </div>
+
+        <!-- Tabs de categorías -->
+        <div class="tabs is-boxed">
+          <ul>
+            <li :class="{ 'is-active': selectedTab === 'todos' }">
+              <a @click="selectedTab = 'todos'">Todos</a>
+            </li>
+            <li v-for="cat in categoriasAgrupadas" 
+                :key="cat.id" 
+                :class="{ 'is-active': selectedTab === cat.id }">
+              <a @click="selectedTab = cat.id">{{ cat.nombre }}</a>
+            </li>
+          </ul>
         </div>
         
         <!-- Tabla de platos -->
@@ -103,24 +118,13 @@
               <tr v-if="platosFiltrados.length === 0">
                 <td colspan="5" class="has-text-centered">
                   No se encontraron platos{{ 
-                    filterCategoria ? ` en la categoría ${formatCategoria(filterCategoria)}` : '' 
+                    selectedTab !== 'todos' ? ` en la categoría ${formatCategoria(selectedTab)}` : '' 
                   }}
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
-        
-        <!-- Botón para añadir plato -->
-        <button 
-          @click="showForm = true; isEdit = false; resetForm()"
-          class="button is-primary is-fullwidth mt-4"
-        >
-          <span class="icon">
-            <i class="fas fa-plus"></i>
-          </span>
-          <span>Añadir nuevo plato</span>
-        </button>
       </div>
     </div>
     
@@ -289,27 +293,36 @@ export default {
     const showForm = ref(false)
     const fileName = ref('')
     const filter = ref('')
-    const filterCategoria = ref('')
+    const selectedTab = ref('todos')
     const previewImageUrl = ref('')
     
-    // Lista predefinida de categorías
+    // Categorías agrupadas
+    const categoriasAgrupadas = [
+      { id: 'carta', nombre: 'Carta' },
+      { id: 'raciones', nombre: 'Raciones' },
+      { id: 'tapas', nombre: 'Tapas' },
+      { id: 'desayunos', nombre: 'Desayunos', subcategorias: [
+        'desayuno_dulce',
+        'desayuno_salado',
+        'desayuno_cafes',
+        'desayuno_infusiones',
+        'desayuno_otros'
+      ]},
+      { id: 'sugerencias_chef', nombre: 'Sugerencias del Chef' }
+    ]
+    
+    // Lista predefinida de categorías para el formulario
     const categoriasOptions = [
       'carta',
       'raciones',
       'tapas',
       'sugerencias_chef',
+      'desayuno_dulce',
+      'desayuno_salado',
+      'desayuno_cafes',
+      'desayuno_infusiones',
+      'desayuno_otros'
     ]
-    
-    // Categorías únicas de los platos existentes
-    const categorias = computed(() => {
-      const cats = new Set()
-      platos.value.forEach(plato => {
-        if (plato.categoria) {
-          cats.add(plato.categoria)
-        }
-      })
-      return Array.from(cats).sort()
-    })
     
     // Platos filtrados por búsqueda y categoría
     const platosFiltrados = computed(() => {
@@ -319,9 +332,16 @@ export default {
           plato.nombre.toLowerCase().includes(filter.value.toLowerCase()) ||
           (plato.descripcion && plato.descripcion.toLowerCase().includes(filter.value.toLowerCase()))
         
-        // Filtro por categoría
-        const matchesCategoria = !filterCategoria.value || 
-          plato.categoria === filterCategoria.value
+        // Filtro por categoría seleccionada
+        let matchesCategoria = true
+        if (selectedTab.value !== 'todos') {
+          const categoriaSeleccionada = categoriasAgrupadas.find(cat => cat.id === selectedTab.value)
+          if (categoriaSeleccionada && categoriaSeleccionada.subcategorias) {
+            matchesCategoria = categoriaSeleccionada.subcategorias.includes(plato.categoria)
+          } else {
+            matchesCategoria = plato.categoria === selectedTab.value
+          }
+        }
         
         return matchesText && matchesCategoria
       })
@@ -494,8 +514,8 @@ export default {
       showForm,
       fileName,
       filter,
-      filterCategoria,
-      categorias,
+      selectedTab,
+      categoriasAgrupadas,
       categoriasOptions,
       previewImageUrl,
       pb,
@@ -515,6 +535,10 @@ export default {
 <style scoped>
 .platos-admin {
   margin-bottom: 2rem;
+}
+
+.tabs {
+  margin-top: 1rem;
 }
 
 .plato-img-container {

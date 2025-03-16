@@ -49,6 +49,7 @@ import Eventos from '@/components/tvViews/Eventos.vue'
 import SugerenciasChef from '@/components/tvViews/SugerenciasChef.vue'
 import MenuDia from '@/components/tvViews/MenuDia.vue'
 import Almuerzos from '@/components/tvViews/Almuerzos.vue'
+import Desayunos from '@/components/tvViews/Desayunos.vue'
 
 export default {
   name: 'TVDynamicView',
@@ -56,7 +57,8 @@ export default {
     VistaDelDia,
     MenuDia,
     Carta,
-    Eventos
+    Eventos,
+    Desayunos
   },
   setup() {
     const route = useRoute()
@@ -74,7 +76,8 @@ export default {
       'eventos': Eventos,
       'sugerencias_chef': SugerenciasChef,
       'menu_dia': MenuDia,
-      'almuerzos': Almuerzos
+      'almuerzos': Almuerzos,
+      'desayunos': Desayunos
     }
     
     // Añadir console.log para verificar los componentes
