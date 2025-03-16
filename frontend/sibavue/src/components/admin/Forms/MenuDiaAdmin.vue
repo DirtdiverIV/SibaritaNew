@@ -264,7 +264,7 @@
 </template>
 
 <script>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import pb from '@/services/pocketbase.js'
 
 export default {
@@ -292,6 +292,12 @@ export default {
     const showCreateMenuForm = ref(false)
     const showEditMenuForm = ref(false)
     const showAddPlatoForm = ref(false)
+
+    // Suscripciones
+    let menuSubscription = null
+    let primerosSubscription = null
+    let segundosSubscription = null
+    let postresSubscription = null
     
     // Cargar el menú del día más reciente
     const loadMenuDia = async () => {
@@ -304,16 +310,58 @@ export default {
         if (menus.length > 0) {
           menuDia.value = menus[0]
           await loadPlatos(menuDia.value.id)
+          setupSubscriptions(menuDia.value.id)
         } else {
           menuDia.value = null
           primeros.value = []
           segundos.value = []
           postres.value = []
+          cleanupSubscriptions()
         }
       } catch (err) {
         console.error('Error al cargar el menú del día:', err)
         alert('Error al cargar el menú del día')
       }
+    }
+
+    // Configurar suscripciones en tiempo real
+    const setupSubscriptions = (menuId) => {
+      cleanupSubscriptions()
+
+      // Suscripción al menú del día
+      menuSubscription = pb.collection('menu_dia').subscribe('*', async (e) => {
+        if (e.record.id === menuId) {
+          menuDia.value = e.record
+        }
+      })
+
+      // Suscripción a primeros platos
+      primerosSubscription = pb.collection('menu_dia_primeros').subscribe(`field = "${menuId}"`, async (e) => {
+        await loadPlatos(menuId)
+      })
+
+      // Suscripción a segundos platos
+      segundosSubscription = pb.collection('menu_dia_segundos').subscribe(`field = "${menuId}"`, async (e) => {
+        await loadPlatos(menuId)
+      })
+
+      // Suscripción a postres
+      postresSubscription = pb.collection('menu_dia_postres').subscribe(`field = "${menuId}"`, async (e) => {
+        await loadPlatos(menuId)
+      })
+    }
+
+    // Limpiar suscripciones
+    const cleanupSubscriptions = () => {
+      if (menuSubscription) pb.collection('menu_dia').unsubscribe()
+      if (primerosSubscription) pb.collection('menu_dia_primeros').unsubscribe()
+      if (segundosSubscription) pb.collection('menu_dia_segundos').unsubscribe()
+      if (postresSubscription) pb.collection('menu_dia_postres').unsubscribe()
+      
+      menuSubscription = null
+      primerosSubscription = null
+      segundosSubscription = null
+      postresSubscription = null
     }
     
     // Cargar los platos del menú del día
@@ -498,6 +546,10 @@ export default {
     // Cargar datos al montar el componente
     onMounted(() => {
       loadMenuDia()
+    })
+
+    onUnmounted(() => {
+      cleanupSubscriptions()
     })
     
     return {

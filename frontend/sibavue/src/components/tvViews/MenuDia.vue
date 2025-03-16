@@ -97,6 +97,12 @@ export default {
     const currentHighlighted = ref(null)
     let highlightInterval = null
 
+    // Suscripciones
+    let menuSubscription = null
+    let primerosSubscription = null
+    let segundosSubscription = null
+    let postresSubscription = null
+
     const highlightNextItem = () => {
       const allItems = [
         ...primeros.value.map((_, i) => `primeros-${i}`),
@@ -124,6 +130,105 @@ export default {
       }
     }
 
+    const setupSubscriptions = (menuId) => {
+      cleanupSubscriptions()
+
+      // Suscripción al menú del día
+      menuSubscription = pb.collection('menu_dia').subscribe('*', async ({ action, record }) => {
+        if (action === 'delete') {
+          menuDia.value = null
+          primeros.value = []
+          segundos.value = []
+          postres.value = []
+          return
+        }
+
+        // Si es el menú actual o es el más reciente (en caso de crear uno nuevo)
+        const menus = await pb.collection('menu_dia').getFullList({
+          sort: '-created',
+          limit: 1
+        })
+        
+        if (menus.length > 0) {
+          const latestMenu = menus[0]
+          if (record.id === menuId || record.id === latestMenu.id) {
+            menuDia.value = record
+            await loadPlatos(record.id)
+          }
+        }
+      })
+
+      // Suscripción a primeros platos
+      primerosSubscription = pb.collection('menu_dia_primeros').subscribe('*', async ({ action, record }) => {
+        if (record.field === menuId || action === 'delete') {
+          await loadPlatos(menuId)
+        }
+      })
+
+      // Suscripción a segundos platos
+      segundosSubscription = pb.collection('menu_dia_segundos').subscribe('*', async ({ action, record }) => {
+        if (record.field === menuId || action === 'delete') {
+          await loadPlatos(menuId)
+        }
+      })
+
+      // Suscripción a postres
+      postresSubscription = pb.collection('menu_dia_postres').subscribe('*', async ({ action, record }) => {
+        if (record.field === menuId || action === 'delete') {
+          await loadPlatos(menuId)
+        }
+      })
+    }
+
+    const cleanupSubscriptions = () => {
+      if (menuSubscription) {
+        pb.collection('menu_dia').unsubscribe(menuSubscription)
+        menuSubscription = null
+      }
+      if (primerosSubscription) {
+        pb.collection('menu_dia_primeros').unsubscribe(primerosSubscription)
+        primerosSubscription = null
+      }
+      if (segundosSubscription) {
+        pb.collection('menu_dia_segundos').unsubscribe(segundosSubscription)
+        segundosSubscription = null
+      }
+      if (postresSubscription) {
+        pb.collection('menu_dia_postres').unsubscribe(postresSubscription)
+        postresSubscription = null
+      }
+    }
+
+    const loadPlatos = async (menuId) => {
+      try {
+        // Cargar primeros
+        primeros.value = await pb.collection('menu_dia_primeros').getFullList({
+          filter: `field = "${menuId}"`,
+          sort: 'created'
+        })
+        
+        // Cargar segundos
+        segundos.value = await pb.collection('menu_dia_segundos').getFullList({
+          filter: `field = "${menuId}"`,
+          sort: 'created'
+        })
+        
+        // Cargar postres
+        postres.value = await pb.collection('menu_dia_postres').getFullList({
+          filter: `field = "${menuId}"`,
+          sort: 'created'
+        })
+
+        // Reiniciar la animación si es necesario
+        if (primeros.value.length > 0 || segundos.value.length > 0 || postres.value.length > 0) {
+          stopHighlightAnimation()
+          startHighlightAnimation()
+        }
+      } catch (err) {
+        console.error('Error al cargar platos:', err)
+      }
+    }
+
     const loadData = async () => {
       try {
         // Obtener menú del día
@@ -137,24 +242,10 @@ export default {
           
           // Cargar los platos del menú del día
           const menuId = menuDia.value.id
+          await loadPlatos(menuId)
           
-          // Cargar primeros
-          primeros.value = await pb.collection('menu_dia_primeros').getFullList({
-            filter: `field = "${menuId}"`,
-            sort: 'created'
-          })
-          
-          // Cargar segundos
-          segundos.value = await pb.collection('menu_dia_segundos').getFullList({
-            filter: `field = "${menuId}"`,
-            sort: 'created'
-          })
-          
-          // Cargar postres
-          postres.value = await pb.collection('menu_dia_postres').getFullList({
-            filter: `field = "${menuId}"`,
-            sort: 'created'
-          })
+          // Configurar suscripciones
+          setupSubscriptions(menuId)
           
           // Iniciar la animación después de cargar los datos
           startHighlightAnimation()
@@ -170,6 +261,7 @@ export default {
 
     onUnmounted(() => {
       stopHighlightAnimation()
+      cleanupSubscriptions()
     })
 
     return {

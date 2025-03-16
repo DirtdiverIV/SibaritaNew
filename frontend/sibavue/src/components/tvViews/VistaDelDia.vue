@@ -152,6 +152,14 @@ export default {
     const currentSection = ref('raciones')
     let highlightInterval = null
 
+    // Suscripciones
+    let menuSubscription = null
+    let primerosSubscription = null
+    let segundosSubscription = null
+    let postresSubscription = null
+    let racionesSubscription = null
+    let tapasSubscription = null
+
     const sections = [
       { name: 'raciones', items: raciones },
       { name: 'tapas', items: tapas },
@@ -184,17 +192,12 @@ export default {
 
     const loadData = async () => {
       try {
-        // Obtener raciones
-        raciones.value = await pb.collection('platos').getFullList({
-          filter: 'categoria = "raciones"',
-          sort: 'precio'
-        })
+        // Limpiar suscripciones existentes antes de cargar datos
+        cleanupSubscriptions()
         
-        // Obtener tapas
-        tapas.value = await pb.collection('platos').getFullList({
-          filter: 'categoria = "tapas"',
-          sort: 'precio'
-        })
+        // Cargar raciones y tapas primero
+        await loadRaciones()
+        await loadTapas()
         
         // Obtener menú del día
         const lista = await pb.collection('menu_dia').getFullList({
@@ -204,42 +207,185 @@ export default {
         
         if (lista.length) {
           menuDia.value = lista[0]
-          
-          // Cargar los platos del menú del día
-          const menuId = menuDia.value.id
-          
-          // Cargar primeros
-          primeros.value = await pb.collection('menu_dia_primeros').getFullList({
-            filter: `field = "${menuId}"`,
-            sort: 'created'
-          })
-          
-          // Cargar segundos
-          segundos.value = await pb.collection('menu_dia_segundos').getFullList({
-            filter: `field = "${menuId}"`,
-            sort: 'created'
-          })
-          
-          // Cargar postres
-          postres.value = await pb.collection('menu_dia_postres').getFullList({
-            filter: `field = "${menuId}"`,
-            sort: 'created'
-          })
+          await loadMenuPlatos(menuDia.value.id)
+          setupSubscriptions(menuDia.value.id)
+        } else {
+          // Si no hay menú, configurar solo las suscripciones de raciones y tapas
+          setupBasicSubscriptions()
         }
+
+        // Iniciar animación después de cargar todos los datos
+        startHighlightAnimation()
       } catch (err) {
         console.error('Error VistaDelDia:', err)
       }
     }
 
+    const setupBasicSubscriptions = () => {
+      // Suscripción a raciones
+      racionesSubscription = pb.collection('platos').subscribe('*', function(data) {
+        const { action, record } = data
+        if (action === 'delete' || (record && record.categoria === 'raciones')) {
+          loadRaciones()
+        }
+      })
+
+      // Suscripción a tapas
+      tapasSubscription = pb.collection('platos').subscribe('*', function(data) {
+        const { action, record } = data
+        if (action === 'delete' || (record && record.categoria === 'tapas')) {
+          loadTapas()
+        }
+      })
+    }
+
+    const setupSubscriptions = (menuId) => {
+      cleanupSubscriptions()
+
+      // Configurar suscripciones básicas primero
+      setupBasicSubscriptions()
+
+      // Suscripción al menú del día
+      menuSubscription = pb.collection('menu_dia').subscribe('*', function(data) {
+        const { action, record } = data
+        if (action === 'delete') {
+          menuDia.value = null
+          primeros.value = []
+          segundos.value = []
+          postres.value = []
+          return
+        }
+
+        // Si es el menú actual o es el más reciente
+        pb.collection('menu_dia').getFullList({
+          sort: '-created',
+          limit: 1
+        }).then(menus => {
+          if (menus.length > 0) {
+            const latestMenu = menus[0]
+            if (record.id === menuId || record.id === latestMenu.id) {
+              menuDia.value = record
+              loadMenuPlatos(record.id)
+            }
+          }
+        })
+      })
+
+      // Suscripción a primeros platos
+      primerosSubscription = pb.collection('menu_dia_primeros').subscribe('*', function(data) {
+        const { action, record } = data
+        if (record.field === menuId || action === 'delete') {
+          loadMenuPlatos(menuId)
+        }
+      })
+
+      // Suscripción a segundos platos
+      segundosSubscription = pb.collection('menu_dia_segundos').subscribe('*', function(data) {
+        const { action, record } = data
+        if (record.field === menuId || action === 'delete') {
+          loadMenuPlatos(menuId)
+        }
+      })
+
+      // Suscripción a postres
+      postresSubscription = pb.collection('menu_dia_postres').subscribe('*', function(data) {
+        const { action, record } = data
+        if (record.field === menuId || action === 'delete') {
+          loadMenuPlatos(menuId)
+        }
+      })
+    }
+
+    const cleanupSubscriptions = () => {
+      if (menuSubscription) {
+        pb.collection('menu_dia').unsubscribe(menuSubscription)
+        menuSubscription = null
+      }
+      if (primerosSubscription) {
+        pb.collection('menu_dia_primeros').unsubscribe(primerosSubscription)
+        primerosSubscription = null
+      }
+      if (segundosSubscription) {
+        pb.collection('menu_dia_segundos').unsubscribe(segundosSubscription)
+        segundosSubscription = null
+      }
+      if (postresSubscription) {
+        pb.collection('menu_dia_postres').unsubscribe(postresSubscription)
+        postresSubscription = null
+      }
+      if (racionesSubscription) {
+        pb.collection('platos').unsubscribe(racionesSubscription)
+        racionesSubscription = null
+      }
+      if (tapasSubscription) {
+        pb.collection('platos').unsubscribe(tapasSubscription)
+        tapasSubscription = null
+      }
+    }
+
+    const loadRaciones = async () => {
+      try {
+        console.log('Intentando cargar raciones...')
+        const result = await pb.collection('platos').getFullList({
+          filter: 'categoria = "raciones"',
+          sort: 'precio',
+          $autoCancel: false
+        })
+        raciones.value = result
+        console.log('Raciones cargadas:', raciones.value)
+      } catch (err) {
+        console.error('Error al cargar raciones:', err)
+        raciones.value = []
+      }
+    }
+
+    const loadTapas = async () => {
+      try {
+        const result = await pb.collection('platos').getFullList({
+          filter: 'categoria = "tapas"',
+          sort: 'precio',
+          $autoCancel: false
+        })
+        tapas.value = result
+      } catch (err) {
+        console.error('Error al cargar tapas:', err)
+        tapas.value = []
+      }
+    }
+
+    const loadMenuPlatos = async (menuId) => {
+      try {
+        // Cargar primeros
+        primeros.value = await pb.collection('menu_dia_primeros').getFullList({
+          filter: `field = "${menuId}"`,
+          sort: 'created'
+        })
+        
+        // Cargar segundos
+        segundos.value = await pb.collection('menu_dia_segundos').getFullList({
+          filter: `field = "${menuId}"`,
+          sort: 'created'
+        })
+        
+        // Cargar postres
+        postres.value = await pb.collection('menu_dia_postres').getFullList({
+          filter: `field = "${menuId}"`,
+          sort: 'created'
+        })
+      } catch (err) {
+        console.error('Error al cargar platos del menú:', err)
+      }
+    }
+
     onMounted(() => {
       loadData()
-      startHighlightAnimation()
     })
 
     onUnmounted(() => {
       if (highlightInterval) {
         clearInterval(highlightInterval)
       }
+      cleanupSubscriptions()
     })
 
     return {
