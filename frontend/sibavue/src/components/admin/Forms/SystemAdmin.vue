@@ -298,6 +298,9 @@ export default {
     const diagnostics = ref([])
     const isRunning = ref(false)
     
+    // Añadimos el ID para menu_dia diagnóstico
+    const menuDiaDiagnosticId = ref(null)
+
     // Cargar TVs
     const loadTvs = async () => {
       loadingTvs.value = true
@@ -427,10 +430,102 @@ export default {
       return 'tag is-light'
     }
     
+    // Función para obtener o crear menú día de diagnóstico
+    const getOrCreateDiagnosticMenuDia = async () => {
+      if (menuDiaDiagnosticId.value) return menuDiaDiagnosticId.value
+
+      try {
+        const existing = await pb.collection('menu_dia').getFirstListItem('nombre = "Menú día diag"')
+        menuDiaDiagnosticId.value = existing.id
+        return existing.id
+      } catch (err) {
+        // no existe, lo creamos
+      }
+
+      const created = await pb.collection('menu_dia').create({
+        nombre: 'Menú día diag',
+        precio: 9.99,
+      })
+      menuDiaDiagnosticId.value = created.id
+      return created.id
+    }
+
+    // Función para generar datos de prueba
+    const dummyDataForCollection = async (col) => {
+      switch (col) {
+        case 'config':
+          return {
+            rotacion_escena_segundos: 999,
+          }
+
+        case 'tv_assignments':
+          return {
+            tv_id: 'diag-' + Math.random().toString(36).substr(2, 5),
+            assigned_views: []
+          }
+
+        case 'views':
+          return {
+            view_name: 'diag_view_' + Math.random().toString(36).substr(2, 5),
+          }
+
+        case 'platos':
+          return {
+            nombre: 'diagnostic_plato',
+            precio: 1.99,
+            precio_medio: 0.99,
+            categoria: 'diagnostic',
+            descripcion: 'test create'
+          }
+
+        case 'menu_dia':
+          return {
+            nombre: 'Menú test diag',
+            precio: 9.99
+          }
+
+        case 'menu_dia_primeros':
+        case 'menu_dia_segundos':
+        case 'menu_dia_postres': {
+          const mdId = await getOrCreateDiagnosticMenuDia()
+          return {
+            nombre: `Subcol ${col} diag`,
+            descripcion: 'test subcol',
+            field: mdId
+          }
+        }
+
+        case 'menus_evento':
+          return {
+            nombre: 'Menú evento diag',
+            precio: 29.99
+          }
+
+        case 'eventos':
+          return {
+            titulo: 'Evento diag',
+            descripcion: 'probando create',
+            precio_desde: 10
+          }
+
+        default:
+          return { testField: 'diagnostic' }
+      }
+    }
+
+    // Función para formatear errores
+    const formatError = (err) => {
+      if (!err) return 'Error desconocido'
+      if (err.status) {
+        return `${err.status}`
+      }
+      return err.message || 'Error'
+    }
+
     const runDiagnostics = async () => {
       isRunning.value = true
       diagnostics.value = []
-      
+
       const collections = [
         'config',
         'tv_assignments',
@@ -443,7 +538,7 @@ export default {
         'menus_evento',
         'eventos'
       ]
-      
+
       for (const col of collections) {
         const result = {
           collection: col,
@@ -452,38 +547,52 @@ export default {
           updateStatus: 'N/A',
           deleteStatus: 'N/A'
         }
-        
+
+        // 1) List
         try {
           await pb.collection(col).getFullList({ limit: 1 })
           result.listStatus = 'OK'
         } catch (err) {
-          result.listStatus = err.status || 'Error'
+          result.listStatus = formatError(err)
         }
-        
+
+        // 2) Create
+        let createdId = null
         try {
-          const record = await pb.collection(col).create({ test: true })
+          const createData = await dummyDataForCollection(col)
+          const record = await pb.collection(col).create(createData)
+          createdId = record.id
           result.createStatus = 'OK'
-          
+        } catch (err) {
+          result.createStatus = formatError(err)
+        }
+
+        // 3) Update (si create fue OK)
+        if (createdId) {
           try {
-            await pb.collection(col).update(record.id, { test: false })
+            await pb.collection(col).update(createdId, { testField: 'diagnostic update' })
             result.updateStatus = 'OK'
           } catch (err) {
-            result.updateStatus = err.status || 'Error'
+            result.updateStatus = formatError(err)
           }
-          
+        }
+
+        // 4) Delete (si create fue OK)
+        if (createdId) {
           try {
-            await pb.collection(col).delete(record.id)
+            await pb.collection(col).delete(createdId)
             result.deleteStatus = 'OK'
           } catch (err) {
-            result.deleteStatus = err.status || 'Error'
+            result.deleteStatus = formatError(err)
           }
-        } catch (err) {
-          result.createStatus = err.status || 'Error'
         }
-        
+
         diagnostics.value.push(result)
+        
+        // Pequeña pausa para no sobrecargar la API
+        await new Promise(resolve => setTimeout(resolve, 200))
       }
-      
+
       isRunning.value = false
     }
     
