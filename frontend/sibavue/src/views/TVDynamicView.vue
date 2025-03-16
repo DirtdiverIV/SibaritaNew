@@ -48,6 +48,7 @@ import Carta from '@/components/tvViews/Carta.vue'
 import Eventos from '@/components/tvViews/Eventos.vue'
 import SugerenciasChef from '@/components/tvViews/SugerenciasChef.vue'
 import MenuDia from '@/components/tvViews/MenuDia.vue'
+import Almuerzos from '@/components/tvViews/Almuerzos.vue'
 
 export default {
   name: 'TVDynamicView',
@@ -68,11 +69,12 @@ export default {
 
     // Diccionario que asocia nombre de la vista (en BD) => componente Vue
     const viewMap = {
-      vista_del_dia: VistaDelDia,
-      carta: Carta,
-      eventos: Eventos,
-      sugerencias_chef: SugerenciasChef,
-      menu_dia: MenuDia
+      'vista_del_dia': VistaDelDia,
+      'carta': Carta,
+      'eventos': Eventos,
+      'sugerencias_chef': SugerenciasChef,
+      'menu_dia': MenuDia,
+      'almuerzos': Almuerzos
     }
     
     // Añadir console.log para verificar los componentes

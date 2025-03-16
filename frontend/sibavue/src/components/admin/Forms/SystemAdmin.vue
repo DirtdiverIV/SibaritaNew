@@ -508,6 +508,24 @@ export default {
             precio_desde: 10
           }
 
+        case 'almuerzos':
+          // Crear un archivo de imagen de prueba
+          const imageBlob = new Blob(['test'], { type: 'image/png' })
+          const testFile = new File([imageBlob], 'test.png', { type: 'image/png' })
+          const formData = new FormData()
+          formData.append('nombre', 'Almuerzo diag')
+          formData.append('precio', '8.50')
+          formData.append('imagen', testFile)
+          return formData
+
+        case 'almuerzo_items':
+          const almuerzoId = await getOrCreateDiagnosticAlmuerzo()
+          return {
+            nombre: 'Item almuerzo diag',
+            descripcion: 'test item',
+            almuerzo: almuerzoId
+          }
+
         default:
           return { testField: 'diagnostic' }
       }
@@ -536,7 +554,9 @@ export default {
         'menu_dia_segundos',
         'menu_dia_postres',
         'menus_evento',
-        'eventos'
+        'eventos',
+        'almuerzos',
+        'almuerzo_items'
       ]
 
       for (const col of collections) {
@@ -602,6 +622,25 @@ export default {
       setTimeout(() => {
         configMessage.value = ''
       }, 5000)
+    }
+    
+    // Función para obtener o crear almuerzo de diagnóstico
+    const getOrCreateDiagnosticAlmuerzo = async () => {
+      try {
+        const existing = await pb.collection('almuerzos').getFirstListItem('nombre = "Almuerzo diag"')
+        return existing.id
+      } catch (err) {
+        // Crear un archivo de imagen de prueba para el almuerzo
+        const imageBlob = new Blob(['test'], { type: 'image/png' })
+        const testFile = new File([imageBlob], 'test.png', { type: 'image/png' })
+        const formData = new FormData()
+        formData.append('nombre', 'Almuerzo diag')
+        formData.append('precio', '8.50')
+        formData.append('imagen', testFile)
+        
+        const created = await pb.collection('almuerzos').create(formData)
+        return created.id
+      }
     }
     
     onMounted(async () => {

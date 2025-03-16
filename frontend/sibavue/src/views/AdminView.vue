@@ -93,6 +93,7 @@ const SystemAdmin = defineAsyncComponent(() => import('@/components/admin/Forms/
 const PlatosAdmin = defineAsyncComponent(() => import('@/components/admin/Forms/PlatosAdmin.vue'))
 const MenuDiaAdmin = defineAsyncComponent(() => import('@/components/admin/Forms/MenuDiaAdmin.vue'))
 const EventosAdmin = defineAsyncComponent(() => import('@/components/admin/Forms/EventosAdmin.vue'))
+const AlmuerzosAdmin = defineAsyncComponent(() => import('@/components/admin/Forms/AlmuerzosAdmin.vue'))
 
 export default {
   name: 'AdminView',
@@ -100,7 +101,8 @@ export default {
     SystemAdmin,
     PlatosAdmin,
     MenuDiaAdmin,
-    EventosAdmin
+    EventosAdmin,
+    AlmuerzosAdmin
   },
   setup() {
     const router = useRouter()
@@ -118,6 +120,11 @@ export default {
         name: 'Platos', 
         component: 'PlatosAdmin',
         icon: 'fas fa-utensils'
+      },
+      {
+        name: 'Almuerzos',
+        component: 'AlmuerzosAdmin',
+        icon: 'fas fa-coffee'
       },
       { 
         name: 'Eventos', 
