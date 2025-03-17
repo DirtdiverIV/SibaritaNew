@@ -227,20 +227,20 @@
           <div class="field">
             <label class="label">Vistas Asignadas</label>
             <div class="control">
-              <div class="select is-multiple is-fullwidth">
-                <select 
-                  v-model="tvForm.assigned_views" 
-                  multiple 
-                  size="5"
+              <div class="views-grid">
+                <button
+                  v-for="view in availableViews"
+                  :key="view.id"
+                  class="view-button"
+                  :class="{ 'is-selected': tvForm.assigned_views.includes(view.id) }"
+                  @click="toggleView(view.id)"
+                  type="button"
                 >
-                  <option 
-                    v-for="view in availableViews" 
-                    :key="view.id" 
-                    :value="view.id"
-                  >
-                    {{ formatViewName(view.view_name) }}
-                  </option>
-                </select>
+                  <span class="icon">
+                    <i class="fas" :class="tvForm.assigned_views.includes(view.id) ? 'fa-check-circle' : 'fa-circle'"></i>
+                  </span>
+                  <span>{{ formatViewName(view.view_name) }}</span>
+                </button>
               </div>
             </div>
           </div>
@@ -643,6 +643,14 @@ export default {
       }
     }
     
+    const toggleView = (viewId) => {
+      if (tvForm.value.assigned_views.includes(viewId)) {
+        tvForm.value.assigned_views = tvForm.value.assigned_views.filter(id => id !== viewId)
+      } else {
+        tvForm.value.assigned_views.push(viewId)
+      }
+    }
+    
     onMounted(async () => {
       await Promise.all([
         loadTvs(),
@@ -670,7 +678,8 @@ export default {
       saveTv,
       saveConfig,
       getStatusClass,
-      runDiagnostics
+      runDiagnostics,
+      toggleView
     }
   }
 }
@@ -805,9 +814,73 @@ export default {
   border-top: 1px solid rgba(212, 175, 55, 0.3);
 }
 
+.views-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.5rem;
+  background-color: rgba(18, 18, 18, 0.5);
+  border-radius: 4px;
+}
+
+.view-button {
+  display: flex;
+  align-items: center;
+  background-color: rgba(30, 30, 30, 0.7);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #e0e0e0;
+  width: 100%;
+  text-align: left;
+}
+
+.view-button:hover {
+  background-color: rgba(212, 175, 55, 0.1);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.view-button.is-selected {
+  background-color: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.1);
+}
+
+.view-button .icon {
+  margin-right: 0.75rem;
+  width: 20px;
+  display: flex;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.view-button.is-selected .icon {
+  color: #d4af37;
+  transform: scale(1.1);
+}
+
+.view-button span:not(.icon) {
+  flex: 1;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.view-button.is-selected span:not(.icon) {
+  color: #d4af37;
+  font-weight: 500;
+}
+
 @media (max-width: 768px) {
   .tv-grid {
     grid-template-columns: 1fr;
+  }
+  
+  .views-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
   
   .table-container {
