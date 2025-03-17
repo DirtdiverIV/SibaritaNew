@@ -2,49 +2,54 @@
   <div class="tv-view">
     <div class="background-pattern"></div>
     <div class="tv-content">
-      <div class="view-header">
-        <div class="restaurant-name">O SIBARITA</div>
-        <h1 class="view-title">SUGERENCIAS DEL CHEF</h1>
+      <div v-if="isLoading" class="tv-loading-container">
+        <TvLoading />
       </div>
-      
-      <div v-if="!sugerencias.length" class="empty-state">
-        <div class="empty-icon">👨‍🍳</div>
-        <h2 class="empty-title">No hay sugerencias disponibles</h2>
-        <p class="empty-subtitle">Consulte nuestra carta o pregunte a nuestro personal</p>
-      </div>
-      
-      <div v-else class="view-body">
-        <div class="sugerencia-principal" v-if="sugerenciaActual">
-          <div class="sugerencia-header">
-            <h2 class="sugerencia-titulo">HOY RECOMENDAMOS</h2>
-          </div>
-          
-          <div class="sugerencia-content">
-            <div class="sugerencia-imagen-container">
-              <div v-if="sugerenciaActual.imagen" class="sugerencia-imagen">
-                <img :src="pb.files.getUrl(sugerenciaActual, sugerenciaActual.imagen)" :alt="sugerenciaActual.nombre" />
-              </div>
-              <div v-else class="sugerencia-imagen sugerencia-imagen-placeholder">
-                <span class="placeholder-icon">🍽️</span>
-              </div>
+      <template v-else>
+        <div class="view-header">
+          <div class="restaurant-name">O SIBARITA</div>
+          <h1 class="view-title">SUGERENCIAS DEL CHEF</h1>
+        </div>
+        
+        <div v-if="!sugerencias.length" class="empty-state">
+          <div class="empty-icon">👨‍🍳</div>
+          <h2 class="empty-title">No hay sugerencias disponibles</h2>
+          <p class="empty-subtitle">Consulte nuestra carta o pregunte a nuestro personal</p>
+        </div>
+        
+        <div v-else class="view-body">
+          <div class="sugerencia-principal" v-if="sugerenciaActual">
+            <div class="sugerencia-header">
+              <h2 class="sugerencia-titulo">HOY RECOMENDAMOS</h2>
             </div>
             
-            <div class="sugerencia-detalles">
-              <h3 class="sugerencia-nombre">{{ sugerenciaActual.nombre }}</h3>
-              <p class="sugerencia-descripcion">{{ sugerenciaActual.descripcion || 'Una exquisita creación de nuestro chef con ingredientes seleccionados.' }}</p>
+            <div class="sugerencia-content">
+              <div class="sugerencia-imagen-container">
+                <div v-if="sugerenciaActual.imagen" class="sugerencia-imagen">
+                  <img :src="pb.files.getUrl(sugerenciaActual, sugerenciaActual.imagen)" :alt="sugerenciaActual.nombre" />
+                </div>
+                <div v-else class="sugerencia-imagen sugerencia-imagen-placeholder">
+                  <span class="placeholder-icon">🍽️</span>
+                </div>
+              </div>
               
-              <div class="sugerencia-footer">
-                <div class="sugerencia-precio">
-                  <span class="price-tag">{{ sugerenciaActual.precio }}€</span>
-                  <span v-if="sugerenciaActual.precio_medio" class="price-medio">
-                    Media: {{ sugerenciaActual.precio_medio }}€
-                  </span>
+              <div class="sugerencia-detalles">
+                <h3 class="sugerencia-nombre">{{ sugerenciaActual.nombre }}</h3>
+                <p class="sugerencia-descripcion">{{ sugerenciaActual.descripcion || 'Una exquisita creación de nuestro chef con ingredientes seleccionados.' }}</p>
+                
+                <div class="sugerencia-footer">
+                  <div class="sugerencia-precio">
+                    <span class="price-tag">{{ sugerenciaActual.precio }}€</span>
+                    <span v-if="sugerenciaActual.precio_medio" class="price-medio">
+                      Media: {{ sugerenciaActual.precio_medio }}€
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -52,10 +57,15 @@
 <script>
 import { ref, onMounted, onUnmounted } from 'vue'
 import pb from '@/services/pocketbase.js'
+import TvLoading from './TvLoading.vue'
 
 export default {
   name: 'SugerenciasChef',
+  components: {
+    TvLoading
+  },
   setup() {
+    const isLoading = ref(true)
     const sugerencias = ref([])
     const sugerenciaActual = ref(null)
     const currentIndex = ref(0)
@@ -79,8 +89,10 @@ export default {
             console.log('La sugerencia actual no tiene imagen')
           }
         }
+        isLoading.value = false
       } catch (error) {
         console.error('Error SugerenciasChef:', error)
+        isLoading.value = false
       }
     }
 
@@ -105,6 +117,7 @@ export default {
     })
 
     return {
+      isLoading,
       sugerencias,
       sugerenciaActual,
       pb

@@ -2,41 +2,46 @@
   <div class="tv-view">
     <div class="background-pattern"></div>
     <div class="tv-content">
-      <div class="view-header">
-        <div class="restaurant-name">O SIBARITA</div>
-        <h1 class="view-title">ALMUERZOS</h1>
+      <div v-if="isLoading" class="tv-loading-container">
+        <TvLoading />
       </div>
-      
-      <div class="view-body">
-        <div class="almuerzos-grid">
-          <div v-for="almuerzo in almuerzos" 
-               :key="almuerzo.id" 
-               class="almuerzo-card"
-               :class="{ 'highlighted': almuerzo.id === highlightedId }">
-            <div class="almuerzo-content">
-              <div class="almuerzo-header">
-                <h2 class="almuerzo-nombre">{{ almuerzo.nombre }}</h2>
-                <div class="almuerzo-precio">{{ almuerzo.precio }}€</div>
-              </div>
-
-              <div class="almuerzo-body">
-                <div class="almuerzo-imagen" v-if="almuerzo.imagen">
-                  <img :src="getImageUrl(almuerzo)" :alt="almuerzo.nombre">
+      <template v-else>
+        <div class="view-header">
+          <div class="restaurant-name">O SIBARITA</div>
+          <h1 class="view-title">ALMUERZOS</h1>
+        </div>
+        
+        <div class="view-body">
+          <div class="almuerzos-grid">
+            <div v-for="almuerzo in almuerzos" 
+                 :key="almuerzo.id" 
+                 class="almuerzo-card"
+                 :class="{ 'highlighted': almuerzo.id === highlightedId }">
+              <div class="almuerzo-content">
+                <div class="almuerzo-header">
+                  <h2 class="almuerzo-nombre">{{ almuerzo.nombre }}</h2>
+                  <div class="almuerzo-precio">{{ almuerzo.precio }}€</div>
                 </div>
-                
-                <div class="almuerzo-items">
-                  <div v-for="item in almuerzoItems[almuerzo.id] || []" 
-                       :key="item.id" 
-                       class="almuerzo-item">
-                    <div class="item-nombre">{{ item.nombre }}</div>
-                    <div v-if="item.descripcion" class="item-descripcion">{{ item.descripcion }}</div>
+
+                <div class="almuerzo-body">
+                  <div class="almuerzo-imagen" v-if="almuerzo.imagen">
+                    <img :src="getImageUrl(almuerzo)" :alt="almuerzo.nombre">
+                  </div>
+                  
+                  <div class="almuerzo-items">
+                    <div v-for="item in almuerzoItems[almuerzo.id] || []" 
+                         :key="item.id" 
+                         class="almuerzo-item">
+                      <div class="item-nombre">{{ item.nombre }}</div>
+                      <div v-if="item.descripcion" class="item-descripcion">{{ item.descripcion }}</div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -44,10 +49,15 @@
 <script>
 import { ref, onMounted, onUnmounted } from 'vue'
 import pb from '@/services/pocketbase.js'
+import TvLoading from './TvLoading.vue'
 
 export default {
   name: 'Almuerzos',
+  components: {
+    TvLoading
+  },
   setup() {
+    const isLoading = ref(true)
     const almuerzos = ref([])
     const almuerzoItems = ref({})
     const highlightedId = ref(null)
@@ -55,9 +65,10 @@ export default {
 
     const loadAlmuerzos = async () => {
       try {
+        isLoading.value = true
         console.log('Cargando almuerzos...')
         const records = await pb.collection('almuerzos').getFullList({
-          sort: 'created'
+          sort: '-created'
         })
         
         console.log('Almuerzos cargados:', records)
@@ -80,6 +91,8 @@ export default {
         })
       } catch (error) {
         console.error('Error cargando almuerzos:', error)
+      } finally {
+        isLoading.value = false
       }
     }
 
@@ -110,6 +123,7 @@ export default {
     })
 
     return {
+      isLoading,
       almuerzos,
       almuerzoItems,
       highlightedId,
@@ -313,5 +327,19 @@ export default {
   .item-descripcion {
     font-size: 1.5vh;
   }
+}
+
+.tv-loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
 }
 </style> 

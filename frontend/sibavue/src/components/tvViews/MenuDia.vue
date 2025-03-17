@@ -2,83 +2,88 @@
   <div class="tv-view">
     <div class="background-pattern"></div>
     <div class="tv-content">
-      <div class="view-header">
-        <div class="restaurant-name">O SIBARITA</div>
-        <div class="title-price-container">
-          <h1 class="view-title">MENÚ DEL DÍA</h1>
-          <div v-if="menuDia" class="menu-price">{{ menuDia.precio }}€</div>
+      <div v-if="isLoading" class="tv-loading-container">
+        <TvLoading />
+      </div>
+      <template v-else>
+        <div class="view-header">
+          <div class="restaurant-name">O SIBARITA</div>
+          <div class="title-price-container">
+            <h1 class="view-title">MENÚ DEL DÍA</h1>
+            <div v-if="menuDia" class="menu-price">{{ menuDia.precio }}€</div>
+          </div>
         </div>
-      </div>
-      
-      <div v-if="!menuDia" class="empty-state">
-        <div class="empty-icon">🍽️</div>
-        <h2 class="empty-title">No hay menú del día disponible</h2>
-        <p class="empty-subtitle">Consulte nuestras sugerencias o la carta</p>
-      </div>
-      
-      <div v-else class="view-body">
-        <div class="menu-container">
-          <div class="menu-columns">
-            <!-- Primeros platos -->
-            <div class="menu-section">
-              <div class="section-header">
-                <h3 class="section-title">Primeros</h3>
-                <div class="section-divider"></div>
+        
+        <div v-if="!menuDia" class="empty-state">
+          <div class="empty-icon">🍽️</div>
+          <h2 class="empty-title">No hay menú del día disponible</h2>
+          <p class="empty-subtitle">Consulte nuestras sugerencias o la carta</p>
+        </div>
+        
+        <div v-else class="view-body">
+          <div class="menu-container">
+            <div class="menu-columns">
+              <!-- Primeros platos -->
+              <div class="menu-section">
+                <div class="section-header">
+                  <h3 class="section-title">Primeros</h3>
+                  <div class="section-divider"></div>
+                </div>
+                
+                <div class="platos-lista" :class="{ 'justify-evenly': primeros.length === 2 }">
+                  <div v-if="primeros.length === 0" class="empty-section">
+                    <p>No hay primeros disponibles</p>
+                  </div>
+                  <div v-else v-for="(plato, index) in primeros" :key="plato.id" class="plato-item" :class="{ 'highlighted': currentHighlighted === `primeros-${index}` }">
+                    <div class="plato-nombre">{{ plato.nombre }}</div>
+                    <div v-if="plato.descripcion" class="plato-descripcion">{{ plato.descripcion }}</div>
+                  </div>
+                </div>
               </div>
               
-              <div class="platos-lista" :class="{ 'justify-evenly': primeros.length === 2 }">
-                <div v-if="primeros.length === 0" class="empty-section">
-                  <p>No hay primeros disponibles</p>
+              <!-- Segundos platos -->
+              <div class="menu-section">
+                <div class="section-header">
+                  <h3 class="section-title">Segundos</h3>
+                  <div class="section-divider"></div>
                 </div>
-                <div v-else v-for="(plato, index) in primeros" :key="plato.id" class="plato-item" :class="{ 'highlighted': currentHighlighted === `primeros-${index}` }">
-                  <div class="plato-nombre">{{ plato.nombre }}</div>
-                  <div v-if="plato.descripcion" class="plato-descripcion">{{ plato.descripcion }}</div>
+                
+                <div class="platos-lista" :class="{ 'justify-evenly': segundos.length === 2 }">
+                  <div v-if="segundos.length === 0" class="empty-section">
+                    <p>No hay segundos disponibles</p>
+                  </div>
+                  <div v-else v-for="(plato, index) in segundos" :key="plato.id" class="plato-item" :class="{ 'highlighted': currentHighlighted === `segundos-${index}` }">
+                    <div class="plato-nombre">{{ plato.nombre }}</div>
+                    <div v-if="plato.descripcion" class="plato-descripcion">{{ plato.descripcion }}</div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Postres -->
+              <div class="menu-section">
+                <div class="section-header">
+                  <h3 class="section-title">Postres</h3>
+                  <div class="section-divider"></div>
+                </div>
+                
+                <div class="platos-lista" :class="{ 'justify-evenly': postres.length === 2 }">
+                  <div v-if="postres.length === 0" class="empty-section">
+                    <p>No hay postres disponibles</p>
+                  </div>
+                  <div v-else v-for="(plato, index) in postres" :key="plato.id" class="plato-item" :class="{ 'highlighted': currentHighlighted === `postres-${index}` }">
+                    <div class="plato-nombre">{{ plato.nombre }}</div>
+                    <div v-if="plato.descripcion" class="plato-descripcion">{{ plato.descripcion }}</div>
+                  </div>
                 </div>
               </div>
             </div>
             
-            <!-- Segundos platos -->
-            <div class="menu-section">
-              <div class="section-header">
-                <h3 class="section-title">Segundos</h3>
-                <div class="section-divider"></div>
-              </div>
-              
-              <div class="platos-lista" :class="{ 'justify-evenly': segundos.length === 2 }">
-                <div v-if="segundos.length === 0" class="empty-section">
-                  <p>No hay segundos disponibles</p>
-                </div>
-                <div v-else v-for="(plato, index) in segundos" :key="plato.id" class="plato-item" :class="{ 'highlighted': currentHighlighted === `segundos-${index}` }">
-                  <div class="plato-nombre">{{ plato.nombre }}</div>
-                  <div v-if="plato.descripcion" class="plato-descripcion">{{ plato.descripcion }}</div>
-                </div>
-              </div>
+            <div class="menu-footer">
+              <p>Incluye pan, bebida y café</p>
             </div>
-            
-            <!-- Postres -->
-            <div class="menu-section">
-              <div class="section-header">
-                <h3 class="section-title">Postres</h3>
-                <div class="section-divider"></div>
-              </div>
-              
-              <div class="platos-lista" :class="{ 'justify-evenly': postres.length === 2 }">
-                <div v-if="postres.length === 0" class="empty-section">
-                  <p>No hay postres disponibles</p>
-                </div>
-                <div v-else v-for="(plato, index) in postres" :key="plato.id" class="plato-item" :class="{ 'highlighted': currentHighlighted === `postres-${index}` }">
-                  <div class="plato-nombre">{{ plato.nombre }}</div>
-                  <div v-if="plato.descripcion" class="plato-descripcion">{{ plato.descripcion }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="menu-footer">
-            <p>Incluye pan, bebida y café</p>
           </div>
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -86,10 +91,15 @@
 <script>
 import { ref, onMounted, onUnmounted } from 'vue'
 import pb from '@/services/pocketbase.js'
+import TvLoading from './TvLoading.vue'
 
 export default {
   name: 'MenuDia',
+  components: {
+    TvLoading
+  },
   setup() {
+    const isLoading = ref(true)
     const menuDia = ref(null)
     const primeros = ref([])
     const segundos = ref([])
@@ -233,6 +243,7 @@ export default {
 
     const loadData = async () => {
       try {
+        isLoading.value = true
         // Obtener menú del día
         const lista = await pb.collection('menu_dia').getFullList({
           sort: '-created',
@@ -254,6 +265,8 @@ export default {
         }
       } catch (err) {
         console.error('Error MenuDia:', err)
+      } finally {
+        isLoading.value = false
       }
     }
 
@@ -267,6 +280,7 @@ export default {
     })
 
     return {
+      isLoading,
       menuDia,
       primeros,
       segundos,
@@ -521,5 +535,19 @@ export default {
 
 .menu-item {
   font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+.tv-loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
 }
 </style>

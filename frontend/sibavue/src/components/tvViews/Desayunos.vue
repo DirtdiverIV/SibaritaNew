@@ -2,149 +2,154 @@
   <div class="tv-view">
     <div class="background-pattern"></div>
     <div class="tv-content">
-      <div class="view-header">
-        <div class="restaurant-name">O SIBARITA</div>
-        <h1 class="view-title">DESAYUNOS</h1>
+      <div v-if="isLoading" class="tv-loading-container">
+        <TvLoading />
       </div>
-      
-      <div class="view-body">
-        <div class="desayunos-grid">
-          <!-- Sección Dulces -->
-          <div class="section-container">
-            <div class="section-header">
-              <h2 class="section-title">Dulces</h2>
-              <div class="section-divider"></div>
-            </div>
-            <div class="section-content">
-              <div v-if="!dulces.length" class="empty-section">
-                <p>No hay desayunos dulces disponibles</p>
+      <template v-else>
+        <div class="view-header">
+          <div class="restaurant-name">O SIBARITA</div>
+          <h1 class="view-title">DESAYUNOS</h1>
+        </div>
+        
+        <div class="view-body">
+          <div class="desayunos-grid">
+            <!-- Sección Dulces -->
+            <div class="section-container">
+              <div class="section-header">
+                <h2 class="section-title">Dulces</h2>
+                <div class="section-divider"></div>
               </div>
-              <div v-else class="platos-list">
-                <div v-for="(item, index) in dulces" 
-                     :key="item.id" 
-                     class="plato-item"
-                     :class="{ 'highlighted': highlightedIndex === index && currentSection === 'dulces' }">
-                  <div class="plato-content">
-                    <div class="plato-name">{{ item.nombre }}</div>
-                    <div v-if="item.descripcion" class="plato-desc">{{ item.descripcion }}</div>
-                  </div>
-                  <div class="plato-price">
-                    <span class="price-tag">{{ item.precio }}€</span>
+              <div class="section-content">
+                <div v-if="!dulces.length" class="empty-section">
+                  <p>No hay desayunos dulces disponibles</p>
+                </div>
+                <div v-else class="platos-list">
+                  <div v-for="(item, index) in dulces" 
+                       :key="item.id" 
+                       class="plato-item"
+                       :class="{ 'highlighted': highlightedIndex === index && currentSection === 'dulces' }">
+                    <div class="plato-content">
+                      <div class="plato-name">{{ item.nombre }}</div>
+                      <div v-if="item.descripcion" class="plato-desc">{{ item.descripcion }}</div>
+                    </div>
+                    <div class="plato-price">
+                      <span class="price-tag">{{ item.precio }}€</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- Sección Salados -->
-          <div class="section-container">
-            <div class="section-header">
-              <h2 class="section-title">Salados</h2>
-              <div class="section-divider"></div>
-            </div>
-            <div class="section-content">
-              <div v-if="!salados.length" class="empty-section">
-                <p>No hay desayunos salados disponibles</p>
+            <!-- Sección Salados -->
+            <div class="section-container">
+              <div class="section-header">
+                <h2 class="section-title">Salados</h2>
+                <div class="section-divider"></div>
               </div>
-              <div v-else class="platos-list">
-                <div v-for="(item, index) in salados" 
-                     :key="item.id" 
-                     class="plato-item"
-                     :class="{ 'highlighted': highlightedIndex === index && currentSection === 'salados' }">
-                  <div class="plato-content">
-                    <div class="plato-name">{{ item.nombre }}</div>
-                    <div v-if="item.descripcion" class="plato-desc">{{ item.descripcion }}</div>
-                  </div>
-                  <div class="plato-price">
-                    <span class="price-tag">{{ item.precio }}€</span>
+              <div class="section-content">
+                <div v-if="!salados.length" class="empty-section">
+                  <p>No hay desayunos salados disponibles</p>
+                </div>
+                <div v-else class="platos-list">
+                  <div v-for="(item, index) in salados" 
+                       :key="item.id" 
+                       class="plato-item"
+                       :class="{ 'highlighted': highlightedIndex === index && currentSection === 'salados' }">
+                    <div class="plato-content">
+                      <div class="plato-name">{{ item.nombre }}</div>
+                      <div v-if="item.descripcion" class="plato-desc">{{ item.descripcion }}</div>
+                    </div>
+                    <div class="plato-price">
+                      <span class="price-tag">{{ item.precio }}€</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- Sección Cafés -->
-          <div class="section-container">
-            <div class="section-header">
-              <h2 class="section-title">Cafés</h2>
-              <div class="section-divider"></div>
-            </div>
-            <div class="section-content">
-              <div v-if="!cafes.length" class="empty-section">
-                <p>No hay cafés disponibles</p>
+            <!-- Sección Cafés -->
+            <div class="section-container">
+              <div class="section-header">
+                <h2 class="section-title">Cafés</h2>
+                <div class="section-divider"></div>
               </div>
-              <div v-else class="platos-list">
-                <div v-for="(item, index) in cafes" 
-                     :key="item.id" 
-                     class="plato-item"
-                     :class="{ 'highlighted': highlightedIndex === index && currentSection === 'cafes' }">
-                  <div class="plato-content">
-                    <div class="plato-name">{{ item.nombre }}</div>
-                    <div v-if="item.descripcion" class="plato-desc">{{ item.descripcion }}</div>
-                  </div>
-                  <div class="plato-price">
-                    <span class="price-tag">{{ item.precio }}€</span>
+              <div class="section-content">
+                <div v-if="!cafes.length" class="empty-section">
+                  <p>No hay cafés disponibles</p>
+                </div>
+                <div v-else class="platos-list">
+                  <div v-for="(item, index) in cafes" 
+                       :key="item.id" 
+                       class="plato-item"
+                       :class="{ 'highlighted': highlightedIndex === index && currentSection === 'cafes' }">
+                    <div class="plato-content">
+                      <div class="plato-name">{{ item.nombre }}</div>
+                      <div v-if="item.descripcion" class="plato-desc">{{ item.descripcion }}</div>
+                    </div>
+                    <div class="plato-price">
+                      <span class="price-tag">{{ item.precio }}€</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- Sección Infusiones -->
-          <div class="section-container">
-            <div class="section-header">
-              <h2 class="section-title">Infusiones</h2>
-              <div class="section-divider"></div>
-            </div>
-            <div class="section-content">
-              <div v-if="!infusiones.length" class="empty-section">
-                <p>No hay infusiones disponibles</p>
+            <!-- Sección Infusiones -->
+            <div class="section-container">
+              <div class="section-header">
+                <h2 class="section-title">Infusiones</h2>
+                <div class="section-divider"></div>
               </div>
-              <div v-else class="platos-list">
-                <div v-for="(item, index) in infusiones" 
-                     :key="item.id" 
-                     class="plato-item"
-                     :class="{ 'highlighted': highlightedIndex === index && currentSection === 'infusiones' }">
-                  <div class="plato-content">
-                    <div class="plato-name">{{ item.nombre }}</div>
-                    <div v-if="item.descripcion" class="plato-desc">{{ item.descripcion }}</div>
-                  </div>
-                  <div class="plato-price">
-                    <span class="price-tag">{{ item.precio }}€</span>
+              <div class="section-content">
+                <div v-if="!infusiones.length" class="empty-section">
+                  <p>No hay infusiones disponibles</p>
+                </div>
+                <div v-else class="platos-list">
+                  <div v-for="(item, index) in infusiones" 
+                       :key="item.id" 
+                       class="plato-item"
+                       :class="{ 'highlighted': highlightedIndex === index && currentSection === 'infusiones' }">
+                    <div class="plato-content">
+                      <div class="plato-name">{{ item.nombre }}</div>
+                      <div v-if="item.descripcion" class="plato-desc">{{ item.descripcion }}</div>
+                    </div>
+                    <div class="plato-price">
+                      <span class="price-tag">{{ item.precio }}€</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- Sección Otros -->
-          <div class="section-container">
-            <div class="section-header">
-              <h2 class="section-title">Otros</h2>
-              <div class="section-divider"></div>
-            </div>
-            <div class="section-content">
-              <div v-if="!otros.length" class="empty-section">
-                <p>No hay otros desayunos disponibles</p>
+            <!-- Sección Otros -->
+            <div class="section-container">
+              <div class="section-header">
+                <h2 class="section-title">Otros</h2>
+                <div class="section-divider"></div>
               </div>
-              <div v-else class="platos-list">
-                <div v-for="(item, index) in otros" 
-                     :key="item.id" 
-                     class="plato-item"
-                     :class="{ 'highlighted': highlightedIndex === index && currentSection === 'otros' }">
-                  <div class="plato-content">
-                    <div class="plato-name">{{ item.nombre }}</div>
-                    <div v-if="item.descripcion" class="plato-desc">{{ item.descripcion }}</div>
-                  </div>
-                  <div class="plato-price">
-                    <span class="price-tag">{{ item.precio }}€</span>
+              <div class="section-content">
+                <div v-if="!otros.length" class="empty-section">
+                  <p>No hay otros desayunos disponibles</p>
+                </div>
+                <div v-else class="platos-list">
+                  <div v-for="(item, index) in otros" 
+                       :key="item.id" 
+                       class="plato-item"
+                       :class="{ 'highlighted': highlightedIndex === index && currentSection === 'otros' }">
+                    <div class="plato-content">
+                      <div class="plato-name">{{ item.nombre }}</div>
+                      <div v-if="item.descripcion" class="plato-desc">{{ item.descripcion }}</div>
+                    </div>
+                    <div class="plato-price">
+                      <span class="price-tag">{{ item.precio }}€</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -152,10 +157,15 @@
 <script>
 import { ref, onMounted, onUnmounted } from 'vue'
 import pb from '@/services/pocketbase.js'
+import TvLoading from './TvLoading.vue'
 
 export default {
   name: 'Desayunos',
+  components: {
+    TvLoading
+  },
   setup() {
+    const isLoading = ref(true)
     const dulces = ref([])
     const salados = ref([])
     const cafes = ref([])
@@ -169,6 +179,7 @@ export default {
 
     const loadPlatos = async () => {
       try {
+        isLoading.value = true
         // Cargar todos los desayunos en una sola llamada
         const allPlatos = await pb.collection('platos').getFullList({
           filter: 'categoria ~ "desayuno_"',
@@ -183,6 +194,8 @@ export default {
         otros.value = allPlatos.filter(plato => plato.categoria === 'desayuno_otros')
       } catch (error) {
         console.error('Error al cargar los desayunos:', error)
+      } finally {
+        isLoading.value = false
       }
     }
 
@@ -223,6 +236,7 @@ export default {
     })
 
     return {
+      isLoading,
       dulces,
       salados,
       cafes,
@@ -402,5 +416,19 @@ export default {
     gap: 0.5rem;
     text-align: center;
   }
+}
+
+.tv-loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
 }
 </style> 

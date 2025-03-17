@@ -2,92 +2,97 @@
   <div class="tv-view">
     <div class="background-pattern"></div>
     <div class="tv-content">
-      <div class="view-header">
-        <div class="restaurant-name">O SIBARITA</div>
-        <h1 class="view-title">NUESTRA CARTA</h1>
+      <div v-if="isLoading" class="tv-loading-container">
+        <TvLoading />
       </div>
-      
-      <div v-if="!carta.length" class="empty-state">
-        <div class="empty-icon">🍽️</div>
-        <h2 class="empty-title">No hay platos en la carta</h2>
-        <p class="empty-subtitle">Consulte nuestro menú del día o pregunte a nuestro personal</p>
-      </div>
-      
-      <div v-else class="view-body">
-        <!-- Plato destacado -->
-        <div v-if="platoDestacado" class="plato-destacado" :class="{ 'fade-in': mostrarDestacado }">
-          <div class="destacado-imagen">
-            <img v-if="platoDestacado.imagen" :src="pb.files.getUrl(platoDestacado, platoDestacado.imagen)" alt="plato destacado" />
-            <div v-else class="destacado-imagen-placeholder">
-              <span class="placeholder-icon">🍽️</span>
-            </div>
-          </div>
-          <div class="destacado-content">
-            <div class="destacado-header">
-              <span class="destacado-tag">Hoy recomendamos</span>
-            </div>
-            <div class="destacado-info">
-              <div class="destacado-texto">
-                <h2 class="destacado-nombre">{{ platoDestacado.nombre }}</h2>
-                <p v-if="platoDestacado.descripcion" class="destacado-descripcion">
-                  {{ platoDestacado.descripcion }}
-                </p>
-              </div>
-              <div class="destacado-precio">
-                <span class="price-tag">{{ platoDestacado.precio }}€{{ platoDestacado.precio_medio ? ' / ' + platoDestacado.precio_medio + '€' : '' }}</span>
-              </div>
-            </div>
-          </div>
+      <template v-else>
+        <div class="view-header">
+          <div class="restaurant-name">O SIBARITA</div>
+          <h1 class="view-title">NUESTRA CARTA</h1>
         </div>
+        
+        <div v-if="!carta.length" class="empty-state">
+          <div class="empty-icon">🍽️</div>
+          <h2 class="empty-title">No hay platos en la carta</h2>
+          <p class="empty-subtitle">Consulte nuestro menú del día o pregunte a nuestro personal</p>
+        </div>
+        
+        <div v-else class="view-body">
+          <!-- Plato destacado -->
+          <div v-if="platoDestacado" class="plato-destacado" :class="{ 'fade-in': mostrarDestacado }">
+            <div class="destacado-imagen">
+              <img v-if="platoDestacado.imagen" :src="pb.files.getUrl(platoDestacado, platoDestacado.imagen)" alt="plato destacado" />
+              <div v-else class="destacado-imagen-placeholder">
+                <span class="placeholder-icon">🍽️</span>
+              </div>
+            </div>
+            <div class="destacado-content">
+              <div class="destacado-header">
+                <span class="destacado-tag">Hoy recomendamos</span>
+              </div>
+              <div class="destacado-info">
+                <div class="destacado-texto">
+                  <h2 class="destacado-nombre">{{ platoDestacado.nombre }}</h2>
+                  <p v-if="platoDestacado.descripcion" class="destacado-descripcion">
+                    {{ platoDestacado.descripcion }}
+                  </p>
+                </div>
+                <div class="destacado-precio">
+                  <span class="price-tag">{{ platoDestacado.precio }}€{{ platoDestacado.precio_medio ? ' / ' + platoDestacado.precio_medio + '€' : '' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <!-- Sección de platos -->
-        <div class="platos-container">
-          <div class="platos-scroll">
-            <!-- Primera copia de los platos -->
-            <div v-for="plato in carta" 
-                 :key="'first-' + plato.id"
-                 class="plato-card">
-              <div v-if="plato.imagen" class="plato-imagen">
-                <img :src="pb.files.getUrl(plato, plato.imagen)" alt="plato" />
-              </div>
-              <div v-else class="plato-imagen plato-imagen-placeholder">
-                <span class="placeholder-icon">🍽️</span>
-              </div>
-              
-              <div class="plato-content">
-                <h3 class="plato-nombre">{{ plato.nombre }}</h3>
-                <p v-if="plato.descripcion" class="plato-descripcion">
-                  {{ plato.descripcion }}
-                </p>
-                <div class="plato-precio">
-                  <span class="price-tag">{{ plato.precio }}€{{ plato.precio_medio ? ' / ' + plato.precio_medio + '€' : '' }}</span>
+          <!-- Sección de platos -->
+          <div class="platos-container">
+            <div class="platos-scroll">
+              <!-- Primera copia de los platos -->
+              <div v-for="plato in carta" 
+                   :key="'first-' + plato.id"
+                   class="plato-card">
+                <div v-if="plato.imagen" class="plato-imagen">
+                  <img :src="pb.files.getUrl(plato, plato.imagen)" alt="plato" />
+                </div>
+                <div v-else class="plato-imagen plato-imagen-placeholder">
+                  <span class="placeholder-icon">🍽️</span>
+                </div>
+                
+                <div class="plato-content">
+                  <h3 class="plato-nombre">{{ plato.nombre }}</h3>
+                  <p v-if="plato.descripcion" class="plato-descripcion">
+                    {{ plato.descripcion }}
+                  </p>
+                  <div class="plato-precio">
+                    <span class="price-tag">{{ plato.precio }}€{{ plato.precio_medio ? ' / ' + plato.precio_medio + '€' : '' }}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <!-- Segunda copia de los platos -->
-            <div v-for="plato in carta" 
-                 :key="'second-' + plato.id"
-                 class="plato-card">
-              <div v-if="plato.imagen" class="plato-imagen">
-                <img :src="pb.files.getUrl(plato, plato.imagen)" alt="plato" />
-              </div>
-              <div v-else class="plato-imagen plato-imagen-placeholder">
-                <span class="placeholder-icon">🍽️</span>
-              </div>
-              
-              <div class="plato-content">
-                <h3 class="plato-nombre">{{ plato.nombre }}</h3>
-                <p v-if="plato.descripcion" class="plato-descripcion">
-                  {{ plato.descripcion }}
-                </p>
-                <div class="plato-precio">
-                  <span class="price-tag">{{ plato.precio }}€{{ plato.precio_medio ? ' / ' + plato.precio_medio + '€' : '' }}</span>
+              <!-- Segunda copia de los platos -->
+              <div v-for="plato in carta" 
+                   :key="'second-' + plato.id"
+                   class="plato-card">
+                <div v-if="plato.imagen" class="plato-imagen">
+                  <img :src="pb.files.getUrl(plato, plato.imagen)" alt="plato" />
+                </div>
+                <div v-else class="plato-imagen plato-imagen-placeholder">
+                  <span class="placeholder-icon">🍽️</span>
+                </div>
+                
+                <div class="plato-content">
+                  <h3 class="plato-nombre">{{ plato.nombre }}</h3>
+                  <p v-if="plato.descripcion" class="plato-descripcion">
+                    {{ plato.descripcion }}
+                  </p>
+                  <div class="plato-precio">
+                    <span class="price-tag">{{ plato.precio }}€{{ plato.precio_medio ? ' / ' + plato.precio_medio + '€' : '' }}</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -95,10 +100,15 @@
 <script>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import pb from '@/services/pocketbase.js'
+import TvLoading from './TvLoading.vue'
 
 export default {
   name: 'Carta',
+  components: {
+    TvLoading
+  },
   setup() {
+    const isLoading = ref(true)
     const carta = ref([])
     const platoDestacado = ref(null)
     const mostrarDestacado = ref(true)
@@ -134,8 +144,9 @@ export default {
     let scrollInterval = null
     let destacadoInterval = null
 
-    const loadCarta = async () => {
+    const loadData = async () => {
       try {
+        isLoading.value = true
         carta.value = await pb.collection('platos').getFullList({
           filter: 'categoria = "carta" || categoria ~ "carta:"',
           sort: 'categoria,nombre'
@@ -143,11 +154,13 @@ export default {
         seleccionarPlatoDestacado()
       } catch (err) {
         console.error('Error Carta:', err)
+      } finally {
+        isLoading.value = false
       }
     }
     
     onMounted(() => {
-      loadCarta()
+      loadData()
       scrollInterval = setInterval(scrollPlatos, 3000) // Cambia cada 3 segundos
       destacadoInterval = setInterval(() => {
         mostrarDestacado.value = false
@@ -168,6 +181,7 @@ export default {
     })
 
     return {
+      isLoading,
       carta,
       pb,
       platoDestacado,
@@ -551,5 +565,19 @@ export default {
     font-size: 1.4rem;
     padding: 0.6rem 1.5rem;
   }
+}
+
+.tv-loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
 }
 </style>

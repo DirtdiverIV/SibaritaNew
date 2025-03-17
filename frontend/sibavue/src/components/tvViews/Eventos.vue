@@ -2,51 +2,56 @@
   <div class="tv-view">
     <div class="background-pattern"></div>
     <div class="tv-content">
-      <div class="view-header">
-        <div class="restaurant-name">O SIBARITA</div>
-        <h1 class="view-title">PRÓXIMOS EVENTOS</h1>
+      <div v-if="isLoading" class="tv-loading-container">
+        <TvLoading />
       </div>
-      
-      <div v-if="!eventos.length" class="empty-state">
-        <div class="empty-icon">📅</div>
-        <h2 class="empty-title">No hay eventos programados</h2>
-        <p class="empty-subtitle">Consulte en recepción para más información</p>
-      </div>
-      
-      <div v-else class="view-body">
-        <div class="evento-card" :class="{ 'fade-in': mostrarEvento }">
-          <div v-if="eventoActual.imagen" class="evento-imagen">
-            <img :src="pb.files.getUrl(eventoActual, eventoActual.imagen)" alt="evento" />
-          </div>
-          <div v-else class="evento-imagen evento-imagen-placeholder">
-            <span class="placeholder-icon">🎉</span>
-          </div>
-          
-          <div class="evento-content">
-            <div class="evento-header">
-              <span class="evento-tag">Realiza tus eventos con nosotros</span>
+      <template v-else>
+        <div class="view-header">
+          <div class="restaurant-name">O SIBARITA</div>
+          <h1 class="view-title">PRÓXIMOS EVENTOS</h1>
+        </div>
+        
+        <div v-if="!eventos.length" class="empty-state">
+          <div class="empty-icon">📅</div>
+          <h2 class="empty-title">No hay eventos programados</h2>
+          <p class="empty-subtitle">Consulte en recepción para más información</p>
+        </div>
+        
+        <div v-else class="view-body">
+          <div class="evento-card" :class="{ 'fade-in': mostrarEvento }">
+            <div v-if="eventoActual.imagen" class="evento-imagen">
+              <img :src="pb.files.getUrl(eventoActual, eventoActual.imagen)" alt="evento" />
             </div>
-            <div class="evento-info">
-              <div class="evento-texto">
-                <h2 class="evento-nombre">{{ eventoActual.titulo }}</h2>
-                <p v-if="eventoActual.descripcion" class="evento-descripcion">
-                  {{ eventoActual.descripcion }}
-                </p>
+            <div v-else class="evento-imagen evento-imagen-placeholder">
+              <span class="placeholder-icon">🎉</span>
+            </div>
+            
+            <div class="evento-content">
+              <div class="evento-header">
+                <span class="evento-tag">Realiza tus eventos con nosotros</span>
               </div>
-              <div class="evento-precio">
-                <span class="price-tag">Desde {{ eventoActual.precio_desde }}€</span>
+              <div class="evento-info">
+                <div class="evento-texto">
+                  <h2 class="evento-nombre">{{ eventoActual.titulo }}</h2>
+                  <p v-if="eventoActual.descripcion" class="evento-descripcion">
+                    {{ eventoActual.descripcion }}
+                  </p>
+                </div>
+                <div class="evento-precio">
+                  <span class="price-tag">Desde {{ eventoActual.precio_desde }}€</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      
-      <div class="view-footer">
-        <p class="reserve-info">Para reservas: 
-          <span class="has-shimmer">info@sibaritatestaurant.com</span> o 
-          <span class="has-shimmer">+34 91 234 5678</span>
-        </p>
-      </div>
+        
+        <div class="view-footer">
+          <p class="reserve-info">Para reservas: 
+            <span class="has-shimmer">info@sibaritatestaurant.com</span> o 
+            <span class="has-shimmer">+34 91 234 5678</span>
+          </p>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -54,10 +59,15 @@
 <script>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import pb from '@/services/pocketbase.js'
+import TvLoading from './TvLoading.vue'
 
 export default {
   name: 'Eventos',
+  components: {
+    TvLoading
+  },
   setup() {
+    const isLoading = ref(true)
     const eventos = ref([])
     const eventoActual = ref(null)
     const mostrarEvento = ref(true)
@@ -77,6 +87,7 @@ export default {
 
     const loadEventos = async () => {
       try {
+        isLoading.value = true
         eventos.value = await pb.collection('eventos').getFullList({
           sort: '-created'
         })
@@ -85,6 +96,8 @@ export default {
         }
       } catch (err) {
         console.error('Error Eventos:', err)
+      } finally {
+        isLoading.value = false
       }
     }
     
@@ -100,6 +113,7 @@ export default {
     })
 
     return {
+      isLoading,
       eventos,
       pb,
       eventoActual,
@@ -384,5 +398,19 @@ export default {
     font-size: 2rem;
     padding: 0.8rem 1.5rem;
   }
+}
+
+.tv-loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
 }
 </style>
