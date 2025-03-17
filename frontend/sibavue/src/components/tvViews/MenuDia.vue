@@ -130,6 +130,38 @@ export default {
       }
     }
 
+    const loadPlatos = async (menuId) => {
+      try {
+        // Cargar todos los platos del menú en una sola llamada
+        const [primerosData, segundosData, postresData] = await Promise.all([
+          pb.collection('menu_dia_primeros').getFullList({
+            filter: `field = "${menuId}"`,
+            sort: 'created'
+          }),
+          pb.collection('menu_dia_segundos').getFullList({
+            filter: `field = "${menuId}"`,
+            sort: 'created'
+          }),
+          pb.collection('menu_dia_postres').getFullList({
+            filter: `field = "${menuId}"`,
+            sort: 'created'
+          })
+        ])
+
+        primeros.value = primerosData
+        segundos.value = segundosData
+        postres.value = postresData
+
+        // Reiniciar la animación si es necesario
+        if (primeros.value.length > 0 || segundos.value.length > 0 || postres.value.length > 0) {
+          stopHighlightAnimation()
+          startHighlightAnimation()
+        }
+      } catch (err) {
+        console.error('Error al cargar platos:', err)
+      }
+    }
+
     const setupSubscriptions = (menuId) => {
       cleanupSubscriptions()
 
@@ -196,36 +228,6 @@ export default {
       if (postresSubscription) {
         pb.collection('menu_dia_postres').unsubscribe(postresSubscription)
         postresSubscription = null
-      }
-    }
-
-    const loadPlatos = async (menuId) => {
-      try {
-        // Cargar primeros
-        primeros.value = await pb.collection('menu_dia_primeros').getFullList({
-          filter: `field = "${menuId}"`,
-          sort: 'created'
-        })
-        
-        // Cargar segundos
-        segundos.value = await pb.collection('menu_dia_segundos').getFullList({
-          filter: `field = "${menuId}"`,
-          sort: 'created'
-        })
-        
-        // Cargar postres
-        postres.value = await pb.collection('menu_dia_postres').getFullList({
-          filter: `field = "${menuId}"`,
-          sort: 'created'
-        })
-
-        // Reiniciar la animación si es necesario
-        if (primeros.value.length > 0 || segundos.value.length > 0 || postres.value.length > 0) {
-          stopHighlightAnimation()
-          startHighlightAnimation()
-        }
-      } catch (err) {
-        console.error('Error al cargar platos:', err)
       }
     }
 

@@ -169,31 +169,18 @@ export default {
 
     const loadPlatos = async () => {
       try {
-        // Cargar platos por categoría
-        dulces.value = await pb.collection('platos').getFullList({
-          filter: 'categoria = "desayuno_dulce"',
+        // Cargar todos los desayunos en una sola llamada
+        const allPlatos = await pb.collection('platos').getFullList({
+          filter: 'categoria ~ "desayuno_"',
           sort: 'nombre'
         })
-        
-        salados.value = await pb.collection('platos').getFullList({
-          filter: 'categoria = "desayuno_salado"',
-          sort: 'nombre'
-        })
-        
-        cafes.value = await pb.collection('platos').getFullList({
-          filter: 'categoria = "desayuno_cafes"',
-          sort: 'nombre'
-        })
-        
-        infusiones.value = await pb.collection('platos').getFullList({
-          filter: 'categoria = "desayuno_infusiones"',
-          sort: 'nombre'
-        })
-        
-        otros.value = await pb.collection('platos').getFullList({
-          filter: 'categoria = "desayuno_otros"',
-          sort: 'nombre'
-        })
+
+        // Filtrar los platos por categoría en el frontend
+        dulces.value = allPlatos.filter(plato => plato.categoria === 'desayuno_dulce')
+        salados.value = allPlatos.filter(plato => plato.categoria === 'desayuno_salado')
+        cafes.value = allPlatos.filter(plato => plato.categoria === 'desayuno_cafes')
+        infusiones.value = allPlatos.filter(plato => plato.categoria === 'desayuno_infusiones')
+        otros.value = allPlatos.filter(plato => plato.categoria === 'desayuno_otros')
       } catch (error) {
         console.error('Error al cargar los desayunos:', error)
       }

@@ -55,19 +55,29 @@ export default {
 
     const loadAlmuerzos = async () => {
       try {
+        console.log('Cargando almuerzos...')
         const records = await pb.collection('almuerzos').getFullList({
           sort: 'created'
         })
+        
+        console.log('Almuerzos cargados:', records)
         almuerzos.value = records
         
-        // Cargar los items para cada almuerzo
-        for (const almuerzo of records) {
-          const items = await pb.collection('almuerzo_items').getFullList({
-            filter: `almuerzo.id = "${almuerzo.id}"`,
-            sort: 'created'
-          })
+        // Cargar todos los items de una vez
+        const allItems = await pb.collection('almuerzo_items').getFullList({
+          sort: 'created'
+        })
+        
+        console.log('Todos los items:', allItems)
+        
+        // Organizar los items por almuerzo
+        records.forEach(almuerzo => {
+          const items = allItems.filter(item => 
+            item.almuerzo && item.almuerzo.includes(almuerzo.id)
+          )
+          console.log('Items filtrados para almuerzo', almuerzo.id, ':', items)
           almuerzoItems.value[almuerzo.id] = items
-        }
+        })
       } catch (error) {
         console.error('Error cargando almuerzos:', error)
       }

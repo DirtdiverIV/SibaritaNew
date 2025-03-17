@@ -192,29 +192,30 @@ export default {
 
     const loadData = async () => {
       try {
-        // Limpiar suscripciones existentes antes de cargar datos
-        cleanupSubscriptions()
+        // Cargar todos los datos en paralelo
+        const [platosData, menuData] = await Promise.all([
+          pb.collection('platos').getFullList({
+            filter: 'categoria = "raciones" || categoria = "tapas"',
+            sort: 'categoria,precio'
+          }),
+          pb.collection('menu_dia').getFullList({
+            sort: '-created',
+            limit: 1
+          })
+        ])
+
+        // Filtrar los platos por categoría en el frontend
+        raciones.value = platosData.filter(plato => plato.categoria === 'raciones')
+        tapas.value = platosData.filter(plato => plato.categoria === 'tapas')
         
-        // Cargar raciones y tapas primero
-        await loadRaciones()
-        await loadTapas()
-        
-        // Obtener menú del día
-        const lista = await pb.collection('menu_dia').getFullList({
-          sort: '-created',
-          limit: 1
-        })
-        
-        if (lista.length) {
-          menuDia.value = lista[0]
+        if (menuData.length) {
+          menuDia.value = menuData[0]
           await loadMenuPlatos(menuDia.value.id)
           setupSubscriptions(menuDia.value.id)
         } else {
-          // Si no hay menú, configurar solo las suscripciones de raciones y tapas
           setupBasicSubscriptions()
         }
 
-        // Iniciar animación después de cargar todos los datos
         startHighlightAnimation()
       } catch (err) {
         console.error('Error VistaDelDia:', err)
@@ -222,19 +223,11 @@ export default {
     }
 
     const setupBasicSubscriptions = () => {
-      // Suscripción a raciones
+      // Suscripción a platos (raciones y tapas)
       racionesSubscription = pb.collection('platos').subscribe('*', function(data) {
         const { action, record } = data
-        if (action === 'delete' || (record && record.categoria === 'raciones')) {
-          loadRaciones()
-        }
-      })
-
-      // Suscripción a tapas
-      tapasSubscription = pb.collection('platos').subscribe('*', function(data) {
-        const { action, record } = data
-        if (action === 'delete' || (record && record.categoria === 'tapas')) {
-          loadTapas()
+        if (action === 'delete' || (record && (record.categoria === 'raciones' || record.categoria === 'tapas'))) {
+          loadData()
         }
       })
     }
@@ -323,55 +316,27 @@ export default {
       }
     }
 
-    const loadRaciones = async () => {
-      try {
-        console.log('Intentando cargar raciones...')
-        const result = await pb.collection('platos').getFullList({
-          filter: 'categoria = "raciones"',
-          sort: 'precio',
-          $autoCancel: false
-        })
-        raciones.value = result
-        console.log('Raciones cargadas:', raciones.value)
-      } catch (err) {
-        console.error('Error al cargar raciones:', err)
-        raciones.value = []
-      }
-    }
-
-    const loadTapas = async () => {
-      try {
-        const result = await pb.collection('platos').getFullList({
-          filter: 'categoria = "tapas"',
-          sort: 'precio',
-          $autoCancel: false
-        })
-        tapas.value = result
-      } catch (err) {
-        console.error('Error al cargar tapas:', err)
-        tapas.value = []
-      }
-    }
-
     const loadMenuPlatos = async (menuId) => {
       try {
-        // Cargar primeros
-        primeros.value = await pb.collection('menu_dia_primeros').getFullList({
-          filter: `field = "${menuId}"`,
-          sort: 'created'
-        })
-        
-        // Cargar segundos
-        segundos.value = await pb.collection('menu_dia_segundos').getFullList({
-          filter: `field = "${menuId}"`,
-          sort: 'created'
-        })
-        
-        // Cargar postres
-        postres.value = await pb.collection('menu_dia_postres').getFullList({
-          filter: `field = "${menuId}"`,
-          sort: 'created'
-        })
+        // Cargar todos los platos del menú en paralelo
+        const [primerosData, segundosData, postresData] = await Promise.all([
+          pb.collection('menu_dia_primeros').getFullList({
+            filter: `field = "${menuId}"`,
+            sort: 'created'
+          }),
+          pb.collection('menu_dia_segundos').getFullList({
+            filter: `field = "${menuId}"`,
+            sort: 'created'
+          }),
+          pb.collection('menu_dia_postres').getFullList({
+            filter: `field = "${menuId}"`,
+            sort: 'created'
+          })
+        ])
+
+        primeros.value = primerosData
+        segundos.value = segundosData
+        postres.value = postresData
       } catch (err) {
         console.error('Error al cargar platos del menú:', err)
       }
