@@ -299,7 +299,6 @@ export default {
     // Categorías agrupadas
     const categoriasAgrupadas = [
       { id: 'carta', nombre: 'Carta' },
-      { id: 'raciones', nombre: 'Raciones' },
       { id: 'tapas', nombre: 'Tapas' },
       { id: 'desayunos', nombre: 'Desayunos', subcategorias: [
         'desayuno_dulce',
@@ -314,7 +313,6 @@ export default {
     // Lista predefinida de categorías para el formulario
     const categoriasOptions = [
       'carta',
-      'raciones',
       'tapas',
       'sugerencias_chef',
       'desayuno_dulce',

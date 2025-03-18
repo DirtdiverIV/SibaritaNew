@@ -97,33 +97,26 @@
               </div>
             </div>
           </div>
-          
-          <!-- Sección Postres -->
+
+          <!-- Sección Inclusión -->
           <div class="column is-12-mobile is-4-tablet">
             <div class="section-card">
               <div class="section-header">
-                <h4 class="has-text-centered">Postres</h4>
-                <button @click="openAddPlatoForm('postres')" class="button is-primary is-small">
-                  <span class="icon is-small"><i class="fas fa-plus"></i></span>
-                </button>
+                <h4 class="has-text-centered">Incluye</h4>
               </div>
               
               <div class="section-content">
-                <div v-if="postres.length === 0" class="empty-section">
-                  <p>No hay postres añadidos</p>
+                <div class="inclusion-item">
+                  <i class="fas fa-bread-slice"></i>
+                  <span>Pan</span>
                 </div>
-                <div v-else class="platos-list">
-                  <div v-for="plato in postres" :key="plato.id" class="plato-item">
-                    <div class="plato-info">
-                      <p class="plato-nombre">{{ plato.nombre }}</p>
-                      <p v-if="plato.descripcion" class="plato-desc">{{ plato.descripcion }}</p>
-                    </div>
-                    <div class="plato-actions">
-                      <button @click="deletePlato('postres', plato.id)" class="delete-btn">
-                        <i class="fas fa-times"></i>
-                      </button>
-                    </div>
-                  </div>
+                <div class="inclusion-item">
+                  <i class="fas fa-glass-martini-alt"></i>
+                  <span>Bebida</span>
+                </div>
+                <div class="inclusion-item">
+                  <i class="fas fa-coffee"></i>
+                  <span>Café o postre</span>
                 </div>
               </div>
             </div>
@@ -133,131 +126,92 @@
     </div>
     
     <!-- Modal para crear nuevo menú -->
-    <div class="modal" :class="{'is-active': showCreateMenuForm}">
-      <div class="modal-background" @click="showCreateMenuForm = false"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">Crear Nuevo Menú del Día</p>
-          <button @click="showCreateMenuForm = false" class="delete" aria-label="close"></button>
-        </header>
-        <section class="modal-card-body">
+    <div class="modal" :class="{ 'is-active': showCreateMenuForm }">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <div class="box">
+          <h3 class="title has-text-centered">Crear Nuevo Menú del Día</h3>
           <div class="field">
-            <label class="label">Nombre del menú</label>
+            <label class="label">Nombre</label>
             <div class="control">
-              <input 
-                v-model="menuForm.nombre" 
-                class="input" 
-                type="text" 
-                placeholder="Ej: Menú Ejecutivo, Menú Especial..." 
-                required
-              />
+              <input v-model="menuForm.nombre" class="input" type="text" placeholder="Nombre del menú">
             </div>
           </div>
-          
           <div class="field">
-            <label class="label">Precio (€)</label>
+            <label class="label">Precio</label>
             <div class="control">
-              <input 
-                v-model.number="menuForm.precio" 
-                class="input" 
-                type="number" 
-                step="0.01" 
-                min="0" 
-                placeholder="0.00" 
-                required
-              />
+              <input v-model="menuForm.precio" class="input" type="number" step="0.01" placeholder="Precio del menú">
             </div>
           </div>
-        </section>
-        <footer class="modal-card-foot">
-          <button @click="createMenuDia" class="button is-primary">Crear Menú</button>
-          <button @click="showCreateMenuForm = false" class="button">Cancelar</button>
-        </footer>
+          <div class="field is-grouped is-grouped-centered">
+            <div class="control">
+              <button @click="createMenuDia" class="button is-primary">Crear</button>
+            </div>
+            <div class="control">
+              <button @click="showCreateMenuForm = false" class="button">Cancelar</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    
-    <!-- Modal para editar menú existente -->
-    <div class="modal" :class="{'is-active': showEditMenuForm}">
-      <div class="modal-background" @click="showEditMenuForm = false"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">Editar Menú del Día</p>
-          <button @click="showEditMenuForm = false" class="delete" aria-label="close"></button>
-        </header>
-        <section class="modal-card-body">
+
+    <!-- Modal para editar menú -->
+    <div class="modal" :class="{ 'is-active': showEditMenuForm }">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <div class="box">
+          <h3 class="title has-text-centered">Editar Menú del Día</h3>
           <div class="field">
-            <label class="label">Nombre del menú</label>
+            <label class="label">Nombre</label>
             <div class="control">
-              <input 
-                v-model="menuForm.nombre" 
-                class="input" 
-                type="text" 
-                placeholder="Ej: Menú Ejecutivo, Menú Especial..." 
-                required
-              />
+              <input v-model="menuForm.nombre" class="input" type="text" placeholder="Nombre del menú">
             </div>
           </div>
-          
           <div class="field">
-            <label class="label">Precio (€)</label>
+            <label class="label">Precio</label>
             <div class="control">
-              <input 
-                v-model.number="menuForm.precio" 
-                class="input" 
-                type="number" 
-                step="0.01" 
-                min="0" 
-                placeholder="0.00" 
-                required
-              />
+              <input v-model="menuForm.precio" class="input" type="number" step="0.01" placeholder="Precio del menú">
             </div>
           </div>
-        </section>
-        <footer class="modal-card-foot">
-          <button @click="updateMenuDia" class="button is-primary">Guardar Cambios</button>
-          <button @click="showEditMenuForm = false" class="button">Cancelar</button>
-        </footer>
+          <div class="field is-grouped is-grouped-centered">
+            <div class="control">
+              <button @click="updateMenuDia" class="button is-primary">Guardar</button>
+            </div>
+            <div class="control">
+              <button @click="showEditMenuForm = false" class="button">Cancelar</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    
-    <!-- Modal para añadir plato al menú -->
-    <div class="modal" :class="{'is-active': showAddPlatoForm}">
-      <div class="modal-background" @click="showAddPlatoForm = false"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">Añadir {{ getCategoriaLabel() }}</p>
-          <button @click="showAddPlatoForm = false" class="delete" aria-label="close"></button>
-        </header>
-        <section class="modal-card-body">
+
+    <!-- Modal para añadir plato -->
+    <div class="modal" :class="{ 'is-active': showAddPlatoForm }">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <div class="box">
+          <h3 class="title has-text-centered">Añadir {{ getCategoriaLabel() }}</h3>
           <div class="field">
-            <label class="label">Nombre del plato</label>
+            <label class="label">Nombre</label>
             <div class="control">
-              <input 
-                v-model="platoForm.nombre" 
-                class="input" 
-                type="text" 
-                placeholder="Nombre del plato" 
-                required
-              />
+              <input v-model="platoForm.nombre" class="input" type="text" placeholder="Nombre del plato">
             </div>
           </div>
-          
           <div class="field">
             <label class="label">Descripción (opcional)</label>
             <div class="control">
-              <textarea 
-                v-model="platoForm.descripcion" 
-                class="textarea" 
-                placeholder="Descripción o ingredientes principales"
-                rows="3"
-              ></textarea>
+              <textarea v-model="platoForm.descripcion" class="textarea" placeholder="Descripción del plato"></textarea>
             </div>
           </div>
-        </section>
-        <footer class="modal-card-foot">
-          <button @click="addPlato" class="button is-primary">Añadir Plato</button>
-          <button @click="showAddPlatoForm = false" class="button">Cancelar</button>
-        </footer>
+          <div class="field is-grouped is-grouped-centered">
+            <div class="control">
+              <button @click="addPlato" class="button is-primary">Añadir</button>
+            </div>
+            <div class="control">
+              <button @click="showAddPlatoForm = false" class="button">Cancelar</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -274,7 +228,6 @@ export default {
     const menuDia = ref(null)
     const primeros = ref([])
     const segundos = ref([])
-    const postres = ref([])
     
     // Formularios
     const menuForm = reactive({
@@ -285,7 +238,7 @@ export default {
     const platoForm = reactive({
       nombre: '',
       descripcion: '',
-      tipo: '' // 'primeros', 'segundos' o 'postres'
+      tipo: '' // 'primeros' o 'segundos'
     })
     
     // Estado de los modales
@@ -297,7 +250,6 @@ export default {
     let menuSubscription = null
     let primerosSubscription = null
     let segundosSubscription = null
-    let postresSubscription = null
     
     // Cargar el menú del día más reciente
     const loadMenuDia = async () => {
@@ -315,7 +267,6 @@ export default {
           menuDia.value = null
           primeros.value = []
           segundos.value = []
-          postres.value = []
           cleanupSubscriptions()
         }
       } catch (err) {
@@ -344,11 +295,6 @@ export default {
       segundosSubscription = pb.collection('menu_dia_segundos').subscribe(`field = "${menuId}"`, async (e) => {
         await loadPlatos(menuId)
       })
-
-      // Suscripción a postres
-      postresSubscription = pb.collection('menu_dia_postres').subscribe(`field = "${menuId}"`, async (e) => {
-        await loadPlatos(menuId)
-      })
     }
 
     // Limpiar suscripciones
@@ -356,12 +302,10 @@ export default {
       if (menuSubscription) pb.collection('menu_dia').unsubscribe()
       if (primerosSubscription) pb.collection('menu_dia_primeros').unsubscribe()
       if (segundosSubscription) pb.collection('menu_dia_segundos').unsubscribe()
-      if (postresSubscription) pb.collection('menu_dia_postres').unsubscribe()
       
       menuSubscription = null
       primerosSubscription = null
       segundosSubscription = null
-      postresSubscription = null
     }
     
     // Cargar los platos del menú del día
@@ -375,12 +319,6 @@ export default {
         
         // Cargar segundos
         segundos.value = await pb.collection('menu_dia_segundos').getFullList({
-          filter: `field = "${menuId}"`,
-          sort: 'created'
-        })
-        
-        // Cargar postres
-        postres.value = await pb.collection('menu_dia_postres').getFullList({
           filter: `field = "${menuId}"`,
           sort: 'created'
         })
@@ -450,10 +388,6 @@ export default {
           await pb.collection('menu_dia_segundos').delete(s.id)
         }
         
-        for (const po of postres.value) {
-          await pb.collection('menu_dia_postres').delete(po.id)
-        }
-        
         // Luego eliminamos el menú
         await pb.collection('menu_dia').delete(id)
         
@@ -478,7 +412,6 @@ export default {
       switch (platoForm.tipo) {
         case 'primeros': return 'Primer Plato'
         case 'segundos': return 'Segundo Plato'
-        case 'postres': return 'Postre'
         default: return 'Plato'
       }
     }
@@ -495,7 +428,6 @@ export default {
       switch (platoForm.tipo) {
         case 'primeros': collectionName = 'menu_dia_primeros'; break
         case 'segundos': collectionName = 'menu_dia_segundos'; break
-        case 'postres': collectionName = 'menu_dia_postres'; break
         default: return
       }
       
@@ -526,7 +458,6 @@ export default {
       switch (tipo) {
         case 'primeros': collectionName = 'menu_dia_primeros'; break
         case 'segundos': collectionName = 'menu_dia_segundos'; break
-        case 'postres': collectionName = 'menu_dia_postres'; break
         default: return
       }
       
@@ -556,7 +487,6 @@ export default {
       menuDia,
       primeros,
       segundos,
-      postres,
       menuForm,
       platoForm,
       showCreateMenuForm,
@@ -661,11 +591,11 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100px;
+  background-color: rgba(30, 30, 30, 0.4);
+  border-radius: 6px;
   color: #a0a0a0;
   font-style: italic;
-  text-align: center;
   border: 1px dashed rgba(160, 160, 160, 0.3);
-  border-radius: 4px;
 }
 
 .platos-list {
@@ -675,9 +605,9 @@ export default {
 }
 
 .plato-item {
-  background-color: rgba(18, 18, 18, 0.4);
+  background-color: rgba(18, 18, 18, 0.6);
   border-radius: 6px;
-  padding: 0.8rem;
+  padding: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -685,49 +615,111 @@ export default {
 }
 
 .plato-info {
-  flex-grow: 1;
+  flex: 1;
 }
 
 .plato-nombre {
+  color: #fff;
   font-weight: 600;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.5rem;
 }
 
 .plato-desc {
-  font-size: 0.85rem;
   color: #a0a0a0;
-  font-style: italic;
+  font-size: 0.9rem;
 }
 
 .plato-actions {
-  margin-left: 1rem;
+  display: flex;
+  gap: 0.5rem;
 }
 
 .delete-btn {
-  background-color: transparent;
+  background: none;
   border: none;
-  color: #f14668;
+  color: #ff4444;
   cursor: pointer;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: all 0.2s ease;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
 }
 
 .delete-btn:hover {
-  background-color: rgba(241, 70, 104, 0.2);
+  background-color: rgba(255, 68, 68, 0.1);
 }
 
-@media screen and (max-width: 768px) {
-  .section-card {
-    margin-bottom: 1.5rem;
-  }
-  
-  .section-content {
-    max-height: 200px;
-  }
+.modal-content {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.box {
+  background-color: rgba(30, 30, 30, 0.95);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.title {
+  color: #d4af37;
+}
+
+.label {
+  color: #fff;
+}
+
+.input, .textarea {
+  background-color: rgba(18, 18, 18, 0.6);
+  border-color: rgba(212, 175, 55, 0.3);
+  color: #fff;
+}
+
+.input:focus, .textarea:focus {
+  border-color: #d4af37;
+  box-shadow: 0 0 0 0.125em rgba(212, 175, 55, 0.25);
+}
+
+.button.is-primary {
+  background-color: #d4af37;
+  border-color: #d4af37;
+}
+
+.button.is-primary:hover {
+  background-color: #c19b2e;
+  border-color: #c19b2e;
+}
+
+.button {
+  background-color: transparent;
+  border-color: #d4af37;
+  color: #d4af37;
+}
+
+.button:hover {
+  background-color: rgba(212, 175, 55, 0.1);
+}
+
+.inclusion-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: rgba(18, 18, 18, 0.6);
+  border-radius: 6px;
+  margin-bottom: 0.8rem;
+  border-left: 3px solid #d4af37;
+}
+
+.inclusion-item i {
+  color: #d4af37;
+  font-size: 1.2rem;
+}
+
+.inclusion-item span {
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.inclusion-item:last-child {
+  margin-bottom: 0;
 }
 </style>

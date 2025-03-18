@@ -58,28 +58,29 @@
                   </div>
                 </div>
               </div>
-              
-              <!-- Postres -->
+
+              <!-- Sección Inclusión -->
               <div class="menu-section">
                 <div class="section-header">
-                  <h3 class="section-title">Postres</h3>
+                  <h3 class="section-title">Incluye</h3>
                   <div class="section-divider"></div>
                 </div>
                 
-                <div class="platos-lista" :class="{ 'justify-evenly': postres.length === 2 }">
-                  <div v-if="postres.length === 0" class="empty-section">
-                    <p>No hay postres disponibles</p>
+                <div class="platos-lista">
+                  <div class="inclusion-item">
+                    <i class="fas fa-bread-slice"></i>
+                    <span>Pan</span>
                   </div>
-                  <div v-else v-for="(plato, index) in postres" :key="plato.id" class="plato-item" :class="{ 'highlighted': currentHighlighted === `postres-${index}` }">
-                    <div class="plato-nombre">{{ plato.nombre }}</div>
-                    <div v-if="plato.descripcion" class="plato-descripcion">{{ plato.descripcion }}</div>
+                  <div class="inclusion-item">
+                    <i class="fas fa-glass-martini-alt"></i>
+                    <span>Bebida</span>
+                  </div>
+                  <div class="inclusion-item">
+                    <i class="fas fa-coffee"></i>
+                    <span>Café o postre</span>
                   </div>
                 </div>
               </div>
-            </div>
-            
-            <div class="menu-footer">
-              <p>Incluye pan, bebida y café</p>
             </div>
           </div>
         </div>
@@ -103,7 +104,6 @@ export default {
     const menuDia = ref(null)
     const primeros = ref([])
     const segundos = ref([])
-    const postres = ref([])
     const currentHighlighted = ref(null)
     let highlightInterval = null
 
@@ -111,13 +111,11 @@ export default {
     let menuSubscription = null
     let primerosSubscription = null
     let segundosSubscription = null
-    let postresSubscription = null
 
     const highlightNextItem = () => {
       const allItems = [
         ...primeros.value.map((_, i) => `primeros-${i}`),
-        ...segundos.value.map((_, i) => `segundos-${i}`),
-        ...postres.value.map((_, i) => `postres-${i}`)
+        ...segundos.value.map((_, i) => `segundos-${i}`)
       ]
 
       const currentIndex = allItems.indexOf(currentHighlighted.value)
@@ -143,7 +141,7 @@ export default {
     const loadPlatos = async (menuId) => {
       try {
         // Cargar todos los platos del menú en una sola llamada
-        const [primerosData, segundosData, postresData] = await Promise.all([
+        const [primerosData, segundosData] = await Promise.all([
           pb.collection('menu_dia_primeros').getFullList({
             filter: `field = "${menuId}"`,
             sort: 'created'
@@ -151,22 +149,11 @@ export default {
           pb.collection('menu_dia_segundos').getFullList({
             filter: `field = "${menuId}"`,
             sort: 'created'
-          }),
-          pb.collection('menu_dia_postres').getFullList({
-            filter: `field = "${menuId}"`,
-            sort: 'created'
           })
         ])
 
         primeros.value = primerosData
         segundos.value = segundosData
-        postres.value = postresData
-
-        // Reiniciar la animación si es necesario
-        if (primeros.value.length > 0 || segundos.value.length > 0 || postres.value.length > 0) {
-          stopHighlightAnimation()
-          startHighlightAnimation()
-        }
       } catch (err) {
         console.error('Error al cargar platos:', err)
       }
@@ -181,7 +168,6 @@ export default {
           menuDia.value = null
           primeros.value = []
           segundos.value = []
-          postres.value = []
           return
         }
 
@@ -213,13 +199,6 @@ export default {
           await loadPlatos(menuId)
         }
       })
-
-      // Suscripción a postres
-      postresSubscription = pb.collection('menu_dia_postres').subscribe('*', async ({ action, record }) => {
-        if (record.field === menuId || action === 'delete') {
-          await loadPlatos(menuId)
-        }
-      })
     }
 
     const cleanupSubscriptions = () => {
@@ -234,10 +213,6 @@ export default {
       if (segundosSubscription) {
         pb.collection('menu_dia_segundos').unsubscribe(segundosSubscription)
         segundosSubscription = null
-      }
-      if (postresSubscription) {
-        pb.collection('menu_dia_postres').unsubscribe(postresSubscription)
-        postresSubscription = null
       }
     }
 
@@ -284,7 +259,6 @@ export default {
       menuDia,
       primeros,
       segundos,
-      postres,
       currentHighlighted
     }
   }
@@ -413,6 +387,8 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .plato-item.highlighted {
@@ -426,12 +402,16 @@ export default {
   font-size: 3.5vh;
   font-weight: 600;
   margin-bottom: 0.8rem;
+  text-align: center;
+  width: 100%;
 }
 
 .plato-descripcion {
   color: #d4af37;
   font-size: 2.8vh;
   line-height: 1.3;
+  text-align: center;
+  width: 100%;
 }
 
 .empty-section {
@@ -446,15 +426,6 @@ export default {
   font-size: 2.4vh;
   background-color: rgba(18, 18, 18, 0.3);
   border-radius: 6px;
-}
-
-.menu-footer {
-  text-align: center;
-  padding: 1rem;
-  color: #d4af37;
-  font-style: italic;
-  font-size: 2vh;
-  border-top: 1px solid rgba(212, 175, 55, 0.3);
 }
 
 .empty-state {
@@ -549,5 +520,37 @@ export default {
   align-items: center;
   background-color: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(5px);
+}
+
+.inclusion-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: rgba(18, 18, 18, 0.3);
+  border-radius: 8px;
+  border-left: 2px solid #d4af37;
+  width: 100%;
+  box-sizing: border-box;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.inclusion-item i {
+  color: #d4af37;
+  font-size: 3.5vh;
+  margin-bottom: 0.8rem;
+}
+
+.inclusion-item span {
+  color: #ffffff;
+  font-size: 3.5vh;
+  font-weight: 600;
+  text-align: center;
+  width: 100%;
 }
 </style>

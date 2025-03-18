@@ -87,6 +87,7 @@
                   <!-- Primeros platos -->
                   <div class="menu-seccion">
                     <h4 class="menu-seccion-title">Primeros</h4>
+                    <div class="section-divider-small"></div>
                     <ul class="menu-platos-list">
                       <li v-for="(plato, index) in primeros" 
                           :key="plato.id" 
@@ -101,6 +102,7 @@
                   <!-- Segundos platos -->
                   <div class="menu-seccion">
                     <h4 class="menu-seccion-title">Segundos</h4>
+                    <div class="section-divider-small"></div>
                     <ul class="menu-platos-list">
                       <li v-for="(plato, index) in segundos" 
                           :key="plato.id" 
@@ -112,22 +114,13 @@
                     </ul>
                   </div>
                   
-                  <!-- Postres -->
-                  <div class="menu-seccion">
-                    <h4 class="menu-seccion-title">Postres</h4>
-                    <ul class="menu-platos-list">
-                      <li v-for="(plato, index) in postres" 
-                          :key="plato.id" 
-                          class="menu-plato-item"
-                          :class="{ 'highlighted': highlightedIndex === index && currentSection === 'postres' }">
-                        {{ plato.nombre }}
-                        <span v-if="plato.descripcion" class="plato-desc-inline">- {{ plato.descripcion }}</span>
-                      </li>
-                    </ul>
-                  </div>
-                  
-                  <div class="menu-footer-info">
-                    <p>Incluye pan, bebida y café</p>
+                  <!-- Sección Inclusión -->
+                  <div class="menu-seccion inclusion-section">
+                    <div class="inclusion-list">
+                      <span><i class="fas fa-bread-slice"></i> Pan</span>
+                      <span><i class="fas fa-glass-martini-alt"></i> Bebida</span>
+                      <span><i class="fas fa-coffee"></i> Café o postre</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -156,7 +149,6 @@ export default {
     const menuDia = ref(null)
     const primeros = ref([])
     const segundos = ref([])
-    const postres = ref([])
     
     const highlightedIndex = ref(0)
     const currentSection = ref('raciones')
@@ -166,7 +158,6 @@ export default {
     let menuSubscription = null
     let primerosSubscription = null
     let segundosSubscription = null
-    let postresSubscription = null
     let racionesSubscription = null
     let tapasSubscription = null
 
@@ -174,8 +165,7 @@ export default {
       { name: 'raciones', items: raciones },
       { name: 'tapas', items: tapas },
       { name: 'primeros', items: primeros },
-      { name: 'segundos', items: segundos },
-      { name: 'postres', items: postres }
+      { name: 'segundos', items: segundos }
     ]
 
     const startHighlightAnimation = () => {
@@ -206,7 +196,7 @@ export default {
         // Cargar todos los datos en paralelo
         const [platosData, menuData] = await Promise.all([
           pb.collection('platos').getFullList({
-            filter: 'categoria = "raciones" || categoria = "tapas"',
+            filter: 'categoria = "carta" || categoria = "tapas"',
             sort: 'categoria,precio'
           }),
           pb.collection('menu_dia').getFullList({
@@ -216,7 +206,7 @@ export default {
         ])
 
         // Filtrar los platos por categoría en el frontend
-        raciones.value = platosData.filter(plato => plato.categoria === 'raciones')
+        raciones.value = platosData.filter(plato => plato.categoria === 'carta')
         tapas.value = platosData.filter(plato => plato.categoria === 'tapas')
         
         if (menuData.length) {
@@ -258,7 +248,6 @@ export default {
           menuDia.value = null
           primeros.value = []
           segundos.value = []
-          postres.value = []
           return
         }
 
@@ -292,14 +281,6 @@ export default {
           loadMenuPlatos(menuId)
         }
       })
-
-      // Suscripción a postres
-      postresSubscription = pb.collection('menu_dia_postres').subscribe('*', function(data) {
-        const { action, record } = data
-        if (record.field === menuId || action === 'delete') {
-          loadMenuPlatos(menuId)
-        }
-      })
     }
 
     const cleanupSubscriptions = () => {
@@ -315,10 +296,6 @@ export default {
         pb.collection('menu_dia_segundos').unsubscribe(segundosSubscription)
         segundosSubscription = null
       }
-      if (postresSubscription) {
-        pb.collection('menu_dia_postres').unsubscribe(postresSubscription)
-        postresSubscription = null
-      }
       if (racionesSubscription) {
         pb.collection('platos').unsubscribe(racionesSubscription)
         racionesSubscription = null
@@ -332,7 +309,7 @@ export default {
     const loadMenuPlatos = async (menuId) => {
       try {
         // Cargar todos los platos del menú en paralelo
-        const [primerosData, segundosData, postresData] = await Promise.all([
+        const [primerosData, segundosData] = await Promise.all([
           pb.collection('menu_dia_primeros').getFullList({
             filter: `field = "${menuId}"`,
             sort: 'created'
@@ -340,16 +317,11 @@ export default {
           pb.collection('menu_dia_segundos').getFullList({
             filter: `field = "${menuId}"`,
             sort: 'created'
-          }),
-          pb.collection('menu_dia_postres').getFullList({
-            filter: `field = "${menuId}"`,
-            sort: 'created'
           })
         ])
 
         primeros.value = primerosData
         segundos.value = segundosData
-        postres.value = postresData
       } catch (err) {
         console.error('Error al cargar platos del menú:', err)
       }
@@ -373,7 +345,6 @@ export default {
       menuDia,
       primeros,
       segundos,
-      postres,
       highlightedIndex,
       currentSection
     }
@@ -470,6 +441,12 @@ export default {
   background: linear-gradient(90deg, transparent, rgba($tv-primary-color, 0.7), transparent);
 }
 
+.section-divider-small {
+  height: 2px;
+  width: 60px;
+  margin: 0 auto;
+  background: linear-gradient(90deg, transparent, rgba($tv-primary-color, 0.7), transparent);
+}
 .section-content {
   flex: 1;
   padding: 1rem;
@@ -562,22 +539,28 @@ export default {
 .menu-completo {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0rem;
   height: 100%;
+  justify-content: space-evenly;
 }
 
 .menu-seccion {
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   background-color: rgba(18, 18, 18, 0.3);
   border-radius: 6px;
-  padding: 0.8rem;
+  padding: 0.5rem;
   border-left: 2px solid rgba($tv-primary-color, 0.5);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 .menu-seccion-title {
   color: $tv-primary-color;
-  font-size: 1.4rem;
-  margin-bottom: 0.8rem;
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
   font-weight: 600;
   text-transform: uppercase;
 }
@@ -586,18 +569,28 @@ export default {
   list-style-type: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 100%;
 }
 
 .menu-plato-item {
-  padding: 0.8rem 0;
+  padding: 0.5rem 0;
   color: #e0e0e0;
   border-bottom: 1px dashed rgba(160, 160, 160, 0.2);
   text-transform: uppercase;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  font-size: 1.2rem;
+  text-align: center;
+  gap: 0.3rem;
+  font-size: 1.8rem;
   transition: all 0.5s ease;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  min-height: 0;
 
   &:hover {
     background-color: rgba(18, 18, 18, 0.9);
@@ -608,10 +601,11 @@ export default {
 }
 
 .plato-desc-inline {
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   color: $tv-primary-color;
   text-transform: none;
-  flex: 1;
+  width: 100%;
+  text-align: center;
   font-weight: 500;
 }
 
@@ -691,5 +685,31 @@ export default {
   align-items: center;
   background-color: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(5px);
+}
+
+.inclusion-section {
+  margin-top: auto;
+  padding: 1rem;
+}
+
+.inclusion-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  color: $tv-primary-color;
+  font-style: italic;
+  font-size: 2vh;
+}
+
+.inclusion-list span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.inclusion-list i {
+  color: $tv-primary-color;
+  font-size: 1.8vh;
 }
 </style>

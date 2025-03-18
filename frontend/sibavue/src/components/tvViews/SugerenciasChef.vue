@@ -8,7 +8,7 @@
       <template v-else>
         <div class="view-header">
           <div class="restaurant-name">O SIBARITA</div>
-          <h1 class="view-title">SUGERENCIAS DEL CHEF</h1>
+          <h1 class="view-title">SUGERENCIAS DEL DÍA</h1>
         </div>
         
         <div v-if="!sugerencias.length" class="empty-state">
