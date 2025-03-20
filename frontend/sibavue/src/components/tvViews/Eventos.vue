@@ -8,7 +8,7 @@
       <template v-else>
         <div class="view-header">
           <div class="restaurant-name">O SIBARITA</div>
-          <h1 class="view-title">PRÓXIMOS EVENTOS</h1>
+          <h1 class="view-title">CELEBRA TUS EVENTOS</h1>
         </div>
         
         <div v-if="!eventos.length" class="empty-state">
@@ -34,7 +34,14 @@
                 <div class="evento-texto">
                   <h2 class="evento-nombre">{{ eventoActual.titulo }}</h2>
                   <p v-if="eventoActual.descripcion" class="evento-descripcion">
-                    {{ eventoActual.descripcion }}
+                    <template v-for="(linea, index) in eventoActual.descripcion.split('\n')" :key="index">
+                      <template v-if="linea.trim().startsWith('-')">
+                        <span class="lista-item">{{ linea.trim().substring(1) }}</span><br>
+                      </template>
+                      <template v-else>
+                        {{ linea }}<br>
+                      </template>
+                    </template>
                   </p>
                 </div>
                 <div class="evento-precio">
@@ -292,12 +299,29 @@ export default {
 
 .evento-descripcion {
   color: #e0e0e0;
-  font-size: 2rem;
+  font-size: 2.4rem;
   line-height: 1.6;
   margin: 0;
   flex: 1;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.lista-item {
+  display: block;
+  padding-left: 2.5rem;
+  position: relative;
+  font-size: 2.4rem;
+}
+
+.lista-item::before {
+  content: "•";
+  color: #d4af37;
+  position: absolute;
+  left: 0;
+  font-size: 1.8em;
+  line-height: 1;
 }
 
 .evento-precio {
@@ -328,14 +352,14 @@ export default {
 }
 
 .reserve-info {
-  font-size: 1.1rem;
+  font-size: 2rem;
   color: #e0e0e0;
   font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
 .has-shimmer {
   display: inline-block;
-  padding: 2px 6px;
+  padding: 4px 12px;
   background: linear-gradient(90deg, 
     rgba(212, 175, 55, 0.1) 0%, 
     rgba(212, 175, 55, 0.3) 50%, 
@@ -343,6 +367,7 @@ export default {
   background-size: 200% 100%;
   animation: shimmer 3s infinite;
   border-radius: 4px;
+  font-size: 2rem;
 }
 
 @keyframes shimmer {
