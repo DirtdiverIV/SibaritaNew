@@ -40,14 +40,14 @@
         </h1>
         
         <!-- Acceso rápido al menú del día -->
-        <div class="quick-access mb-5">
+        <!-- <div class="quick-access mb-5">
           <router-link to="/admin/menu-dia" class="button is-primary is-large is-fullwidth">
             <span class="icon is-large">
               <i class="fas fa-clipboard-list"></i>
             </span>
             <span>Gestionar Menú del Día</span>
           </router-link>
-        </div>
+        </div> -->
         
         <!-- Secciones dinámicas -->
         <div class="tabs is-centered is-boxed">

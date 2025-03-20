@@ -39,10 +39,16 @@
                 
                 <div class="sugerencia-footer">
                   <div class="sugerencia-precio">
-                    <span class="price-tag">{{ sugerenciaActual.precio }}€</span>
-                    <span v-if="sugerenciaActual.precio_medio" class="price-medio">
-                      Media: {{ sugerenciaActual.precio_medio }}€
-                    </span>
+                    <div class="precio-container">
+                      <div class="precio-item">
+                        <span class="precio-label">Ración</span>
+                        <span class="price-tag">{{ sugerenciaActual.precio }}€</span>
+                      </div>
+                      <div v-if="sugerenciaActual.precio_medio" class="precio-item">
+                        <span class="precio-label">Media Ración</span>
+                        <span class="price-tag">{{ sugerenciaActual.precio_medio }}€</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -107,7 +113,7 @@ export default {
     onMounted(() => {
       loadSugerencias()
       // Rotar cada 30 segundos
-      rotationInterval = setInterval(rotarSugerencias, 30000)
+      rotationInterval = setInterval(rotarSugerencias, 5000)
     })
 
     onUnmounted(() => {
@@ -258,41 +264,71 @@ export default {
 }
 
 .sugerencia-nombre {
-  font-size: 5vh;
-  margin: 0 0 2vh;
+  font-size: 8vh;
+  margin: 0 0 3vh;
   color: #d4af37;
   line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .sugerencia-descripcion {
-  font-size: 3vh;
+  font-size: 4.5vh;
   line-height: 1.6;
-  margin-bottom: 3vh;
+  margin-bottom: 4vh;
   font-style: italic;
   flex: 1;
+  color: #e0e0e0;
 }
 
 .sugerencia-footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
+  padding-top: 2rem;
+  border-top: 2px solid rgba(212, 175, 55, 0.3);
+  width: 100%;
 }
 
 .sugerencia-precio {
-  text-align: right;
+  width: 100%;
+}
+
+.precio-container {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  align-items: center;
+}
+
+.precio-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.precio-label {
+  font-size: 2.5vh;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
 }
 
 .price-tag {
-  font-size: 6vh;
-  color: #d4af37;
-  font-weight: bold;
-}
-
-.price-medio {
-  display: block;
-  font-size: 3vh;
-  color: rgba(255, 255, 255, 0.7);
-  margin-top: 1vh;
+  font-size: 4.5vh;
+  padding: 0.8rem 2rem;
+  background-color: #d4af37;
+  color: #121212;
+  border-radius: 12px;
+  font-weight: 700;
+  display: inline-block;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  letter-spacing: 1px;
+  min-width: 150px;
+  text-align: center;
 }
 
 .sugerencia-imagen-placeholder {
@@ -346,19 +382,26 @@ export default {
   }
   
   .sugerencia-nombre {
-    font-size: 4vh;
+    font-size: 6vh;
   }
   
   .sugerencia-descripcion {
-    font-size: 2.5vh;
+    font-size: 3.5vh;
+  }
+  
+  .precio-container {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .precio-label {
+    font-size: 2vh;
   }
   
   .price-tag {
-    font-size: 5vh;
-  }
-  
-  .price-medio {
-    font-size: 2.5vh;
+    font-size: 3.5vh;
+    padding: 0.6rem 1.5rem;
+    min-width: 120px;
   }
 }
 
@@ -369,5 +412,19 @@ export default {
 
 .sugerencia-principal {
   animation: fadeIn 0.5s ease-out;
+}
+
+.tv-loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
 }
 </style>
