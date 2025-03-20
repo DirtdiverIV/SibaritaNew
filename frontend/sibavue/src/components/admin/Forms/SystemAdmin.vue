@@ -26,16 +26,6 @@
               <h3 class="tv-id">{{ tv.tv_id }}</h3>
             </div>
             
-            <div class="tv-views">
-              <div 
-                v-for="viewName in getAssignedViewNames(tv)" 
-                :key="viewName"
-                class="view-tag"
-              >
-                {{ formatViewName(viewName) }}
-              </div>
-            </div>
-            
             <div class="tv-actions">
               <a 
                 :href="`/tv/${tv.tv_id}`" 
@@ -222,27 +212,7 @@
                 placeholder="Ej: tv1"
               />
             </div>
-          </div>
-          
-          <div class="field">
-            <label class="label">Vistas Asignadas</label>
-            <div class="control">
-              <div class="views-grid">
-                <button
-                  v-for="view in availableViews"
-                  :key="view.id"
-                  class="view-button"
-                  :class="{ 'is-selected': tvForm.assigned_views.includes(view.id) }"
-                  @click="toggleView(view.id)"
-                  type="button"
-                >
-                  <span class="icon">
-                    <i class="fas" :class="tvForm.assigned_views.includes(view.id) ? 'fa-check-circle' : 'fa-circle'"></i>
-                  </span>
-                  <span>{{ formatViewName(view.view_name) }}</span>
-                </button>
-              </div>
-            </div>
+            <p class="help">Este identificador se usará para acceder a la pantalla</p>
           </div>
         </section>
         
@@ -283,10 +253,8 @@ export default {
     const isEdit = ref(false)
     const editId = ref(null)
     const tvForm = ref({
-      tv_id: '',
-      assigned_views: []
+      tv_id: ''
     })
-    const availableViews = ref([])
     
     // Estado para configuración
     const rotationSeconds = ref(10)
@@ -306,7 +274,6 @@ export default {
       loadingTvs.value = true
       try {
         const response = await pb.collection('tv_assignments').getFullList({
-          expand: 'assigned_views',
           sort: 'tv_id'
         })
         console.log('Respuesta de PocketBase:', response)
@@ -321,14 +288,40 @@ export default {
       }
     }
     
-    // Cargar vistas disponibles
-    const loadViews = async () => {
+    const resetTvForm = () => {
+      tvForm.value = {
+        tv_id: ''
+      }
+      isEdit.value = false
+      editId.value = null
+    }
+    
+    const editTv = (tv) => {
+      isEdit.value = true
+      editId.value = tv.id
+      tvForm.value = {
+        tv_id: tv.tv_id
+      }
+      showTvForm.value = true
+    }
+    
+    const saveTv = async () => {
       try {
-        availableViews.value = await pb.collection('views').getFullList({
-          sort: 'view_name'
-        })
+        if (isEdit.value) {
+          await pb.collection('tv_assignments').update(editId.value, {
+            tv_id: tvForm.value.tv_id
+          })
+        } else {
+          await pb.collection('tv_assignments').create({
+            tv_id: tvForm.value.tv_id,
+            assigned_views: []
+          })
+        }
+        showTvForm.value = false
+        await loadTvs()
       } catch (err) {
-        console.error('Error al cargar vistas:', err)
+        console.error('Error al guardar TV:', err)
+        alert('Error al guardar la pantalla TV: ' + err.message)
       }
     }
     
@@ -368,57 +361,6 @@ export default {
       } catch (err) {
         console.error('Error al guardar configuración:', err)
         showConfigMessage('Error al guardar la configuración: ' + err.message, 'danger')
-      }
-    }
-    
-    // Funciones auxiliares para TVs
-    const getAssignedViewNames = (tv) => {
-      if (!tv.expand || !tv.expand.assigned_views) return []
-      
-      const views = tv.expand.assigned_views
-      return Array.isArray(views) ? 
-        views.map(v => v.view_name) : 
-        [views.view_name]
-    }
-    
-    const formatViewName = (name) => {
-      return name.split('_').map(word => 
-        word.charAt(0).toUpperCase() + word.slice(1)
-      ).join(' ')
-    }
-    
-    const resetTvForm = () => {
-      tvForm.value = {
-        tv_id: '',
-        assigned_views: []
-      }
-      isEdit.value = false
-      editId.value = null
-    }
-    
-    const editTv = (tv) => {
-      isEdit.value = true
-      editId.value = tv.id
-      tvForm.value = {
-        tv_id: tv.tv_id,
-        assigned_views: Array.isArray(tv.assigned_views) ? 
-          tv.assigned_views.map(v => v.id) : 
-          [tv.assigned_views.id]
-      }
-      showTvForm.value = true
-    }
-    
-    const saveTv = async () => {
-      try {
-        if (isEdit.value) {
-          await pb.collection('tv_assignments').update(editId.value, tvForm.value)
-        } else {
-          await pb.collection('tv_assignments').create(tvForm.value)
-        }
-        showTvForm.value = false
-        await loadTvs()
-      } catch (err) {
-        console.error('Error al guardar TV:', err)
       }
     }
     
@@ -526,6 +468,29 @@ export default {
             almuerzo: almuerzoId
           }
 
+        case 'tv_schedules':
+          return {
+            tv_id: 'diag-tv',
+            schedule_type: await getOrCreateDiagnosticScheduleType(),
+            start_time: '09:00',
+            end_time: '10:00',
+            assigned_views: [],
+            is_active: true,
+            specific_date: null
+          }
+
+        case 'schedule_types':
+          return {
+            name: 'diagnostic_type',
+            is_default: false
+          }
+
+        case 'holiday_dates':
+          return {
+            date: new Date().toISOString().split('T')[0],
+            description: 'Día diagnóstico'
+          }
+
         default:
           return { testField: 'diagnostic' }
       }
@@ -556,7 +521,10 @@ export default {
         'menus_evento',
         'eventos',
         'almuerzos',
-        'almuerzo_items'
+        'almuerzo_items',
+        'tv_schedules',
+        'schedule_types',
+        'holiday_dates'
       ]
 
       for (const col of collections) {
@@ -642,19 +610,24 @@ export default {
         return created.id
       }
     }
-    
-    const toggleView = (viewId) => {
-      if (tvForm.value.assigned_views.includes(viewId)) {
-        tvForm.value.assigned_views = tvForm.value.assigned_views.filter(id => id !== viewId)
-      } else {
-        tvForm.value.assigned_views.push(viewId)
+
+    // Función para obtener o crear un tipo de horario de diagnóstico
+    const getOrCreateDiagnosticScheduleType = async () => {
+      try {
+        const existing = await pb.collection('schedule_types').getFirstListItem('name = "diagnostic_type"')
+        return existing.id
+      } catch (err) {
+        const created = await pb.collection('schedule_types').create({
+          name: 'diagnostic_type',
+          is_default: false
+        })
+        return created.id
       }
     }
     
     onMounted(async () => {
       await Promise.all([
         loadTvs(),
-        loadViews(),
         loadConfig()
       ])
     })
@@ -665,21 +638,17 @@ export default {
       showTvForm,
       isEdit,
       tvForm,
-      availableViews,
       rotationSeconds,
       configMessage,
       configMessageType,
       diagnostics,
       isRunning,
-      getAssignedViewNames,
-      formatViewName,
+      getStatusClass,
+      runDiagnostics,
       resetTvForm,
       editTv,
       saveTv,
-      saveConfig,
-      getStatusClass,
-      runDiagnostics,
-      toggleView
+      saveConfig
     }
   }
 }
@@ -744,21 +713,6 @@ export default {
   margin: 0;
 }
 
-.tv-views {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.view-tag {
-  background-color: rgba(212, 175, 55, 0.1);
-  color: #d4af37;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.9rem;
-}
-
 .tv-actions {
   display: flex;
   gap: 0.5rem;
@@ -814,73 +768,9 @@ export default {
   border-top: 1px solid rgba(212, 175, 55, 0.3);
 }
 
-.views-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 0.75rem;
-  width: 100%;
-  padding: 0.5rem;
-  background-color: rgba(18, 18, 18, 0.5);
-  border-radius: 4px;
-}
-
-.view-button {
-  display: flex;
-  align-items: center;
-  background-color: rgba(30, 30, 30, 0.7);
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  color: #e0e0e0;
-  width: 100%;
-  text-align: left;
-}
-
-.view-button:hover {
-  background-color: rgba(212, 175, 55, 0.1);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.view-button.is-selected {
-  background-color: rgba(212, 175, 55, 0.15);
-  border: 1px solid rgba(212, 175, 55, 0.4);
-  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.1);
-}
-
-.view-button .icon {
-  margin-right: 0.75rem;
-  width: 20px;
-  display: flex;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.view-button.is-selected .icon {
-  color: #d4af37;
-  transform: scale(1.1);
-}
-
-.view-button span:not(.icon) {
-  flex: 1;
-  font-size: 0.95rem;
-  transition: all 0.3s ease;
-}
-
-.view-button.is-selected span:not(.icon) {
-  color: #d4af37;
-  font-weight: 500;
-}
-
 @media (max-width: 768px) {
   .tv-grid {
     grid-template-columns: 1fr;
-  }
-  
-  .views-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
   
   .table-container {

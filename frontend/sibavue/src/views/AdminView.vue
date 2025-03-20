@@ -24,6 +24,10 @@
       
       <div class="navbar-menu" :class="{'is-active': isNavbarActive}">
         <div class="navbar-end">
+          <router-link to="/" class="navbar-item">
+            <span class="icon"><i class="fas fa-desktop"></i></span>
+            <span>Selector de TVs</span>
+          </router-link>
           <a class="navbar-item" @click="logout">
             <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
             <span>Cerrar Sesión</span>
@@ -94,6 +98,7 @@ const PlatosAdmin = defineAsyncComponent(() => import('@/components/admin/Forms/
 const MenuDiaAdmin = defineAsyncComponent(() => import('@/components/admin/Forms/MenuDiaAdmin.vue'))
 const EventosAdmin = defineAsyncComponent(() => import('@/components/admin/Forms/EventosAdmin.vue'))
 const AlmuerzosAdmin = defineAsyncComponent(() => import('@/components/admin/Forms/AlmuerzosAdmin.vue'))
+const TVScheduleAdmin = defineAsyncComponent(() => import('@/components/admin/Forms/TVScheduleAdmin.vue'))
 
 export default {
   name: 'AdminView',
@@ -102,7 +107,8 @@ export default {
     PlatosAdmin,
     MenuDiaAdmin,
     EventosAdmin,
-    AlmuerzosAdmin
+    AlmuerzosAdmin,
+    TVScheduleAdmin
   },
   setup() {
     const router = useRouter()
@@ -130,6 +136,11 @@ export default {
         name: 'Eventos', 
         component: 'EventosAdmin',
         icon: 'fas fa-calendar-alt'
+      },
+      {
+        name: 'Horarios TV',
+        component: 'TVScheduleAdmin',
+        icon: 'fas fa-tv'
       },
       { 
         name: 'Sistema', 

@@ -158,50 +158,163 @@ export default {
       }
     }
 
-    // Carga la configuración de tv_assignments para un tvId dado
+    // Cargar configuración global y horarios
+    const loadConfig = async () => {
+      try {
+        const configList = await pb.collection('config').getFullList({
+          sort: '-created',
+          limit: 1
+        })
+        
+        if (configList.length > 0) {
+          const configRecord = configList[0]
+          rotationSeconds.value = configRecord.rotacion_escena_segundos || 20
+        } else {
+          rotationSeconds.value = 20 // Valor predeterminado
+        }
+        
+        console.log('Tiempo de rotación configurado:', rotationSeconds.value, 'segundos')
+      } catch (err) {
+        console.error('Error al cargar configuración:', err)
+        rotationSeconds.value = 20 // Valor predeterminado en caso de error
+      }
+    }
+
+    // Determinar el tipo de día actual
+    const getCurrentScheduleType = async () => {
+      const today = new Date()
+      const dayOfWeek = today.getDay() // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
+      const todayStr = today.toISOString().split('T')[0]
+
+      try {
+        // Cargar todos los tipos de horario
+        const scheduleTypes = await pb.collection('schedule_types').getFullList()
+        const workdayType = scheduleTypes.find(t => t.name.toLowerCase() === 'workday')
+        const weekendType = scheduleTypes.find(t => t.name.toLowerCase() === 'weekend')
+        const customType = scheduleTypes.find(t => t.name.toLowerCase() === 'custom')
+
+        if (!workdayType || !weekendType || !customType) {
+          console.error('Faltan tipos de horario en la base de datos')
+          return null
+        }
+
+        // Verificar si es un día festivo
+        try {
+          const holiday = await pb.collection('holiday_dates').getFirstListItem(`date = "${todayStr}"`)
+          if (holiday) {
+            return weekendType.id
+          }
+        } catch (err) {
+          // Si no encuentra el registro, no es festivo
+          console.log('No es un día festivo')
+        }
+
+        // Si es sábado, es fin de semana
+        if (dayOfWeek === 6) {
+          return weekendType.id
+        }
+
+        // Si es domingo, no hay servicio
+        if (dayOfWeek === 0) {
+          return null
+        }
+
+        // Verificar si hay un horario personalizado para hoy
+        try {
+          const customSchedule = await pb.collection('tv_schedules').getFirstListItem(
+            `specific_date = "${todayStr}"`
+          )
+          if (customSchedule) {
+            return customType.id
+          }
+        } catch (err) {
+          console.log('No hay horario personalizado para hoy')
+        }
+
+        // Por defecto, es día laboral (lunes a viernes)
+        return workdayType.id
+
+      } catch (err) {
+        console.error('Error al obtener los tipos de horario:', err)
+        return null
+      }
+    }
+
+    // Obtener las vistas programadas para la hora actual
+    const getCurrentScheduledViews = async (tvId) => {
+      try {
+        const scheduleType = await getCurrentScheduleType()
+        
+        if (!scheduleType) {
+          errorMessage.value = 'No hay servicio configurado para este horario'
+          return []
+        }
+
+        const now = new Date()
+        const currentTime = now.getHours().toString().padStart(2, '0') + ':' + 
+                          now.getMinutes().toString().padStart(2, '0')
+        const todayStr = now.toISOString().split('T')[0]
+
+        try {
+          // Primero obtenemos todos los horarios para esta TV
+          const schedules = await pb.collection('tv_schedules').getFullList({
+            filter: `tv_id = "${tvId}" && is_active = true`,
+            expand: 'schedule_type,assigned_views'
+          })
+
+          // Filtramos manualmente por tipo de horario y hora
+          const currentSchedule = schedules.find(schedule => {
+            const isCorrectType = schedule.expand?.schedule_type?.id === scheduleType
+            const isCorrectTime = schedule.start_time <= currentTime && schedule.end_time >= currentTime
+            const isCorrectDate = schedule.specific_date ? schedule.specific_date === todayStr : true
+
+            return isCorrectType && isCorrectTime && isCorrectDate
+          })
+
+          if (currentSchedule?.assigned_views?.length > 0) {
+            // Obtener los nombres de las vistas
+            const views = await pb.collection('views').getFullList({
+              filter: currentSchedule.assigned_views.map(id => `id = "${id}"`).join(' || ')
+            })
+            
+            console.log('Vistas encontradas:', views)
+            return views.map(v => v.view_name)
+          } else {
+            errorMessage.value = 'No hay vistas asignadas para este horario'
+            return []
+          }
+        } catch (err) {
+          console.error('Error al buscar horario:', err)
+          errorMessage.value = 'No hay horario configurado para este momento'
+          return []
+        }
+      } catch (err) {
+        console.error('Error al obtener vistas programadas:', err)
+        errorMessage.value = 'Error al cargar el horario: ' + err.message
+        return []
+      }
+    }
+
+    // Modificar loadTvAssignment para usar los horarios programados
     const loadTvAssignment = async (tvId) => {
       try {
         console.log('Cargando asignaciones para TV:', tvId)
         
-        // Intentar obtener la asignación específica para este TV
-        const record = await pb.collection('tv_assignments')
-          .getFirstListItem(`tv_id = "${tvId}"`)
+        // Obtener las vistas programadas para la hora actual
+        const scheduledViews = await getCurrentScheduledViews(tvId)
+        console.log('Vistas programadas obtenidas:', scheduledViews)
         
-        console.log('Registro encontrado:', record)
-        
-        // Verificar si tiene expand.assigned_views
-        if (record.expand && record.expand.assigned_views && record.expand.assigned_views.length > 0) {
-          assignedViews.value = record.expand.assigned_views.map(v => v.view_name)
-          console.log('Vistas asignadas (de expand):', assignedViews.value)
-        } 
-        // Verificar si tiene asignaciones directas
-        else if (record.assigned_views && record.assigned_views.length > 0) {
-          // Obtener las vistas asignadas
-          try {
-            const viewIds = Array.isArray(record.assigned_views) 
-                          ? record.assigned_views 
-                          : [record.assigned_views]
-            
-            // Obtener detalles de cada vista por ID
-            const viewsPromises = viewIds.map(id => 
-              pb.collection('views').getOne(id)
-            )
-            const views = await Promise.all(viewsPromises)
-            assignedViews.value = views.map(v => v.view_name)
-            console.log('Vistas asignadas (de IDs):', assignedViews.value)
-          } catch (error) {
-            console.error('Error al obtener vistas:', error)
-            errorMessage.value = 'Error al cargar vistas asignadas'
-            await useFallbackViews()
-          }
+        if (scheduledViews.length > 0) {
+          assignedViews.value = scheduledViews
+          console.log('Vistas asignadas:', assignedViews.value)
+          errorMessage.value = ''
         } else {
-          // No hay vistas asignadas
-          errorMessage.value = 'No hay vistas asignadas a este TV'
+          console.log('No se encontraron vistas programadas, usando fallback')
           await useFallbackViews()
         }
       } catch (err) {
         console.error('Error al cargar asignación:', err)
-        errorMessage.value = `No se encontró configuración para TV ${tvId}`
+        errorMessage.value = `Error al cargar configuración para TV ${tvId}: ${err.message}`
         await useFallbackViews()
       }
     }
@@ -228,29 +341,6 @@ export default {
       }
       
       console.log('Vistas fallback asignadas:', assignedViews.value)
-    }
-
-    // Cargar configuración global
-    const loadConfig = async () => {
-      try {
-        const configList = await pb.collection('config').getFullList({
-          sort: '-created',
-          limit: 1
-        })
-        
-        if (configList.length > 0) {
-          const configRecord = configList[0]
-          rotationSeconds.value = configRecord.rotacion_escena_segundos || 20
-        } else {
-          rotationSeconds.value = 20 // Valor predeterminado
-        }
-        
-        console.log('Tiempo de rotación configurado:', rotationSeconds.value, 'segundos')
-      } catch (err) {
-        console.error('Error al cargar configuración:', err)
-        rotationSeconds.value = 20 // Valor predeterminado
-        console.log('Usando tiempo predeterminado:', rotationSeconds.value, 'segundos')
-      }
     }
 
     // Función para forzar vista inicial
@@ -302,23 +392,38 @@ export default {
       }
     })
 
+    // Actualizar las vistas cada minuto para mantener el horario actualizado
+    let updateInterval = null
+
+    const startUpdateInterval = () => {
+      // Actualizar cada minuto
+      updateInterval = setInterval(async () => {
+        if (route.params.tvId) {
+          await loadTvAssignment(route.params.tvId)
+        }
+      }, 60000) // 60000 ms = 1 minuto
+    }
+
+    // Limpiar el intervalo al desmontar el componente
+    onUnmounted(() => {
+      if (updateInterval) {
+        clearInterval(updateInterval)
+      }
+    })
+
+    // Inicialización
     onMounted(async () => {
-      // 1) Leer param :tvId de la ruta actual
-      const tvId = route.params.tvId
-      
-      // 2) Cargar la configuración global
       await loadConfig()
       
-      // 3) Cargar la asignación de TV
-      await loadTvAssignment(tvId)
-      
-      // Forzar vista inicial para depuración
-      forceInitialView()
-      
-      // 4) Iniciar la rotación si hay vistas asignadas
-      if (assignedViews.value.length > 0) {
-        startRotation()
+      if (route.params.tvId) {
+        await loadTvAssignment(route.params.tvId)
+        startUpdateInterval()
+      } else {
+        errorMessage.value = 'No se especificó ID de TV'
+        await useFallbackViews()
       }
+      
+      startRotation()
 
       // 5) Activar modo pantalla completa
       const element = document.documentElement
