@@ -346,12 +346,12 @@ export default {
 }
 
 .section-title {
-  color: #d4af37;
-  font-size: 3vh;
-  font-weight: 600;
-  margin: 0;
-  text-transform: uppercase;
+  color: $tv-primary-color;
   text-align: center;
+  font-size: 3.5vh;
+  margin: 0;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
 .section-divider {
@@ -398,20 +398,20 @@ export default {
 }
 
 .plato-nombre {
-  color: #ffffff;
-  font-size: 3.5vh;
+  color: $tv-text-light;
+  text-transform: uppercase;
   font-weight: 600;
-  margin-bottom: 0.8rem;
   text-align: center;
-  width: 100%;
+  font-size: 5.5vh;
+  margin-bottom: 0.5rem;
 }
 
 .plato-descripcion {
-  color: #d4af37;
-  font-size: 2.8vh;
-  line-height: 1.3;
+  color: $tv-primary-color;
   text-align: center;
-  width: 100%;
+  font-size: 3.8vh;
+  font-weight: 500;
+  font-style: italic;
 }
 
 .empty-section {
@@ -548,8 +548,8 @@ export default {
 
 .inclusion-item span {
   color: #ffffff;
-  font-size: 3.5vh;
-  font-weight: 600;
+  font-size: 2.8vh;
+  font-weight: 500;
   text-align: center;
   width: 100%;
 }

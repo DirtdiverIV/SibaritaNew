@@ -24,17 +24,33 @@
                 <div v-if="!raciones.length" class="empty-section">
                   <p>No hay raciones disponibles hoy</p>
                 </div>
-                <div v-else class="platos-list">
-                  <div v-for="(item, index) in raciones" 
-                       :key="item.id" 
-                       class="plato-item"
-                       :class="{ 'highlighted': highlightedIndex === index && currentSection === 'raciones' }">
-                    <div class="plato-content">
-                      <div class="plato-name">{{ item.nombre }}</div>
-                      <div v-if="item.descripcion" class="plato-desc">{{ item.descripcion }}</div>
+                <div v-else class="platos-scroll-container">
+                  <div class="platos-scroll-content">
+                    <!-- Primera copia de las raciones -->
+                    <div v-for="(item, index) in raciones" 
+                         :key="'first-' + item.id" 
+                         class="plato-item"
+                         :class="{ 'highlighted': highlightedIndex === index && currentSection === 'raciones' }">
+                      <div class="plato-content">
+                        <div class="plato-name">{{ item.nombre }}</div>
+                        <div v-if="item.descripcion" class="plato-desc">{{ item.descripcion }}</div>
+                      </div>
+                      <div class="plato-price">
+                        <span class="price-tag">{{ item.precio }}€{{ item.precio_medio ? ' / ' + item.precio_medio + '€' : '' }}</span>
+                      </div>
                     </div>
-                    <div class="plato-price">
-                      <span class="price-tag">{{ item.precio }}€{{ item.precio_medio ? ' / ' + item.precio_medio + '€' : '' }}</span>
+                    <!-- Segunda copia de las raciones para el scroll infinito -->
+                    <div v-for="(item, index) in raciones" 
+                         :key="'second-' + item.id" 
+                         class="plato-item"
+                         :class="{ 'highlighted': highlightedIndex === index && currentSection === 'raciones' }">
+                      <div class="plato-content">
+                        <div class="plato-name">{{ item.nombre }}</div>
+                        <div v-if="item.descripcion" class="plato-desc">{{ item.descripcion }}</div>
+                      </div>
+                      <div class="plato-price">
+                        <span class="price-tag">{{ item.precio }}€{{ item.precio_medio ? ' / ' + item.precio_medio + '€' : '' }}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -452,6 +468,7 @@ export default {
   padding: 1rem;
   overflow: hidden;
   font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  position: relative;
 }
 
 .empty-section {
@@ -472,6 +489,7 @@ export default {
   gap: 0.8rem;
   height: 100%;
   overflow: hidden;
+  position: relative;
 }
 
 .plato-item {
@@ -711,5 +729,28 @@ export default {
 .inclusion-list i {
   color: $tv-primary-color;
   font-size: 1.8vh;
+}
+
+.platos-scroll-container {
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.platos-scroll-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  animation: scrollVertical 30s linear infinite;
+  will-change: transform;
+}
+
+@keyframes scrollVertical {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
 }
 </style>
