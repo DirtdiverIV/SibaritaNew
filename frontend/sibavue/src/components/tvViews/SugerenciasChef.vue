@@ -264,7 +264,7 @@ export default {
 }
 
 .sugerencia-nombre {
-  font-size: 8vh;
+  font-size: 10vh;
   margin: 0 0 3vh;
   color: #d4af37;
   line-height: 1.2;
@@ -274,7 +274,7 @@ export default {
 }
 
 .sugerencia-descripcion {
-  font-size: 4.5vh;
+  font-size: 5.5vh;
   line-height: 1.6;
   margin-bottom: 4vh;
   font-style: italic;
@@ -289,6 +289,7 @@ export default {
   padding-top: 2rem;
   border-top: 2px solid rgba(212, 175, 55, 0.3);
   width: 100%;
+  margin-top: 2rem;
 }
 
 .sugerencia-precio {
@@ -297,28 +298,34 @@ export default {
 
 .precio-container {
   display: flex;
-  justify-content: center;
-  gap: 3rem;
+  justify-content: space-around;
   align-items: center;
+  width: 100%;
+  padding: 0 2rem;
 }
 
 .precio-item {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 1rem;
+  gap: 2rem;
+  background: rgba(212, 175, 55, 0.1);
+  padding: 1.5rem 2rem;
+  border-radius: 15px;
+  border: 2px solid rgba(212, 175, 55, 0.3);
 }
 
 .precio-label {
-  font-size: 2.5vh;
+  font-size: 3vh;
   color: #d4af37;
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .price-tag {
-  font-size: 4.5vh;
+  font-size: 5vh;
   padding: 0.8rem 2rem;
   background-color: #d4af37;
   color: #121212;
@@ -327,7 +334,7 @@ export default {
   display: inline-block;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   letter-spacing: 1px;
-  min-width: 150px;
+  min-width: 180px;
   text-align: center;
 }
 
@@ -382,26 +389,31 @@ export default {
   }
   
   .sugerencia-nombre {
-    font-size: 6vh;
+    font-size: 7vh;
   }
   
   .sugerencia-descripcion {
-    font-size: 3.5vh;
+    font-size: 4vh;
   }
   
   .precio-container {
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
+  }
+  
+  .precio-item {
+    width: 100%;
+    justify-content: space-between;
   }
   
   .precio-label {
-    font-size: 2vh;
+    font-size: 2.5vh;
   }
   
   .price-tag {
-    font-size: 3.5vh;
+    font-size: 4vh;
     padding: 0.6rem 1.5rem;
-    min-width: 120px;
+    min-width: 140px;
   }
 }
 

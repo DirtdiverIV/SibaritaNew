@@ -33,10 +33,9 @@
                          :class="{ 'highlighted': highlightedIndex === index && currentSection === 'raciones' }">
                       <div class="plato-content">
                         <div class="plato-name">{{ item.nombre }}</div>
-                        <div v-if="item.descripcion" class="plato-desc">{{ item.descripcion }}</div>
                       </div>
                       <div class="plato-price">
-                        <span class="price-tag">{{ item.precio }}€{{ item.precio_medio ? ' / ' + item.precio_medio + '€' : '' }}</span>
+                        <span class="price-tag">{{ item.precio.toString().split('').join('&#8203;') }}€{{ item.precio_medio ? ' / ' + item.precio_medio.toString().split('').join('&#8203;') + '€' : '' }}</span>
                       </div>
                     </div>
                     <!-- Segunda copia de las raciones para el scroll infinito -->
@@ -46,10 +45,9 @@
                          :class="{ 'highlighted': highlightedIndex === index && currentSection === 'raciones' }">
                       <div class="plato-content">
                         <div class="plato-name">{{ item.nombre }}</div>
-                        <div v-if="item.descripcion" class="plato-desc">{{ item.descripcion }}</div>
                       </div>
                       <div class="plato-price">
-                        <span class="price-tag">{{ item.precio }}€{{ item.precio_medio ? ' / ' + item.precio_medio + '€' : '' }}</span>
+                        <span class="price-tag">{{ item.precio.toString().split('').join('&#8203;') }}€{{ item.precio_medio ? ' / ' + item.precio_medio.toString().split('').join('&#8203;') + '€' : '' }}</span>
                       </div>
                     </div>
                   </div>
@@ -75,10 +73,9 @@
                        :class="{ 'highlighted': highlightedIndex === index && currentSection === 'tapas' }">
                     <div class="plato-content">
                       <div class="plato-name">{{ item.nombre }}</div>
-                      <div v-if="item.descripcion" class="plato-desc">{{ item.descripcion }}</div>
                     </div>
                     <div class="plato-price">
-                      <span class="price-tag">{{ item.precio }}€</span>
+                      <span class="price-tag">{{ item.precio.toString().split('').join('&#8203;') }}€</span>
                     </div>
                   </div>
                 </div>
@@ -90,7 +87,7 @@
               <div class="section-header">
                 <div class="menu-header-flex">
                   <h2 class="section-title">Menú del Día</h2>
-                  <div v-if="menuDia" class="menu-price">{{ menuDia.precio }}€</div>
+                  <div v-if="menuDia" class="menu-price">{{ menuDia.precio.toString().split('').join('&#8203;') }}€</div>
                 </div>
                 <div class="section-divider"></div>
               </div>
@@ -438,11 +435,12 @@ export default {
   right: 0;
   top: 50%;
   transform: translateY(-50%);
+  font-size: 3.8vh;
 }
 
 .section-title {
   color: $tv-primary-color;
-  font-size: 2.8vh;
+  font-size: 3.8vh;
   text-align: center;
   font-weight: 600;
   margin: 0;
@@ -524,7 +522,7 @@ export default {
   font-weight: 600;
   color: $tv-text-light;
   margin-bottom: 0;
-  font-size: 1.2rem;
+  font-size: 2.2rem;
   text-transform: uppercase;
   min-width: 150px;
 }
@@ -541,11 +539,12 @@ export default {
   margin-left: 1.5rem;
   text-align: right;
   min-width: 80px;
-  font-size: 1.2rem;
+  font-size: 2.2rem;
 }
 
 .price-tag {
   @include tv-price-tag;
+  font-size: 2.2rem;
 }
 
 .menu-dia-container {
@@ -577,7 +576,7 @@ export default {
 .menu-seccion-title {
   color: $tv-primary-color;
   text-align: center;
-  font-size: 2rem;
+  font-size: 3.8vh;
   margin-bottom: 0.5rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -603,7 +602,7 @@ export default {
   align-items: center;
   text-align: center;
   gap: 0.3rem;
-  font-size: 1.8rem;
+  font-size: 3.8vh;
   transition: all 0.5s ease;
   flex: 1;
   display: flex;
@@ -707,28 +706,28 @@ export default {
 
 .inclusion-section {
   margin-top: auto;
-  padding: 1rem;
+  padding: 0.5rem;
 }
 
 .inclusion-list {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
   color: $tv-primary-color;
   font-style: italic;
-  font-size: 2vh;
+  font-size: 1.6vh;
 }
 
 .inclusion-list span {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.3rem;
 }
 
 .inclusion-list i {
   color: $tv-primary-color;
-  font-size: 1.8vh;
+  font-size: 1.4vh;
 }
 
 .platos-scroll-container {

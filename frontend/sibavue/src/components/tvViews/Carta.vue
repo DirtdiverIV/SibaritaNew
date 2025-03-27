@@ -29,6 +29,9 @@
             <div class="destacado-content">
               <div class="destacado-header">
                 <span class="destacado-tag">Hoy recomendamos</span>
+                <div class="destacado-precio">
+                  <span>{{ platoDestacado.precio }}€{{ platoDestacado.precio_medio ? ' / ' + platoDestacado.precio_medio + '€' : '' }}</span>
+                </div>
               </div>
               <div class="destacado-info">
                 <div class="destacado-texto">
@@ -36,9 +39,6 @@
                   <p v-if="platoDestacado.descripcion" class="destacado-descripcion">
                     {{ platoDestacado.descripcion }}
                   </p>
-                </div>
-                <div class="destacado-precio">
-                  <span class="price-tag">{{ platoDestacado.precio }}€{{ platoDestacado.precio_medio ? ' / ' + platoDestacado.precio_medio + '€' : '' }}</span>
                 </div>
               </div>
             </div>
@@ -60,9 +60,6 @@
                 
                 <div class="plato-content">
                   <h3 class="plato-nombre">{{ plato.nombre }}</h3>
-                  <p v-if="plato.descripcion" class="plato-descripcion">
-                    {{ plato.descripcion }}
-                  </p>
                   <div class="plato-precio">
                     <span class="price-tag">{{ plato.precio }}€{{ plato.precio_medio ? ' / ' + plato.precio_medio + '€' : '' }}</span>
                   </div>
@@ -81,9 +78,6 @@
                 
                 <div class="plato-content">
                   <h3 class="plato-nombre">{{ plato.nombre }}</h3>
-                  <p v-if="plato.descripcion" class="plato-descripcion">
-                    {{ plato.descripcion }}
-                  </p>
                   <div class="plato-precio">
                     <span class="price-tag">{{ plato.precio }}€{{ plato.precio_medio ? ' / ' + plato.precio_medio + '€' : '' }}</span>
                   </div>
@@ -313,28 +307,30 @@ export default {
 
 .plato-nombre {
   color: $tv-text-light;
-  font-size: 1.2rem;
+  font-size: 1.8rem;
   font-weight: 600;
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-}
-
-.plato-descripcion {
-  color: #b0b0b0;
-  font-size: 0.9rem;
   margin-bottom: 1rem;
-  flex: 1;
+  text-transform: uppercase;
 }
 
 .plato-precio {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-top: auto;
+  width: 100%;
 }
 
 .price-tag {
   @include tv-price-tag;
+  font-size: 1.6rem;
+  padding: 0.8rem 1.2rem;
+  letter-spacing: 0.2em;
+  background-color: rgba($tv-primary-color, 0.9);
+  border-radius: 8px;
+  min-width: fit-content;
+  text-align: right;
+  white-space: nowrap;
 }
 
 .destacado-container {
@@ -380,6 +376,9 @@ export default {
 
 .destacado-header {
   margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .destacado-tag {
@@ -410,7 +409,7 @@ export default {
 
 .destacado-nombre {
   color: $tv-primary-color;
-  font-size: 3.5rem;
+  font-size: 4.2rem;
   font-weight: 700;
   margin: 0;
   text-transform: uppercase;
@@ -420,30 +419,25 @@ export default {
 
 .destacado-descripcion {
   color: $tv-text-light;
-  font-size: 1.8rem;
+  font-size: 3.2rem;
   line-height: 1.6;
   margin: 0;
-  max-width: 80%;
+  max-width: 90%;
 }
 
 .destacado-precio {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding-top: 2rem;
-  border-top: 2px solid rgba($tv-primary-color, 0.3);
-}
-
-.destacado-precio .price-tag {
-  font-size: 2.5rem;
-  padding: 1rem 2rem;
+  padding: 0.8rem 2rem;
   background-color: $tv-primary-color;
   color: $tv-text-dark;
-  border-radius: 12px;
+  border-radius: 8px;
+  font-size: 1.8rem;
   font-weight: 700;
-  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 2px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  letter-spacing: 1px;
 }
 
 .destacado-close {

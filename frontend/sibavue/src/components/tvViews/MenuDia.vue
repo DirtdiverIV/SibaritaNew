@@ -322,7 +322,7 @@ export default {
 
 .menu-columns {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr 1fr 0.5fr;
   gap: 1rem;
   flex: 1;
   min-height: 0;
@@ -461,7 +461,7 @@ export default {
   
   .menu-section:nth-child(3) {
     grid-column: 1 / -1;
-    height: 35%;
+    height: 15%;
   }
 }
 
@@ -525,8 +525,8 @@ export default {
 .inclusion-item {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1.5rem;
+  gap: 0.8rem;
+  padding: 1rem;
   background-color: rgba(18, 18, 18, 0.3);
   border-radius: 8px;
   border-left: 2px solid #d4af37;
@@ -542,13 +542,13 @@ export default {
 
 .inclusion-item i {
   color: #d4af37;
-  font-size: 3.5vh;
-  margin-bottom: 0.8rem;
+  font-size: 3.2vh;
+  margin-bottom: 0.6rem;
 }
 
 .inclusion-item span {
   color: #ffffff;
-  font-size: 2.8vh;
+  font-size: 2.6vh;
   font-weight: 500;
   text-align: center;
   width: 100%;
