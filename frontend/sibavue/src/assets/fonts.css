@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'BelleroSeLight';
-    src: url('../public/fonts/belleroseligth.ttf') format('truetype');
+    src: url('/fonts/belleroseligth.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -9,5 +9,5 @@
 
 /* Aplicar la fuente a todos los elementos excepto los iconos */
 *:not(.fas):not(.far):not(.fab):not(.fa) {
-    font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif !important;
+    font-family: 'BelleroSeLight', 'Montserrat', system-ui, Avenir, Helvetica, Arial, sans-serif !important;
 } 
