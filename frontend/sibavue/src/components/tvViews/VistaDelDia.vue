@@ -110,7 +110,7 @@
                           class="menu-plato-item"
                           :class="{ 'highlighted': highlightedIndex === index && currentSection === 'primeros' }">
                         {{ plato.nombre }}
-                        <span v-if="plato.descripcion" class="plato-desc-inline">- {{ plato.descripcion }}</span>
+                        <!-- <span v-if="plato.descripcion" class="plato-desc-inline">- {{ plato.descripcion }}</span> -->
                       </li>
                     </ul>
                   </div>
@@ -125,7 +125,7 @@
                           class="menu-plato-item"
                           :class="{ 'highlighted': highlightedIndex === index && currentSection === 'segundos' }">
                         {{ plato.nombre }}
-                        <span v-if="plato.descripcion" class="plato-desc-inline">- {{ plato.descripcion }}</span>
+                        <!-- <span v-if="plato.descripcion" class="plato-desc-inline">- {{ plato.descripcion }}</span> -->
                       </li>
                     </ul>
                   </div>

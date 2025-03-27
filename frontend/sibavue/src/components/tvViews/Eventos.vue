@@ -54,8 +54,15 @@
         
         <div class="view-footer">
           <p class="reserve-info">Para reservas: 
-            <span class="has-shimmer">info@sibaritatestaurant.com</span> o 
-            <span class="has-shimmer">+34 91 234 5678</span>
+            <span class="has-shimmer">
+              <i class="fas fa-phone"></i>
+              691 36 95 82
+            </span>
+            <span class="contact-separator">|</span>
+            <span class="has-shimmer">
+              <i class="fab fa-whatsapp"></i>
+              WhatsApp
+            </span>
           </p>
         </div>
       </template>
@@ -67,6 +74,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import pb from '@/services/pocketbase.js'
 import TvLoading from './TvLoading.vue'
+import '@/assets/styles/tv-theme.scss'
 
 export default {
   name: 'Eventos',
@@ -130,75 +138,35 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/assets/styles/tv-theme.scss';
+
 .tv-view {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background: none;
-  font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif !important;
+  @extend .tv-view;
 }
 
 .background-pattern {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1;
-  opacity: 0.5;
-  background: linear-gradient(135deg,
-    rgba(25, 25, 25, 0.95) 0%,
-    rgba(35, 35, 35, 0.97) 50%,
-    rgba(25, 25, 25, 0.95) 100%);
-  background-image: url('data:image/svg+xml;utf8,<svg width="80" height="88" viewBox="0 0 80 88" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23d4af37" stop-opacity="0.6"/><stop offset="100%" stop-color="%23b08b29" stop-opacity="0.5"/></linearGradient></defs><rect width="80" height="88" fill="%23222" fill-opacity="0.7"/><path d="M22 21.91V26h-2c-9.94 0-18 8.06-18 18 0 9.943 8.058 18 18 18h2v4.09c8.012.722 14.785 5.738 18 12.73 3.212-6.99 9.983-12.008 18-12.73V62h2c9.94 0 18-8.06 18-18 0-9.943-8.058-18-18-18h-2v-4.09c-8.012-.722-14.785-5.738-18-12.73-3.212 6.99-9.983 12.008-18 12.73zM54 58v4.696c-5.574 1.316-10.455 4.428-14 8.69-3.545-4.262-8.426-7.374-14-8.69V58h-5.993C12.27 58 6 51.734 6 44c0-7.732 6.275-14 14.007-14H26v-4.696c5.574-1.316 10.455-4.428 14-8.69 3.545 4.262 8.426 7.374 14 8.69V30h5.993C67.73 30 74 36.266 74 44c0 7.732-6.275 14-14.007 14H54zM42 88c0-9.94 8.06-18 18-18h2v-4.09c8.016-.722 14.787-5.738 18-12.73v7.434c-3.545 4.262-8.426 7.374-14 8.69V74h-5.993C52.275 74 46 80.268 46 88h-4zm-4 0c0-9.943-8.058-18-18-18h-2v-4.09c-8.012-.722-14.785-5.738-18-12.73v7.434c3.545 4.262 8.426 7.374 14 8.69V74h5.993C27.73 74 34 80.266 34 88h4zm4-88c0 9.943 8.058 18 18 18h2v4.09c8.012.722 14.785 5.738 18 12.73v-7.434c-3.545-4.262-8.426-7.374-14-8.69V14h-5.993C52.27 14 46 7.734 46 0h-4zM0 34.82c3.213-6.992 9.984-12.008 18-12.73V18h2c9.94 0 18-8.06 18-18h-4c0 7.732-6.275 14-14.007 14H14v4.696c-5.574 1.316-10.455 4.428-14 8.69v7.433z" fill="url(%23goldGrad)" fill-opacity="0.8" fill-rule="evenodd"/></svg>');
+  @extend .background-pattern;
 }
 
 .tv-content {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  padding: 1.5vh 1.5vw;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  @extend .tv-content;
 }
 
 .view-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2vh;
-  padding-bottom: 1vh;
-  border-bottom: 2px solid #d4af37;
+  @extend .view-header;
 }
 
 .restaurant-name {
-  color: #ffffff;
-  font-size: 2.8vh;
-  font-weight: 700;
-  letter-spacing: 2px;
+  @extend .restaurant-name;
 }
 
 .view-title {
-  color: #d4af37;
-  font-size: 3vh;
-  font-weight: 700;
-  text-transform: uppercase;
-  margin: 0;
-  letter-spacing: 3px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  @extend .view-title;
 }
 
 .view-body {
+  @extend .view-body;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -207,13 +175,9 @@ export default {
 }
 
 .evento-card {
+  @include tv-card;
   width: 100%;
   height: 100%;
-  background-color: rgba(30, 30, 30, 0.7);
-  backdrop-filter: blur(4px);
-  border-radius: 12px;
-  overflow: hidden;
-  border: 2px solid rgba(212, 175, 55, 0.3);
   display: flex;
   opacity: 0;
   transform: translateY(20px);
@@ -261,12 +225,9 @@ export default {
 }
 
 .evento-tag {
-  background-color: #d4af37;
-  color: #121212;
-  padding: 0.8rem 2rem;
-  border-radius: 8px;
+  @include tv-price-tag;
   font-size: 1.8rem;
-  font-weight: 700;
+  padding: 0.8rem 2rem;
   text-transform: uppercase;
   letter-spacing: 2px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -287,7 +248,7 @@ export default {
 }
 
 .evento-nombre {
-  color: #d4af37;
+  color: $tv-primary-color;
   font-size: 3.5rem;
   margin: 0;
   font-weight: 700;
@@ -298,7 +259,7 @@ export default {
 }
 
 .evento-descripcion {
-  color: #e0e0e0;
+  color: $tv-text-light;
   font-size: 2.4rem;
   line-height: 1.6;
   margin: 0;
@@ -313,57 +274,68 @@ export default {
   padding-left: 2.5rem;
   position: relative;
   font-size: 2.4rem;
-}
-
-.lista-item::before {
-  content: "•";
-  color: #d4af37;
-  position: absolute;
-  left: 0;
-  font-size: 1.8em;
-  line-height: 1;
+  
+  &::before {
+    content: "•";
+    color: $tv-primary-color;
+    position: absolute;
+    left: 0;
+    font-size: 1.8em;
+    line-height: 1;
+  }
 }
 
 .evento-precio {
   display: flex;
   align-items: center;
   padding-left: 2rem;
-  border-left: 2px solid rgba(212, 175, 55, 0.3);
-}
-
-.evento-precio .price-tag {
-  font-size: 3rem;
-  padding: 1rem 2rem;
-  background-color: #d4af37;
-  color: #121212;
-  border-radius: 12px;
-  font-weight: 700;
-  display: inline-block;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  letter-spacing: 1px;
+  border-left: 2px solid $tv-border-color;
+  
+  .price-tag {
+    @include tv-price-tag;
+    font-size: 3rem;
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    letter-spacing: 1px;
+  }
 }
 
 .view-footer {
   text-align: center;
   padding: 1rem;
   background-color: rgba(18, 18, 18, 0.6);
-  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  border-top: 1px solid $tv-border-color;
   margin-top: auto;
+}
+
+.contact-separator {
+  margin: 0 1rem;
+  color: $tv-text-light;
+  opacity: 0.5;
 }
 
 .reserve-info {
   font-size: 2rem;
-  color: #e0e0e0;
-  font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  color: $tv-text-light;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  i {
+    margin-right: 0.5rem;
+    font-size: 1.8rem;
+  }
 }
 
 .has-shimmer {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   padding: 4px 12px;
   background: linear-gradient(90deg, 
-    rgba(212, 175, 55, 0.1) 0%, 
-    rgba(212, 175, 55, 0.3) 50%, 
-    rgba(212, 175, 55, 0.1) 100%);
+    rgba($tv-primary-color, 0.1) 0%, 
+    rgba($tv-primary-color, 0.3) 50%, 
+    rgba($tv-primary-color, 0.1) 100%);
   background-size: 200% 100%;
   animation: shimmer 3s infinite;
   border-radius: 4px;
@@ -391,14 +363,14 @@ export default {
 }
 
 .empty-title {
-  color: #d4af37;
+  color: $tv-primary-color;
   font-size: 3vh;
   margin-bottom: 2vh;
 }
 
 .empty-subtitle {
   font-size: 2vh;
-  color: #e0e0e0;
+  color: $tv-text-light;
 }
 
 @media screen and (max-width: 768px) {

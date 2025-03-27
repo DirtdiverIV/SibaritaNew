@@ -50,7 +50,7 @@ $tv-background-pattern: url('data:image/svg+xml;utf8,<svg width="80" height="88"
 
 @mixin tv-title {
   color: $tv-primary-color;
-  font-size: 3vh;
+  font-size: 6vh;
   font-weight: 700;
   text-transform: uppercase;
   margin: 0;
@@ -60,7 +60,7 @@ $tv-background-pattern: url('data:image/svg+xml;utf8,<svg width="80" height="88"
 
 @mixin tv-restaurant-name {
   color: $tv-text-light;
-  font-size: 2.8vh;
+  font-size: 5vh;
   font-weight: 700;
   letter-spacing: 2px;
 }

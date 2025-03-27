@@ -300,7 +300,7 @@ export default {
 
 .menu-price {
   @include tv-price-tag;
-  font-size: 2vh;
+  font-size: 6vh;
 }
 
 .view-body {
