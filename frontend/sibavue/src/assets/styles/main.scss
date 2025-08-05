@@ -4,18 +4,9 @@
 
 // Estilos globales personalizados
 
-// Patrón de fondo
+// Patrón de fondo simple
 body {
   background-color: $background;
-  background-image: 
-    linear-gradient(30deg, $primary-dark 12%, transparent 12.5%, transparent 87%, $primary-dark 87.5%, $primary-dark),
-    linear-gradient(150deg, $primary-dark 12%, transparent 12.5%, transparent 87%, $primary-dark 87.5%, $primary-dark),
-    linear-gradient(30deg, $primary-dark 12%, transparent 12.5%, transparent 87%, $primary-dark 87.5%, $primary-dark),
-    linear-gradient(150deg, $primary-dark 12%, transparent 12.5%, transparent 87%, $primary-dark 87.5%, $primary-dark),
-    linear-gradient(60deg, rgba($gold-dark, 0.1) 25%, transparent 25.5%, transparent 75%, rgba($gold-dark, 0.1) 75%, rgba($gold-dark, 0.1)),
-    linear-gradient(60deg, rgba($gold-dark, 0.1) 25%, transparent 25.5%, transparent 75%, rgba($gold-dark, 0.1) 75%, rgba($gold-dark, 0.1));
-  background-size: 40px 70px;
-  background-position: 0 0, 0 0, 20px 35px, 20px 35px, 0 0, 20px 35px;
   min-height: 100vh;
 }
 
@@ -32,16 +23,16 @@ body {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, $gold-dark, $gold, $gold-light, $gold, $gold-dark);
+    background: linear-gradient(90deg, #929AAB, #393E46, #929AAB);
     z-index: 1;
   }
   
   .card-header {
-    background-color: rgba($primary-dark, 0.5);
-    border-bottom: 1px solid rgba($gold-dark, 0.3);
+    background-color: #EEEEEE;
+    border-bottom: 1px solid rgba(146, 154, 171, 0.5);
     
     .card-header-title {
-      color: $gold;
+      color: #393E46;
     }
   }
   

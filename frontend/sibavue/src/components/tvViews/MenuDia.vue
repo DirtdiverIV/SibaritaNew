@@ -10,7 +10,7 @@
           <div class="restaurant-name">O SIBARITA</div>
           <div class="title-price-container">
             <h1 class="view-title">MENÚ DEL DÍA</h1>
-            <div v-if="menuDia" class="menu-price">{{ menuDia.precio }}€</div>
+            <div v-if="menuDia" class="menu-price">{{ formatPrice(menuDia.precio) }}€</div>
           </div>
         </div>
         
@@ -77,7 +77,7 @@
                   </div>
                   <div class="inclusion-item">
                     <i class="fas fa-coffee"></i>
-                    <span>Café o postre</span>
+                    <span>Postre o Café</span>
                   </div>
                 </div>
               </div>
@@ -111,6 +111,27 @@ export default {
     let menuSubscription = null
     let primerosSubscription = null
     let segundosSubscription = null
+
+    // Función para formatear el precio
+    const formatPrice = (price) => {
+      if (!price) return '0,00'
+      
+      // Convertir a string y reemplazar punto por coma
+      let formattedPrice = price.toString().replace('.', ',')
+      
+      // Si no tiene decimales, añadir ,00
+      if (!formattedPrice.includes(',')) {
+        formattedPrice += ',00'
+      } else {
+        // Si solo tiene un decimal, añadir un 0
+        const parts = formattedPrice.split(',')
+        if (parts[1] && parts[1].length === 1) {
+          formattedPrice += '0'
+        }
+      }
+      
+      return formattedPrice
+    }
 
     const highlightNextItem = () => {
       const allItems = [
@@ -259,7 +280,8 @@ export default {
       menuDia,
       primeros,
       segundos,
-      currentHighlighted
+      currentHighlighted,
+      formatPrice
     }
   }
 }
@@ -332,16 +354,16 @@ export default {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: rgba(30, 30, 30, 0.5);
-  backdrop-filter: blur(2px);
+  background-color: #2D2D2D;
+  backdrop-filter: none;
   border-radius: 8px;
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  border: 1px solid rgba(246, 201, 14, 0.3);
   overflow: hidden;
 }
 
 .section-header {
   padding: 1rem;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  border-bottom: 1px solid rgba(246, 201, 14, 0.3);
   text-align: center;
 }
 
@@ -358,7 +380,7 @@ export default {
   height: 2px;
   width: 100px;
   margin: 0.5rem auto;
-  background: linear-gradient(90deg, transparent, rgba($tv-primary-color, 0.7), transparent);
+  background: linear-gradient(90deg, transparent, rgba(246, 201, 14, 0.7), transparent);
 }
 
 .platos-lista {
@@ -376,7 +398,7 @@ export default {
 }
 
 .plato-item {
-  background-color: rgba(18, 18, 18, 0.3);
+  background-color: #1A1A1A;
   border-radius: 8px;
   padding: 1.5rem;
   transition: all 0.3s ease;
@@ -392,9 +414,10 @@ export default {
 }
 
 .plato-item.highlighted {
-  background-color: rgba(18, 18, 18, 0.9);
-  border-left: 3px solid #d4af37;
+  background-color: #1A1A1A;
+  border-left: 3px solid #F6C90E;
   transform: translateX(5px);
+  box-shadow: 0 2px 8px rgba(246, 201, 14, 0.3);
 }
 
 .plato-nombre {
@@ -417,14 +440,14 @@ export default {
 .empty-section {
   text-align: center;
   padding: 2rem;
-  color: #a0a0a0;
+  color: #EEEEEE;
   font-style: italic;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
   font-size: 2.4vh;
-  background-color: rgba(18, 18, 18, 0.3);
+  background-color: #1A1A1A;
   border-radius: 6px;
 }
 
@@ -444,14 +467,14 @@ export default {
 }
 
 .empty-title {
-  color: #d4af37;
+  color: #F6C90E;
   font-size: 3vh;
   margin-bottom: 2vh;
 }
 
 .empty-subtitle {
   font-size: 2vh;
-  color: #e0e0e0;
+  color: #EEEEEE;
 }
 
 @media (max-width: 1200px) {
@@ -518,7 +541,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(26, 26, 26, 0.9);
   backdrop-filter: blur(5px);
 }
 
@@ -527,9 +550,9 @@ export default {
   align-items: center;
   gap: 0.8rem;
   padding: 1rem;
-  background-color: rgba(18, 18, 18, 0.3);
+  background-color: #1A1A1A;
   border-radius: 8px;
-  border-left: 2px solid #d4af37;
+  border-left: 2px solid #F6C90E;
   width: 100%;
   box-sizing: border-box;
   flex: 1;
@@ -541,13 +564,13 @@ export default {
 }
 
 .inclusion-item i {
-  color: #d4af37;
+  color: #F6C90E;
   font-size: 3.2vh;
   margin-bottom: 0.6rem;
 }
 
 .inclusion-item span {
-  color: #ffffff;
+  color: #EEEEEE;
   font-size: 2.6vh;
   font-weight: 500;
   text-align: center;

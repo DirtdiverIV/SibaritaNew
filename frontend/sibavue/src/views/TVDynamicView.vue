@@ -499,17 +499,7 @@ export default {
   width: 100%;
   height: 100%;
   z-index: 0;
-  background-color: rgba(25, 25, 25, 0.95);
-  background-image: 
-    linear-gradient(135deg, 
-      rgba(25, 25, 25, 0.92) 0%, 
-      rgba(35, 35, 35, 0.95) 50%, 
-      rgba(25, 25, 25, 0.92) 100%),
-    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><defs><linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23d4af37" stop-opacity="0.3"/><stop offset="100%" stop-color="%23b08b29" stop-opacity="0.25"/></linearGradient><pattern id="smallGrid" width="25" height="25" patternUnits="userSpaceOnUse"><path d="M12.5,0 L12.5,25 M0,12.5 L25,12.5" stroke="%23d4af37" stroke-width="0.5" stroke-opacity="0.2"/></pattern></defs><rect width="100" height="100" fill="%23222" fill-opacity="0.7"/><rect width="100" height="100" fill="url(%23smallGrid)"/><path d="M50,0 L100,50 L50,100 L0,50 Z" fill="%23282828" fill-opacity="0.4"/><path d="M50,0 L100,50 L50,100 L0,50 Z" fill="url(%23goldGrad)" transform="rotate(45 50 50)"/><path d="M25,25 h50 v50 h-50 Z" fill="none" stroke="%23d4af37" stroke-width="1" stroke-opacity="0.3"/><path d="M40,40 L60,40 L60,60 L40,60 Z" fill="url(%23goldGrad)"/><path d="M0,0 Q25,25 50,0 T100,0 M0,50 Q25,75 50,50 T100,50 M0,100 Q25,125 50,100 T100,100" stroke="%23d4af37" stroke-width="1" stroke-opacity="0.2" fill="none"/><circle cx="50" cy="50" r="8" fill="%23d4af37" fill-opacity="0.2"/><path d="M50,42 L58,50 L50,58 L42,50 Z" fill="%23d4af37" fill-opacity="0.3"/></svg>');
-  background-size: 100px 100px;
-  background-position: center center;
-  background-blend-mode: overlay;
-  opacity: 1;
+  background-color: #1A1A1A;
   pointer-events: none;
 }
 
@@ -543,19 +533,20 @@ export default {
 
 .loading-content {
   padding: 2rem;
-  background: rgba(18, 18, 18, 0.8);
+  background: #2D2D2D;
   border-radius: 8px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  border: 1px solid rgba(246, 201, 14, 0.3);
   font-family: 'BelleroSeLight', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  color: #EEEEEE;
 }
 
 .loading-spinner {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  border: 3px solid rgba(212, 175, 55, 0.3);
-  border-top-color: #d4af37;
+  border: 3px solid rgba(246, 201, 14, 0.3);
+  border-top-color: #F6C90E;
   animation: spin 1.5s linear infinite;
   margin: 0 auto 1.5rem;
 }
@@ -564,7 +555,7 @@ export default {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 3px solid rgba(212, 175, 55, 0.6);
+  border: 3px solid rgba(246, 201, 14, 0.6);
   border-top-color: transparent;
   animation: spin 2s linear infinite reverse;
   margin: 5px auto;

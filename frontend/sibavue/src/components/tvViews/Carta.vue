@@ -302,7 +302,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: rgba(18, 18, 18, 0.7);
+  background-color: #2D2D2D;
 }
 
 .plato-nombre {
@@ -339,7 +339,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(18, 18, 18, 0.95);
+  background-color: #303841;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -474,14 +474,14 @@ export default {
 }
 
 .empty-title {
-  color: #d4af37;
+  color: #F6C90E;
   font-size: 3vh;
   margin-bottom: 2vh;
 }
 
 .empty-subtitle {
   font-size: 2vh;
-  color: #e0e0e0;
+  color: #EEEEEE;
 }
 
 .carta-container {
@@ -504,9 +504,9 @@ export default {
   margin: 0 0 1rem 0;
   border-radius: 12px;
   overflow: hidden;
-  background-color: rgba(30, 30, 30, 0.7);
+  background-color: #2D2D2D;
   backdrop-filter: blur(4px);
-  border: 2px solid rgba(212, 175, 55, 0.3);
+  border: 2px solid rgba(246, 201, 14, 0.3);
   display: flex;
   opacity: 0;
   transform: translateY(20px);
@@ -521,7 +521,7 @@ export default {
 .destacado-imagen-placeholder {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #1e1e1e, #2c2c2c);
+  background: #1A1A1A;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -571,7 +571,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(26, 26, 26, 0.9);
   backdrop-filter: blur(5px);
 }
 </style>

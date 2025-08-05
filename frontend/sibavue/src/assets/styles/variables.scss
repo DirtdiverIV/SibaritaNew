@@ -1,59 +1,159 @@
 // Variables personalizadas para Sibarita Restaurant
 
-// Colores corporativos
-$primary: #1e1e1e; // Gris muy oscuro
-$primary-light: #2c2c2c;
-$primary-dark: #121212;
+// Colores corporativos - Nueva paleta (MODO CLARO - COMENTADO)
+// $primary: #393E46; // Gris oscuro principal
+// $primary-light: #929AAB; // Gris medio
+// $primary-dark: #2c3038; // Gris más oscuro
 
-$gold: #d4af37; // Dorado
-$gold-light: #f8e8a7;
-$gold-dark: #b08b29;
+// $gold: #929AAB; // Ahora usamos gris medio como acento
+// $gold-light: #EEEEEE; // Gris claro
+// $gold-dark: #393E46; // Gris oscuro
 
-$background: #242424;
-$background-light: #333333;
+// $background: #F7F7F7; // Blanco principal
+// $background-light: #EEEEEE; // Gris muy claro
+
+// Colores corporativos - Nueva paleta INVERTIDA (MODO OSCURO - COMENTADO)
+// $primary: #F7F7F7; // Blanco/claro principal
+// $primary-light: #EEEEEE; // Gris muy claro
+// $primary-dark: #929AAB; // Gris medio
+
+// $gold: #EEEEEE; // Gris claro como acento
+// $gold-light: #F7F7F7; // Blanco
+// $gold-dark: #929AAB; // Gris medio
+
+// $background: #393E46; // Gris oscuro principal
+// $background-light: #2c3038; // Gris más oscuro
+
+// Colores corporativos - NUEVA PALETA AMARILLA (ACTIVA)
+$primary: #F6C90E; // Amarillo principal para texto
+$primary-light: #EEEEEE; // Blanco para detalles
+$primary-dark: #2D2D2D; // Gris oscuro secundario
+
+$gold: #F6C90E; // Amarillo como acento principal
+$gold-light: #EEEEEE; // Blanco
+$gold-dark: #2D2D2D; // Gris oscuro para bordes
+
+$background: #1A1A1A; // Negro-gris oscuro principal
+$background-light: #2D2D2D; // Gris oscuro secundario
 
 // Sobrescribir variables de Bulma después de importar Bulma
 $scheme-main: $background;
 $scheme-main-bis: $background-light;
 $scheme-main-ter: $primary-light;
 
-$text: #f8f8f8;
-$text-light: #e0e0e0;
-$text-strong: $gold-light;
+// MODO CLARO - COMENTADO
+// $text: #393E46; // Texto principal oscuro
+// $text-light: #929AAB; // Texto secundario
+// $text-strong: #393E46; // Texto fuerte
 
-$link: $gold;
-$link-hover: $gold-light;
+// $link: #393E46;
+// $link-hover: #929AAB;
+
+// MODO OSCURO GRIS - COMENTADO
+// $text: #F7F7F7; // Texto principal claro
+// $text-light: #EEEEEE; // Texto secundario claro
+// $text-strong: #F7F7F7; // Texto fuerte
+
+// $link: #EEEEEE;
+// $link-hover: #F7F7F7;
+
+// MODO OSCURO AMARILLO - ACTIVO
+$text: #F6C90E; // Texto principal amarillo
+$text-light: #EEEEEE; // Texto secundario blanco
+$text-strong: #F6C90E; // Texto fuerte amarillo
+
+$link: #F6C90E;
+$link-hover: #EEEEEE;
 
 $border: $primary-light;
-$shadow: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.3), 0 0px 0 1px rgba(0, 0, 0, 0.02);
+$shadow: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.6), 0 0px 0 1px rgba(246, 201, 14, 0.1);
 
-// Componentes específicos
-$card-background-color: rgba($primary, 0.8);
-$card-shadow: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.4), 0 0 0 1px rgba($gold-dark, 0.1);
+// Componentes específicos - MODO CLARO COMENTADO
+// $card-background-color: #EEEEEE;
+// $card-shadow: 0 0.5em 1em -0.125em rgba(57, 62, 70, 0.2), 0 0 0 1px rgba(146, 154, 171, 0.1);
 
-$input-background-color: $primary-light;
-$input-border-color: $primary;
-$input-color: $text;
+// $input-background-color: #F7F7F7;
+// $input-border-color: #929AAB;
+// $input-color: #393E46;
+// $input-shadow: none;
+
+// $button-background-color: #EEEEEE;
+// $button-color: #393E46;
+// $button-border-color: #929AAB;
+// $button-hover-color: #F7F7F7;
+// $button-hover-border-color: #393E46;
+
+// Componentes específicos - MODO OSCURO GRIS COMENTADO
+// $card-background-color: #2c3038;
+// $card-shadow: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(146, 154, 171, 0.2);
+
+// $input-background-color: #393E46;
+// $input-border-color: #929AAB;
+// $input-color: #F7F7F7;
+// $input-shadow: none;
+
+// $button-background-color: #2c3038;
+// $button-color: #F7F7F7;
+// $button-border-color: #929AAB;
+// $button-hover-color: #393E46;
+// $button-hover-border-color: #EEEEEE;
+
+// Componentes específicos - MODO OSCURO AMARILLO ACTIVO
+$card-background-color: #2D2D2D;
+$card-shadow: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(246, 201, 14, 0.2);
+
+$input-background-color: #2D2D2D;
+$input-border-color: #F6C90E;
+$input-color: #F6C90E;
 $input-shadow: none;
 
-$button-background-color: $primary-dark;
-$button-color: $gold;
-$button-border-color: $gold-dark;
-$button-hover-color: $text;
-$button-hover-border-color: $gold;
+$button-background-color: #2D2D2D;
+$button-color: #F6C90E;
+$button-border-color: #F6C90E;
+$button-hover-color: #1A1A1A;
+$button-hover-border-color: #EEEEEE;
 
-$navbar-background-color: rgba($primary-dark, 0.95);
-$navbar-item-color: $text-light;
+// NAVBAR Y MENU - MODO CLARO COMENTADO
+// $navbar-background-color: rgba($primary-dark, 0.95);
+// $navbar-item-color: $text-light;
+// $navbar-item-hover-color: $gold;
+// $navbar-item-hover-background-color: rgba($primary, 0.3);
+
+// $menu-item-active-background-color: $gold-dark;
+// $menu-item-active-color: $text;
+
+// $table-background-color: $primary;
+// $table-color: $text;
+// $table-head-cell-color: $gold;
+// $table-row-hover-background-color: $primary-light;
+
+// NAVBAR Y MENU - MODO OSCURO GRIS COMENTADO
+// $navbar-background-color: rgba($background-light, 0.95);
+// $navbar-item-color: $text;
+// $navbar-item-hover-color: $gold;
+// $navbar-item-hover-background-color: rgba($primary-light, 0.3);
+
+// $menu-item-active-background-color: $gold-dark;
+// $menu-item-active-color: $background;
+
+// $table-background-color: $background-light;
+// $table-color: $text;
+// $table-head-cell-color: $gold;
+// $table-row-hover-background-color: $primary-dark;
+
+// NAVBAR Y MENU - MODO OSCURO AMARILLO ACTIVO
+$navbar-background-color: rgba($background-light, 0.95);
+$navbar-item-color: $text;
 $navbar-item-hover-color: $gold;
-$navbar-item-hover-background-color: rgba($primary, 0.3);
+$navbar-item-hover-background-color: rgba($primary-light, 0.3);
 
-$menu-item-active-background-color: $gold-dark;
-$menu-item-active-color: $text;
+$menu-item-active-background-color: $gold;
+$menu-item-active-color: $background;
 
-$table-background-color: $primary;
+$table-background-color: $background-light;
 $table-color: $text;
 $table-head-cell-color: $gold;
-$table-row-hover-background-color: $primary-light;
+$table-row-hover-background-color: $primary-dark;
 
 // Tipografía
 $family-sans-serif: 'Montserrat', sans-serif;

@@ -101,17 +101,17 @@ export default {
   align-items: center;
   min-height: 100vh;
   width: 100%;
-  background-color: rgba(26, 26, 26, 0.9);
+  background-color: rgba(247, 247, 247, 0.9);
   backdrop-filter: blur(5px);
 }
 
 .loading-content {
   text-align: center;
   padding: 2rem;
-  background: #2D2D2D;
+  background: #EEEEEE;
   border-radius: 12px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(246, 201, 14, 0.3);
+  box-shadow: 0 5px 20px rgba(57, 62, 70, 0.2);
+  border: 1px solid rgba(146, 154, 171, 0.3);
 }
 
 .loading-text {
@@ -123,8 +123,8 @@ export default {
   display: inline-block;
   font-size: 3rem;
   font-weight: 700;
-  color: #EEEEEE;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  color: #393E46;
+  text-shadow: 0 1px 2px rgba(57, 62, 70, 0.1);
   margin: 0 0.1rem;
   animation: bounce 1s infinite;
   animation-delay: calc(0.1s * var(--i));
@@ -134,7 +134,7 @@ export default {
 }
 
 .letter.sibarita {
-  color: #F6C90E;
+  color: #929AAB;
   font-weight: 800;
 }
 
@@ -153,8 +153,8 @@ export default {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  border: 3px solid rgba(246, 201, 14, 0.3);
-  border-top-color: #F6C90E;
+  border: 3px solid rgba(146, 154, 171, 0.3);
+  border-top-color: #393E46;
   animation: spin 1.5s linear infinite;
   margin: 0 auto;
 }
@@ -163,7 +163,7 @@ export default {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  border: 3px solid rgba(238, 238, 238, 0.6);
+  border: 3px solid rgba(146, 154, 171, 0.6);
   border-top-color: transparent;
   animation: spin 2s linear infinite reverse;
   margin: 5px auto;

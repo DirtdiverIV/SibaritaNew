@@ -474,11 +474,11 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100px;
-  background-color: rgba(30, 30, 30, 0.4);
+  background-color: #1A1A1A;
   border-radius: 6px;
-  color: #a0a0a0;
+  color: #EEEEEE;
   font-style: italic;
-  border: 1px dashed rgba(160, 160, 160, 0.3);
+  border: 1px dashed rgba(238, 238, 238, 0.3);
 }
 
 .platos-list {
@@ -548,7 +548,7 @@ export default {
 }
 
 .menu-dia-container {
-  background: linear-gradient(135deg, rgba(30, 30, 30, 0.9), rgba(18, 18, 18, 0.95));
+  background: #2D2D2D;
   border: 1px solid rgba($tv-primary-color, 0.4);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
@@ -563,7 +563,7 @@ export default {
 
 .menu-seccion {
   margin-bottom: 0.5rem;
-  background-color: rgba(18, 18, 18, 0.3);
+  background-color: #1A1A1A;
   border-radius: 6px;
   padding: 0.5rem;
   border-left: 2px solid rgba($tv-primary-color, 0.5);
@@ -594,8 +594,8 @@ export default {
 
 .menu-plato-item {
   padding: 0.5rem 0;
-  color: #e0e0e0;
-  border-bottom: 1px dashed rgba(160, 160, 160, 0.2);
+  color: #EEEEEE;
+  border-bottom: 1px dashed rgba(238, 238, 238, 0.2);
   text-transform: uppercase;
   display: flex;
   flex-direction: column;
